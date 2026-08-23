@@ -21,8 +21,8 @@ body {
 
 body {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
 #game-wrapper {
@@ -31,74 +31,79 @@ body {
     width: 100vw;
     height: 100vh;
 
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
 
     background: #000;
-
-    overflow: hidden;
 }
 
 #game {
-    width: 100vw;
-    height: 100vh;
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    background: #000;
 
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 
-    background: #000;
-
     touch-action: none;
 }
 
-/* FULLSCREEN */
+
+/* ================================
+   FULLSCREEN
+================================ */
 
 #fullscreen-button {
     position: fixed;
 
-    right: 14px;
-    top: 14px;
+    right: 12px;
+    top: 12px;
 
     width: 42px;
     height: 42px;
 
+    z-index: 50;
+
     border: 2px solid rgba(255,255,255,.55);
 
-    background: rgba(0,0,0,.42);
+    border-radius: 7px;
+
+    background: rgba(0,0,0,.45);
 
     color: white;
 
     font-size: 22px;
 
-    border-radius: 7px;
-
-    z-index: 20;
-
     touch-action: none;
 }
 
 #fullscreen-button:active {
-    background: rgba(255,255,255,.18);
+    background: rgba(255,255,255,.2);
 }
 
-/* JOYSTICK */
+
+/* ================================
+   JOYSTICK
+================================ */
 
 #joystick {
     position: fixed;
 
-    left: 18px;
-    bottom: 18px;
+    left: 12px;
+    bottom: 12px;
 
-    width: 132px;
-    height: 132px;
+    width: 125px;
+    height: 125px;
 
-    z-index: 10;
+    z-index: 40;
 
     opacity: .38;
 
     transition: opacity .15s;
+
+    touch-action: none;
 }
 
 #joystick:active {
@@ -108,72 +113,77 @@ body {
 .joy {
     position: absolute;
 
-    width: 43px;
-    height: 43px;
+    width: 40px;
+    height: 40px;
+
+    border: 2px solid rgba(255,255,255,.75);
 
     border-radius: 8px;
 
-    border: 2px solid rgba(255,255,255,.65);
+    background: rgba(15,15,15,.35);
 
-    background: rgba(20,20,20,.30);
-
-    color: rgba(255,255,255,.9);
-
-    font-size: 19px;
+    color: white;
 
     font-family: monospace;
+
+    font-size: 18px;
 
     touch-action: none;
 }
 
 .joy.up {
-    left: 44px;
+    left: 42px;
     top: 0;
 }
 
 .joy.down {
-    left: 44px;
+    left: 42px;
     bottom: 0;
 }
 
 .joy.left {
     left: 0;
-    top: 44px;
+    top: 42px;
 }
 
 .joy.right {
     right: 0;
-    top: 44px;
+    top: 42px;
 }
 
 .joy:active {
-    background: rgba(255,255,255,.22);
+    background: rgba(255,255,255,.25);
 }
 
-/* Z X C */
+
+/* ================================
+   ACTION BUTTONS
+================================ */
 
 #actions {
     position: fixed;
 
-    right: 18px;
-    bottom: 22px;
+    right: 12px;
+    bottom: 15px;
+
+    z-index: 40;
 
     display: flex;
 
-    gap: 10px;
+    gap: 9px;
 
-    z-index: 10;
+    touch-action: none;
 }
 
 .action-button {
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
 
     border-radius: 50%;
 
     border: 2px solid rgba(255,255,255,.65);
 
-    background: rgba(10,10,10,.35);
+    background: rgba(10,10,10,.4);
 
     color: white;
 
@@ -189,8 +199,8 @@ body {
 }
 
 .action-button:active {
-    background: rgba(255,255,255,.22);
     opacity: .8;
+    background: rgba(255,255,255,.2);
 }
 
 .z-button {
@@ -205,64 +215,20 @@ body {
     border-color: rgba(80,160,255,.8);
 }
 
-/* RUN */
 
-#run-indicator {
-    position: fixed;
-
-    left: 170px;
-    bottom: 20px;
-
-    color: white;
-
-    font-size: 12px;
-
-    padding: 6px 9px;
-
-    border: 1px solid rgba(255,255,255,.3);
-
-    background: rgba(0,0,0,.3);
-
-    opacity: .3;
-
-    z-index: 10;
-}
-
-#run-indicator.active {
-    opacity: .8;
-}
-
-/* FULLSCREEN */
-
-:fullscreen #game {
-    width: 100vw;
-    height: 100vh;
-}
-
-:-webkit-full-screen #game {
-    width: 100vw;
-    height: 100vh;
-}
-
-/* MOBILE */
+/* ================================
+   SMALL SCREENS
+================================ */
 
 @media (max-width: 600px) {
 
     #joystick {
-        left: 10px;
-        bottom: 10px;
-
-        transform: scale(.9);
-
+        transform: scale(.88);
         transform-origin: bottom left;
     }
 
     #actions {
-        right: 10px;
-        bottom: 12px;
-
-        transform: scale(.9);
-
+        transform: scale(.88);
         transform-origin: bottom right;
     }
 }
@@ -270,14 +236,12 @@ body {
 @media (max-height: 350px) {
 
     #joystick {
-        transform: scale(.72);
-
+        transform: scale(.7);
         transform-origin: bottom left;
     }
 
     #actions {
-        transform: scale(.72);
-
+        transform: scale(.7);
         transform-origin: bottom right;
     }
     }
