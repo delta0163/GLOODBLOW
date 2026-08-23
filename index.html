@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,
-      initial-scale=1.0,
-      maximum-scale=1.0,
-      user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Blood Glow RPG</title>
+    <title>Blood Glow RPG</title>
 
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -19,77 +16,22 @@
 
     <canvas id="canvas" width="320" height="180"></canvas>
 
-    <!-- Главное меню -->
-    <div id="mainMenu">
-
-        <div class="title">
-            BLOOD GLOW
-        </div>
-
-        <button id="startButton">
-            НАЧАТЬ ИГРУ
-        </button>
-
-        <button id="loadButton">
-            ФАЙЛЫ СОХРАНЕНИЯ
-        </button>
-
-    </div>
-
-    <!-- Меню сохранений -->
-    <div id="saveMenu">
-
-        <div class="saveTitle">
-            ФАЙЛЫ СОХРАНЕНИЯ
-        </div>
-
-        <div class="saveSlot" data-slot="0">
-            ФАЙЛ 1
-            <span>ПУСТО</span>
-        </div>
-
-        <div class="saveSlot" data-slot="1">
-            ФАЙЛ 2
-            <span>ПУСТО</span>
-        </div>
-
-        <div class="saveSlot" data-slot="2">
-            ФАЙЛ 3
-            <span>ПУСТО</span>
-        </div>
-
-        <div class="saveHint">
-            Нажми на файл для загрузки
-        </div>
-
-        <button id="saveBack">
-            НАЗАД
-        </button>
-
-    </div>
-
-    <!-- Управление -->
-
+    <!-- Джойстик -->
     <div id="joystick">
-
         <button class="joy up" data-key="up">▲</button>
         <button class="joy left" data-key="left">◀</button>
         <button class="joy right" data-key="right">▶</button>
         <button class="joy down" data-key="down">▼</button>
-
     </div>
 
+    <!-- Кнопки -->
     <div id="buttons">
-
-        <button id="zButton">Z</button>
-        <button id="xButton">X</button>
-        <button id="cButton">C</button>
-
+        <button class="game-btn z" data-key="z">Z</button>
+        <button class="game-btn x" data-key="x">X</button>
+        <button class="game-btn c" data-key="c">C</button>
     </div>
 
-    <button id="fullscreen">
-        ⛶
-    </button>
+    <button id="fullscreen">⛶</button>
 
 </div>
 
