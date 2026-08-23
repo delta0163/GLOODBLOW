@@ -1,15 +1,11 @@
 "use strict";
 
-
 /* =====================================================
    CANVAS
 ===================================================== */
 
-const canvas =
-    document.getElementById("game");
-
-const ctx =
-    canvas.getContext("2d");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
 ctx.imageSmoothingEnabled = false;
 
@@ -22,40 +18,31 @@ const H = 180;
 ===================================================== */
 
 const fullscreenButton =
-    document.getElementById(
-        "fullscreen-button"
-    );
+    document.getElementById("fullscreen-button");
 
-fullscreenButton.addEventListener(
-    "pointerdown",
-    async function(e) {
+fullscreenButton.addEventListener("pointerdown", async function(e) {
 
-        e.preventDefault();
+    e.preventDefault();
 
-        try {
+    try {
 
-            if (!document.fullscreenElement) {
+        if (!document.fullscreenElement) {
 
-                await document.documentElement
-                    .requestFullscreen();
+            await document.documentElement.requestFullscreen();
 
-            } else {
+        } else {
 
-                await document.exitFullscreen();
-
-            }
-
-        } catch(error) {
-
-            console.log(
-                "Fullscreen error:",
-                error
-            );
+            await document.exitFullscreen();
 
         }
 
+    } catch(error) {
+
+        console.log("Fullscreen error:", error);
+
     }
-);
+
+});
 
 
 /* =====================================================
@@ -77,7 +64,6 @@ const keys = {
 
 };
 
-
 const previous = {
 
     z: false,
@@ -91,192 +77,130 @@ const previous = {
    KEYBOARD
 ===================================================== */
 
-window.addEventListener(
-    "keydown",
-    function(e) {
+window.addEventListener("keydown", function(e) {
 
-        const k =
-            e.key.toLowerCase();
+    const k = e.key.toLowerCase();
 
-        if (
-            e.key === "ArrowUp" ||
-            k === "w"
-        )
-            keys.up = true;
+    if (e.key === "ArrowUp" || k === "w")
+        keys.up = true;
 
-        if (
-            e.key === "ArrowDown" ||
-            k === "s"
-        )
-            keys.down = true;
+    if (e.key === "ArrowDown" || k === "s")
+        keys.down = true;
 
-        if (
-            e.key === "ArrowLeft" ||
-            k === "a"
-        )
-            keys.left = true;
+    if (e.key === "ArrowLeft" || k === "a")
+        keys.left = true;
 
-        if (
-            e.key === "ArrowRight" ||
-            k === "d"
-        )
-            keys.right = true;
+    if (e.key === "ArrowRight" || k === "d")
+        keys.right = true;
 
-        if (k === "z")
-            keys.z = true;
+    if (k === "z")
+        keys.z = true;
 
-        if (k === "x")
-            keys.x = true;
+    if (k === "x")
+        keys.x = true;
 
-        if (k === "c")
-            keys.c = true;
+    if (k === "c")
+        keys.c = true;
 
-        e.preventDefault();
+    e.preventDefault();
 
-    },
-    { passive:false }
-);
+}, { passive:false });
 
 
-window.addEventListener(
-    "keyup",
-    function(e) {
+window.addEventListener("keyup", function(e) {
 
-        const k =
-            e.key.toLowerCase();
+    const k = e.key.toLowerCase();
 
-        if (
-            e.key === "ArrowUp" ||
-            k === "w"
-        )
-            keys.up = false;
+    if (e.key === "ArrowUp" || k === "w")
+        keys.up = false;
 
-        if (
-            e.key === "ArrowDown" ||
-            k === "s"
-        )
-            keys.down = false;
+    if (e.key === "ArrowDown" || k === "s")
+        keys.down = false;
 
-        if (
-            e.key === "ArrowLeft" ||
-            k === "a"
-        )
-            keys.left = false;
+    if (e.key === "ArrowLeft" || k === "a")
+        keys.left = false;
 
-        if (
-            e.key === "ArrowRight" ||
-            k === "d"
-        )
-            keys.right = false;
+    if (e.key === "ArrowRight" || k === "d")
+        keys.right = false;
 
-        if (k === "z")
-            keys.z = false;
+    if (k === "z")
+        keys.z = false;
 
-        if (k === "x")
-            keys.x = false;
+    if (k === "x")
+        keys.x = false;
 
-        if (k === "c")
-            keys.c = false;
+    if (k === "c")
+        keys.c = false;
 
-        e.preventDefault();
+    e.preventDefault();
 
-    },
-    { passive:false }
-);
+}, { passive:false });
 
 
 /* =====================================================
    MOBILE BUTTONS
 ===================================================== */
 
-document
-    .querySelectorAll(".joy")
-    .forEach(function(button) {
+document.querySelectorAll(".joy").forEach(function(button) {
 
-        const key =
-            button.dataset.key;
+    const key = button.dataset.key;
 
-        button.addEventListener(
-            "pointerdown",
-            function(e) {
+    button.addEventListener("pointerdown", function(e) {
 
-                e.preventDefault();
+        e.preventDefault();
 
-                keys[key] = true;
+        keys[key] = true;
 
-                button.setPointerCapture(
-                    e.pointerId
-                );
-
-            }
-        );
-
-        button.addEventListener(
-            "pointerup",
-            function(e) {
-
-                e.preventDefault();
-
-                keys[key] = false;
-
-            }
-        );
-
-        button.addEventListener(
-            "pointercancel",
-            function() {
-
-                keys[key] = false;
-
-            }
-        );
+        button.setPointerCapture(e.pointerId);
 
     });
 
+    button.addEventListener("pointerup", function(e) {
 
-document
-    .querySelectorAll(".action-button")
-    .forEach(function(button) {
+        e.preventDefault();
 
-        const key =
-            button.dataset.key;
-
-        button.addEventListener(
-            "pointerdown",
-            function(e) {
-
-                e.preventDefault();
-
-                keys[key] = true;
-
-                button.setPointerCapture(
-                    e.pointerId
-                );
-
-            }
-        );
-
-        button.addEventListener(
-            "pointerup",
-            function(e) {
-
-                e.preventDefault();
-
-                keys[key] = false;
-
-            }
-        );
-
-        button.addEventListener(
-            "pointercancel",
-            function() {
-
-                keys[key] = false;
-
-            }
-        );
+        keys[key] = false;
 
     });
+
+    button.addEventListener("pointercancel", function() {
+
+        keys[key] = false;
+
+    });
+
+});
+
+
+document.querySelectorAll(".action-button").forEach(function(button) {
+
+    const key = button.dataset.key;
+
+    button.addEventListener("pointerdown", function(e) {
+
+        e.preventDefault();
+
+        keys[key] = true;
+
+        button.setPointerCapture(e.pointerId);
+
+    });
+
+    button.addEventListener("pointerup", function(e) {
+
+        e.preventDefault();
+
+        keys[key] = false;
+
+    });
+
+    button.addEventListener("pointercancel", function() {
+
+        keys[key] = false;
+
+    });
+
+});
 
 
 /* =====================================================
@@ -284,63 +208,42 @@ document
 ===================================================== */
 
 const runIndicator =
-    document.getElementById(
-        "run-indicator"
-    );
+    document.getElementById("run-indicator");
 
 let runPointer = null;
 
-canvas.addEventListener(
-    "pointerdown",
-    function(e) {
+canvas.addEventListener("pointerdown", function(e) {
 
-        runPointer =
-            e.pointerId;
+    runPointer = e.pointerId;
 
-        keys.run = true;
+    keys.run = true;
 
-        runIndicator
-            .classList
-            .add("active");
+    runIndicator.classList.add("active");
 
-    }
-);
+});
 
-canvas.addEventListener(
-    "pointerup",
-    function(e) {
+canvas.addEventListener("pointerup", function(e) {
 
-        if (
-            e.pointerId !==
-            runPointer
-        )
-            return;
+    if (e.pointerId !== runPointer)
+        return;
 
-        runPointer = null;
+    runPointer = null;
 
-        keys.run = false;
+    keys.run = false;
 
-        runIndicator
-            .classList
-            .remove("active");
+    runIndicator.classList.remove("active");
 
-    }
-);
+});
 
-canvas.addEventListener(
-    "pointercancel",
-    function() {
+canvas.addEventListener("pointercancel", function() {
 
-        runPointer = null;
+    runPointer = null;
 
-        keys.run = false;
+    keys.run = false;
 
-        runIndicator
-            .classList
-            .remove("active");
+    runIndicator.classList.remove("active");
 
-    }
-);
+});
 
 
 /* =====================================================
@@ -363,7 +266,9 @@ const game = {
 
     transition: 0,
 
-    battle: null
+    battle: null,
+
+    firstBattleDone: false
 
 };
 
@@ -375,46 +280,56 @@ const game = {
 const party = [
 
     {
-        name: "Дельта",
+        name: "ДЕЛЬТА",
         color: "#ffffff",
-        hp: 100,
-        maxHP: 100,
+
+        hp: 90,
+        maxHP: 90,
+
         atk: 14,
         def: 8
     },
 
     {
-        name: "Немка",
+        name: "НЕМКА",
         color: "#ff5555",
-        hp: 90,
-        maxHP: 90,
+
+        hp: 100,
+        maxHP: 100,
+
         atk: 11,
         def: 9
     },
 
     {
-        name: "Личи",
+        name: "ЛИЧИ",
         color: "#55aaff",
-        hp: 110,
-        maxHP: 110,
+
+        hp: 80,
+        maxHP: 80,
+
         atk: 13,
         def: 6
     },
 
     {
-        name: "Панкейк",
+        name: "ПАНКЕЙК",
         color: "#55dd66",
-        hp: 85,
-        maxHP: 85,
+
+        hp: 70,
+        maxHP: 70,
+
         atk: 10,
         def: 11
     },
 
     {
-        name: "Каштан",
+        name: "КАШТАН",
         color: "#cc8844",
-        hp: 120,
-        maxHP: 120,
+
+        hp: 110,
+        maxHP: 110,
+
         atk: 12,
         def: 12
     }
@@ -701,17 +616,15 @@ function canMove(x,y) {
 
     const test = {
 
-        x: x,
-        y: y,
+        x:x,
+        y:y,
 
-        width: player.width,
-        height: player.height
+        width:player.width,
+        height:player.height
 
     };
 
-    for (
-        const wall of rooms[game.room].walls
-    ) {
+    for (const wall of rooms[game.room].walls) {
 
         if (overlap(test,wall))
             return false;
@@ -729,59 +642,44 @@ function canMove(x,y) {
 
 function updatePlayer() {
 
-    if (
-        game.mode !== "explore"
-    )
+    if (game.mode !== "explore")
         return;
 
     let dx = 0;
     let dy = 0;
 
     const speed =
-        keys.run
-            ? 2.7
-            : 1.4;
+        keys.run ? 2.7 : 1.4;
 
     if (keys.up) {
 
         dy -= speed;
-
-        player.direction =
-            "up";
+        player.direction = "up";
 
     }
 
     if (keys.down) {
 
         dy += speed;
-
-        player.direction =
-            "down";
+        player.direction = "down";
 
     }
 
     if (keys.left) {
 
         dx -= speed;
-
-        player.direction =
-            "left";
+        player.direction = "left";
 
     }
 
     if (keys.right) {
 
         dx += speed;
-
-        player.direction =
-            "right";
+        player.direction = "right";
 
     }
 
-    if (
-        dx !== 0 &&
-        dy !== 0
-    ) {
+    if (dx !== 0 && dy !== 0) {
 
         dx *= .707;
         dy *= .707;
@@ -793,22 +691,16 @@ function updatePlayer() {
             player.x + dx,
             player.y
         )
-    ) {
-
+    )
         player.x += dx;
-
-    }
 
     if (
         canMove(
             player.x,
             player.y + dy
         )
-    ) {
-
+    )
         player.y += dy;
-
-    }
 
 }
 
@@ -819,64 +711,53 @@ function updatePlayer() {
 
 function updateFollowers() {
 
-    if (
-        game.mode !== "explore"
-    )
+    if (game.mode !== "explore")
         return;
 
     const targets = [
 
         {
-            x: player.x - 15,
-            y: player.y
+            x:player.x - 15,
+            y:player.y
         },
 
         {
-            x: player.x - 30,
-            y: player.y
+            x:player.x - 30,
+            y:player.y
         },
 
         {
-            x: player.x - 45,
-            y: player.y
+            x:player.x - 45,
+            y:player.y
         },
 
         {
-            x: player.x - 60,
-            y: player.y
+            x:player.x - 60,
+            y:player.y
         }
 
     ];
 
-    followers.forEach(
-        function(f,i) {
+    followers.forEach(function(f,i) {
 
-            const target =
-                targets[i];
+        const target = targets[i];
 
-            const dx =
-                target.x - f.x;
+        const dx = target.x - f.x;
+        const dy = target.y - f.y;
 
-            const dy =
-                target.y - f.y;
+        const distance =
+            Math.sqrt(
+                dx*dx + dy*dy
+            );
 
-            const distance =
-                Math.sqrt(
-                    dx*dx +
-                    dy*dy
-                );
+        if (distance > 2) {
 
-            if (
-                distance > 2
-            ) {
-
-                f.x += dx * .08;
-                f.y += dy * .08;
-
-            }
+            f.x += dx * .08;
+            f.y += dy * .08;
 
         }
-    );
+
+    });
 
 }
 
@@ -896,18 +777,14 @@ function npcDistance() {
     const dy =
         player.y - npc.y;
 
-    return Math.sqrt(
-        dx*dx + dy*dy
-    );
+    return Math.sqrt(dx*dx + dy*dy);
 
 }
 
 
 function updateNPC() {
 
-    if (
-        game.mode !== "explore"
-    )
+    if (game.mode !== "explore")
         return;
 
     if (
@@ -931,13 +808,10 @@ function updateNPC() {
 
 function startDialogue(name) {
 
-    if (
-        !dialogues[name]
-    )
+    if (!dialogues[name])
         return;
 
-    game.mode =
-        "dialogue";
+    game.mode = "dialogue";
 
     game.dialogue =
         dialogues[name];
@@ -949,9 +823,7 @@ function startDialogue(name) {
 
 function updateDialogue() {
 
-    if (
-        game.mode !== "dialogue"
-    )
+    if (game.mode !== "dialogue")
         return;
 
     if (
@@ -992,8 +864,7 @@ function closeDialogue() {
 
     game.dialogueIndex = 0;
 
-    game.mode =
-        "explore";
+    game.mode = "explore";
 
 }
 
@@ -1004,9 +875,7 @@ function closeDialogue() {
 
 function updateExit() {
 
-    if (
-        game.mode !== "explore"
-    )
+    if (game.mode !== "explore")
         return;
 
     const room =
@@ -1024,17 +893,29 @@ function updateExit() {
 
         game.transition = 20;
 
-        if (
-            game.room === "room1"
-        ) {
+        if (game.room === "room1") {
 
             player.x = 275;
             player.y = 90;
 
-        } else {
+        }
+
+        else {
 
             player.x = 30;
             player.y = 90;
+
+            /* FIRST STORY BATTLE */
+
+            if (!game.firstBattleDone) {
+
+                setTimeout(function() {
+
+                    startFirstBattle();
+
+                },500);
+
+            }
 
         }
 
@@ -1044,17 +925,22 @@ function updateExit() {
 
 
 /* =====================================================
-   BATTLE
+   RANDOM BATTLES
 ===================================================== */
 
 let stepCounter = 0;
 
-
 function randomBattleCheck() {
 
-    if (
-        game.mode !== "explore"
-    )
+    if (game.mode !== "explore")
+        return;
+
+    /*
+       Первый сюжетный бой должен
+       произойти раньше случайных.
+    */
+
+    if (!game.firstBattleDone)
         return;
 
     if (
@@ -1066,15 +952,11 @@ function randomBattleCheck() {
 
         stepCounter++;
 
-        if (
-            stepCounter >= 400
-        ) {
+        if (stepCounter >= 500) {
 
             stepCounter = 0;
 
-            if (
-                Math.random() < .30
-            ) {
+            if (Math.random() < .25) {
 
                 startBattle();
 
@@ -1088,27 +970,29 @@ function randomBattleCheck() {
 
 
 /* =====================================================
-   START BATTLE
+   FIRST BATTLE
 ===================================================== */
 
-function startBattle() {
+function startFirstBattle() {
 
-    game.mode =
-        "battle";
+    if (game.firstBattleDone)
+        return;
+
+    game.mode = "battle";
 
     game.battle = {
 
         enemy: {
 
-            name: "Теневой зверь",
+            name: "ТЕНЕВОЙ ЗВЕРЬ",
 
-            hp: 180,
+            hp: 80,
 
-            maxHP: 180,
+            maxHP: 80,
 
-            attack: 12,
+            attack: 8,
 
-            color: "#aa55ff"
+            color: "#6633aa"
 
         },
 
@@ -1119,25 +1003,83 @@ function startBattle() {
         menu: 0,
 
         message:
-            "Что будет делать Дельта?",
+            "Перед вами появился Теневой зверь.",
 
         soul: {
 
-            x: 160,
+            x:160,
+            y:125,
 
-            y: 125,
+            size:5,
 
-            size: 5,
+            speed:2.5,
 
-            speed: 2.5,
-
-            damageCooldown: 0
+            damageCooldown:0
 
         },
 
         bullets: [],
 
-        enemyTimer: 0
+        enemyTimer:0,
+
+        firstBattle:true
+
+    };
+
+}
+
+
+/* =====================================================
+   NORMAL BATTLE
+===================================================== */
+
+function startBattle() {
+
+    game.mode = "battle";
+
+    game.battle = {
+
+        enemy: {
+
+            name:"ТЕНЕВОЙ ЗВЕРЬ",
+
+            hp:180,
+
+            maxHP:180,
+
+            attack:12,
+
+            color:"#aa55ff"
+
+        },
+
+        phase:"menu",
+
+        actor:0,
+
+        menu:0,
+
+        message:
+            "Что будет делать ДЕЛЬТА?",
+
+        soul: {
+
+            x:160,
+            y:125,
+
+            size:5,
+
+            speed:2.5,
+
+            damageCooldown:0
+
+        },
+
+        bullets:[],
+
+        enemyTimer:0,
+
+        firstBattle:false
 
     };
 
@@ -1159,9 +1101,7 @@ function updateBattle() {
 
     /* MENU */
 
-    if (
-        b.phase === "menu"
-    ) {
+    if (b.phase === "menu") {
 
         if (
             keys.left &&
@@ -1170,9 +1110,7 @@ function updateBattle() {
 
             b.menu--;
 
-            if (
-                b.menu < 0
-            )
+            if (b.menu < 0)
                 b.menu = 3;
 
         }
@@ -1184,9 +1122,7 @@ function updateBattle() {
 
             b.menu++;
 
-            if (
-                b.menu > 3
-            )
+            if (b.menu > 3)
                 b.menu = 0;
 
         }
@@ -1205,17 +1141,14 @@ function updateBattle() {
 
     /* ACT */
 
-    else if (
-        b.phase === "act"
-    ) {
+    else if (b.phase === "act") {
 
         if (
             keys.x &&
             !previous.x
         ) {
 
-            b.phase =
-                "menu";
+            b.phase = "menu";
 
         }
 
@@ -1227,7 +1160,7 @@ function updateBattle() {
             b.enemy.hp -= 10;
 
             b.message =
-                "Дельта поговорил с врагом.";
+                "Вы поговорили с врагом.";
 
             afterAction();
 
@@ -1238,17 +1171,14 @@ function updateBattle() {
 
     /* ITEM */
 
-    else if (
-        b.phase === "item"
-    ) {
+    else if (b.phase === "item") {
 
         if (
             keys.x &&
             !previous.x
         ) {
 
-            b.phase =
-                "menu";
+            b.phase = "menu";
 
         }
 
@@ -1273,11 +1203,13 @@ function updateBattle() {
 
                 b.message =
                     target.name +
-                    " восстановил HP!";
+                    " восстановил 35 HP!";
 
                 afterAction();
 
-            } else {
+            }
+
+            else {
 
                 b.message =
                     "HP уже заполнено.";
@@ -1291,17 +1223,14 @@ function updateBattle() {
 
     /* MERCY */
 
-    else if (
-        b.phase === "mercy"
-    ) {
+    else if (b.phase === "mercy") {
 
         if (
             keys.x &&
             !previous.x
         ) {
 
-            b.phase =
-                "menu";
+            b.phase = "menu";
 
         }
 
@@ -1310,19 +1239,18 @@ function updateBattle() {
             !previous.z
         ) {
 
-            if (
-                b.enemy.hp <= 35
-            ) {
+            if (b.enemy.hp <= 35) {
 
                 b.enemy.hp = 0;
 
                 b.message =
                     "Враг был пощажён.";
 
-                b.phase =
-                    "victory";
+                b.phase = "victory";
 
-            } else {
+            }
+
+            else {
 
                 b.message =
                     "Враг ещё не готов.";
@@ -1338,21 +1266,19 @@ function updateBattle() {
 
     /* ENEMY */
 
-    else if (
-        b.phase === "enemy"
-    ) {
+    else if (b.phase === "enemy") {
 
         updateSoul();
 
         updateBullets();
 
-        if (
-            b.enemyTimer > 0
-        ) {
+        if (b.enemyTimer > 0) {
 
             b.enemyTimer--;
 
-        } else {
+        }
+
+        else {
 
             endEnemyPhase();
 
@@ -1363,17 +1289,14 @@ function updateBattle() {
 
     /* VICTORY */
 
-    else if (
-        b.phase === "victory"
-    ) {
+    else if (b.phase === "victory") {
 
         if (
             keys.z &&
             !previous.z
         ) {
 
-            game.mode =
-                "explore";
+            game.mode = "explore";
 
             game.battle = null;
 
@@ -1384,9 +1307,7 @@ function updateBattle() {
 
     /* DEFEAT */
 
-    else if (
-        b.phase === "defeat"
-    ) {
+    else if (b.phase === "defeat") {
 
         if (
             keys.z &&
@@ -1395,8 +1316,7 @@ function updateBattle() {
 
             resetParty();
 
-            game.mode =
-                "explore";
+            game.mode = "explore";
 
             game.battle = null;
 
@@ -1422,9 +1342,7 @@ function chooseBattleAction() {
 
     /* FIGHT */
 
-    if (
-        b.menu === 0
-    ) {
+    if (b.menu === 0) {
 
         const damage =
             actor.atk +
@@ -1447,36 +1365,27 @@ function chooseBattleAction() {
 
     /* ACT */
 
-    else if (
-        b.menu === 1
-    ) {
+    else if (b.menu === 1) {
 
-        b.phase =
-            "act";
+        b.phase = "act";
 
     }
 
 
     /* ITEM */
 
-    else if (
-        b.menu === 2
-    ) {
+    else if (b.menu === 2) {
 
-        b.phase =
-            "item";
+        b.phase = "item";
 
     }
 
 
     /* MERCY */
 
-    else if (
-        b.menu === 3
-    ) {
+    else if (b.menu === 3) {
 
-        b.phase =
-            "mercy";
+        b.phase = "mercy";
 
     }
 
@@ -1484,7 +1393,7 @@ function chooseBattleAction() {
 
 
 /* =====================================================
-   NEXT CHARACTER
+   AFTER CHARACTER ACTION
 ===================================================== */
 
 function afterAction() {
@@ -1492,21 +1401,37 @@ function afterAction() {
     const b =
         game.battle;
 
-    if (
-        b.enemy.hp <= 0
-    ) {
+
+    if (b.enemy.hp <= 0) {
 
         b.enemy.hp = 0;
 
-        b.phase =
-            "victory";
+        b.phase = "victory";
 
-        b.message =
-            "Враг побеждён!";
+        if (b.firstBattle) {
+
+            b.message =
+                "Теневой зверь исчез...";
+
+            game.firstBattleDone = true;
+
+        }
+
+        else {
+
+            b.message =
+                "Враг побеждён!";
+
+        }
 
         return;
 
     }
+
+
+    /*
+       Следующий персонаж
+    */
 
     b.actor++;
 
@@ -1518,10 +1443,13 @@ function afterAction() {
 
         startEnemyPhase();
 
-    } else {
+    }
 
-        b.phase =
-            "menu";
+    else {
+
+        b.phase = "menu";
+
+        b.menu = 0;
 
         b.message =
             "Ход: " +
@@ -1541,11 +1469,9 @@ function startEnemyPhase() {
     const b =
         game.battle;
 
-    b.phase =
-        "enemy";
+    b.phase = "enemy";
 
-    b.enemyTimer =
-        480;
+    b.enemyTimer = 480;
 
     b.bullets = [];
 
@@ -1553,8 +1479,8 @@ function startEnemyPhase() {
     b.soul.y = 125;
 
     for (
-        let i = 0;
-        i < 7;
+        let i=0;
+        i<7;
         i++
     ) {
 
@@ -1562,17 +1488,17 @@ function startEnemyPhase() {
 
             x:
                 55 +
-                Math.random() * 210,
+                Math.random()*210,
 
             y:
                 -10 -
-                Math.random() * 80,
+                Math.random()*80,
 
             speed:
                 1 +
-                Math.random() * 1.6,
+                Math.random()*1.6,
 
-            size: 4
+            size:4
 
         });
 
@@ -1646,84 +1572,75 @@ function updateBullets() {
     const soul =
         b.soul;
 
-    b.bullets.forEach(
-        function(bullet) {
+    b.bullets.forEach(function(bullet) {
 
-            bullet.y +=
-                bullet.speed;
+        bullet.y += bullet.speed;
+
+        if (bullet.y > 165) {
+
+            bullet.y = -10;
+
+            bullet.x =
+                50 +
+                Math.random()*220;
+
+        }
+
+
+        const dx =
+            bullet.x - soul.x;
+
+        const dy =
+            bullet.y - soul.y;
+
+        const distance =
+            Math.sqrt(
+                dx*dx +
+                dy*dy
+            );
+
+
+        if (
+            distance <
+            bullet.size +
+            soul.size
+        ) {
 
             if (
-                bullet.y > 165
+                soul.damageCooldown <= 0
             ) {
 
-                bullet.y = -10;
+                const target =
+                    party[b.actor];
 
-                bullet.x =
-                    50 +
-                    Math.random() * 220;
+                target.hp -= 10;
 
-            }
+                soul.damageCooldown =
+                    45;
 
+                b.message =
+                    target.name +
+                    " получил 10 урона!";
 
-            const dx =
-                bullet.x -
-                soul.x;
+                if (target.hp <= 0) {
 
-            const dy =
-                bullet.y -
-                soul.y;
+                    target.hp = 0;
 
-            const distance =
-                Math.sqrt(
-                    dx*dx +
-                    dy*dy
-                );
-
-
-            if (
-                distance <
-                bullet.size +
-                soul.size
-            ) {
-
-                if (
-                    soul.damageCooldown <= 0
-                ) {
-
-                    const target =
-                        party[b.actor];
-
-                    target.hp -= 10;
-
-                    soul.damageCooldown =
-                        45;
-
-                    b.message =
-                        target.name +
-                        " получил 10 урона!";
-
-                    if (
-                        target.hp <= 0
-                    ) {
-
-                        target.hp = 0;
-
-                        checkDefeat();
-
-                    }
+                    checkDefeat();
 
                 }
 
             }
 
         }
-    );
+
+    });
 
 }
 
 
 /* =====================================================
-   END ENEMY
+   END ENEMY PHASE
 ===================================================== */
 
 function endEnemyPhase() {
@@ -1733,11 +1650,12 @@ function endEnemyPhase() {
 
     b.actor = 0;
 
-    b.phase =
-        "menu";
+    b.phase = "menu";
+
+    b.menu = 0;
 
     b.message =
-        "Ход: Дельта";
+        "Ход: ДЕЛЬТА";
 
 }
 
@@ -1750,16 +1668,12 @@ function checkDefeat() {
 
     let alive = false;
 
-    party.forEach(
-        function(p) {
+    party.forEach(function(p) {
 
-            if (
-                p.hp > 0
-            )
-                alive = true;
+        if (p.hp > 0)
+            alive = true;
 
-        }
-    );
+    });
 
     if (!alive) {
 
@@ -1777,14 +1691,11 @@ function checkDefeat() {
 
 function resetParty() {
 
-    party.forEach(
-        function(p) {
+    party.forEach(function(p) {
 
-            p.hp =
-                p.maxHP;
+        p.hp = p.maxHP;
 
-        }
-    );
+    });
 
 }
 
@@ -1814,15 +1725,15 @@ function drawRoom() {
 
 
     for (
-        let y = 10;
-        y < 172;
-        y += 16
+        let y=10;
+        y<172;
+        y+=16
     ) {
 
         for (
-            let x = 10;
-            x < 312;
-            x += 16
+            let x=10;
+            x<312;
+            x+=16
         ) {
 
             ctx.fillRect(
@@ -1841,18 +1752,16 @@ function drawRoom() {
         "#555";
 
 
-    room.walls.forEach(
-        function(w) {
+    room.walls.forEach(function(w) {
 
-            ctx.fillRect(
-                w.x,
-                w.y,
-                w.w,
-                w.h
-            );
+        ctx.fillRect(
+            w.x,
+            w.y,
+            w.w,
+            w.h
+        );
 
-        }
-    );
+    });
 
 
     ctx.fillStyle =
@@ -1869,60 +1778,49 @@ function drawRoom() {
 
 
 /* =====================================================
-   CHARACTER
+   CHARACTER DRAW
 ===================================================== */
 
-function drawCharacter(
-    x,
-    y,
-    color
-) {
+function drawCharacter(x,y,color) {
 
     x = Math.round(x);
     y = Math.round(y);
 
-
-    ctx.fillStyle =
-        "#000";
+    ctx.fillStyle = "#000";
 
     ctx.fillRect(
-        x - 1,
-        y - 1,
+        x-1,
+        y-1,
         12,
         16
     );
 
-
-    ctx.fillStyle =
-        color;
+    ctx.fillStyle = color;
 
     ctx.fillRect(
-        x + 2,
+        x+2,
         y,
         6,
         6
     );
 
-
     ctx.fillRect(
-        x + 1,
-        y + 6,
+        x+1,
+        y+6,
         8,
         7
     );
 
-
     ctx.fillRect(
-        x + 1,
-        y + 13,
+        x+1,
+        y+13,
         3,
         2
     );
 
-
     ctx.fillRect(
-        x + 6,
-        y + 13,
+        x+6,
+        y+13,
         3,
         2
     );
@@ -1938,7 +1836,6 @@ function drawExplore() {
 
     drawRoom();
 
-
     const npc =
         rooms[game.room].npc;
 
@@ -1950,17 +1847,15 @@ function drawExplore() {
     );
 
 
-    followers.forEach(
-        function(f) {
+    followers.forEach(function(f) {
 
-            drawCharacter(
-                f.x,
-                f.y,
-                f.color
-            );
+        drawCharacter(
+            f.x,
+            f.y,
+            f.color
+        );
 
-        }
-    );
+    });
 
 
     drawCharacter(
@@ -1970,8 +1865,7 @@ function drawExplore() {
     );
 
 
-    ctx.fillStyle =
-        "#fff";
+    ctx.fillStyle = "#fff";
 
     ctx.font =
         "6px monospace";
@@ -1997,7 +1891,6 @@ function drawExplore() {
             18
         );
 
-
         ctx.strokeStyle =
             "#fff";
 
@@ -2007,7 +1900,6 @@ function drawExplore() {
             130,
             18
         );
-
 
         ctx.fillStyle =
             "#fff";
@@ -2024,7 +1916,7 @@ function drawExplore() {
 
 
 /* =====================================================
-   TEXT
+   WRAPPED TEXT
 ===================================================== */
 
 function drawWrappedText(
@@ -2041,8 +1933,8 @@ function drawWrappedText(
     let line = "";
 
     for (
-        let i = 0;
-        i < words.length;
+        let i=0;
+        i<words.length;
         i++
     ) {
 
@@ -2052,9 +1944,8 @@ function drawWrappedText(
             " ";
 
         if (
-            ctx.measureText(
-                test
-            ).width > maxWidth &&
+            ctx.measureText(test).width >
+            maxWidth &&
             i > 0
         ) {
 
@@ -2069,10 +1960,11 @@ function drawWrappedText(
 
             y += lineHeight;
 
-        } else {
+        }
 
-            line =
-                test;
+        else {
+
+            line = test;
 
         }
 
@@ -2185,7 +2077,7 @@ function drawBattle() {
     );
 
 
-    /* ENEMY AREA */
+    /* ENEMY */
 
     ctx.fillStyle =
         "#101010";
@@ -2194,7 +2086,7 @@ function drawBattle() {
         0,
         0,
         320,
-        88
+        75
     );
 
 
@@ -2203,17 +2095,15 @@ function drawBattle() {
 
     ctx.strokeRect(
         20,
-        10,
+        8,
         280,
-        70
+        60
     );
 
 
-    /* ENEMY */
-
     drawEnemy(
         160,
-        45,
+        38,
         b.enemy.color
     );
 
@@ -2222,63 +2112,65 @@ function drawBattle() {
         "#fff";
 
     ctx.font =
-        "8px monospace";
+        "7px monospace";
 
     ctx.fillText(
         b.enemy.name,
-        25,
-        22
+        27,
+        20
     );
 
 
-    ctx.font =
-        "6px monospace";
-
     ctx.fillText(
         "HP",
-        230,
-        22
+        225,
+        20
     );
 
 
     drawHPBar(
-        245,
-        17,
-        45,
-        5,
+        240,
+        15,
+        48,
+        6,
         b.enemy.hp,
         b.enemy.maxHP
     );
 
 
+    ctx.fillText(
+        b.enemy.hp +
+        "/" +
+        b.enemy.maxHP,
+        240,
+        31
+    );
+
+
     /* MESSAGE */
 
-    if (
-        b.message
-    ) {
+    if (b.message) {
 
         ctx.fillStyle =
             "#fff";
 
         ctx.font =
-            "7px monospace";
+            "6px monospace";
 
         drawWrappedText(
             b.message,
             35,
-            102,
+            84,
             250,
-            9
+            8
         );
 
     }
 
 
-    /* ENEMY PHASE */
+    /* ENEMY ATTACK */
 
-    if (
-        b.phase === "enemy"
-    ) {
+    if (b.phase === "enemy") {
 
         drawEnemyBox();
 
@@ -2287,9 +2179,7 @@ function drawBattle() {
 
     /* VICTORY */
 
-    if (
-        b.phase === "victory"
-    ) {
+    if (b.phase === "victory") {
 
         ctx.fillStyle =
             "#fff";
@@ -2319,9 +2209,7 @@ function drawBattle() {
 
     /* DEFEAT */
 
-    if (
-        b.phase === "defeat"
-    ) {
+    if (b.phase === "defeat") {
 
         ctx.fillStyle =
             "#fff";
@@ -2351,7 +2239,6 @@ function drawBattle() {
 
     drawBattleParty();
 
-
     drawBattleMenu();
 
 }
@@ -2361,18 +2248,14 @@ function drawBattle() {
    ENEMY
 ===================================================== */
 
-function drawEnemy(
-    x,
-    y,
-    color
-) {
+function drawEnemy(x,y,color) {
 
     ctx.fillStyle =
         "#000";
 
     ctx.fillRect(
-        x - 18,
-        y - 22,
+        x-18,
+        y-22,
         36,
         44
     );
@@ -2382,8 +2265,8 @@ function drawEnemy(
         color;
 
     ctx.fillRect(
-        x - 14,
-        y - 18,
+        x-14,
+        y-18,
         28,
         32
     );
@@ -2393,15 +2276,15 @@ function drawEnemy(
         "#fff";
 
     ctx.fillRect(
-        x - 8,
-        y - 8,
+        x-8,
+        y-8,
         5,
         5
     );
 
     ctx.fillRect(
-        x + 3,
-        y - 8,
+        x+3,
+        y-8,
         5,
         5
     );
@@ -2459,73 +2342,87 @@ function drawHPBar(
 
 function drawBattleParty() {
 
+    /*
+       Все 5 персонажей подписаны.
+       У каждого отображается текущее HP
+       и максимальное HP.
+    */
+
     ctx.font =
-        "6px monospace";
+        "5.5px monospace";
 
 
-    party.forEach(
-        function(p,i) {
+    party.forEach(function(p,i) {
 
-            const y =
-                105 + i * 13;
+        const y =
+            105 + i * 12;
 
 
-            ctx.fillStyle =
-                p.color;
+        /* NAME */
+
+        ctx.fillStyle =
+            p.color;
+
+        ctx.fillText(
+            p.name,
+            8,
+            y
+        );
+
+
+        /* HP TEXT */
+
+        ctx.fillStyle =
+            "#fff";
+
+        ctx.fillText(
+            "HP",
+            72,
+            y
+        );
+
+
+        /* HP BAR */
+
+        drawHPBar(
+            88,
+            y-5,
+            35,
+            5,
+            p.hp,
+            p.maxHP
+        );
+
+
+        /* NUMBERS */
+
+        ctx.fillText(
+            p.hp +
+            "/" +
+            p.maxHP,
+            128,
+            y
+        );
+
+
+        /*
+           ARROW — чей сейчас ход
+        */
+
+        if (
+            i === game.battle.actor &&
+            game.battle.phase === "menu"
+        ) {
 
             ctx.fillText(
-                p.name,
-                15,
+                "▶",
+                2,
                 y
             );
-
-
-            ctx.fillStyle =
-                "#fff";
-
-            ctx.fillText(
-                "HP",
-                75,
-                y
-            );
-
-
-            drawHPBar(
-                90,
-                y - 5,
-                45,
-                5,
-                p.hp,
-                p.maxHP
-            );
-
-
-            ctx.fillText(
-                p.hp +
-                "/" +
-                p.maxHP,
-                142,
-                y
-            );
-
-
-            if (
-                i ===
-                game.battle.actor &&
-                game.battle.phase ===
-                "menu"
-            ) {
-
-                ctx.fillText(
-                    "▶",
-                    5,
-                    y
-                );
-
-            }
 
         }
-    );
+
+    });
 
 }
 
@@ -2540,9 +2437,7 @@ function drawBattleMenu() {
         game.battle;
 
 
-    if (
-        b.phase === "menu"
-    ) {
+    if (b.phase === "menu") {
 
         const labels = [
 
@@ -2554,56 +2449,50 @@ function drawBattleMenu() {
         ];
 
 
-        labels.forEach(
-            function(label,i) {
+        labels.forEach(function(label,i) {
 
-                const x =
-                    185 +
-                    (i % 2) * 60;
+            const x =
+                175 +
+                (i % 2) * 65;
 
-                const y =
-                    110 +
-                    Math.floor(i / 2) * 25;
-
-
-                if (
-                    i === b.menu
-                ) {
-
-                    ctx.strokeStyle =
-                        "#fff";
-
-                    ctx.strokeRect(
-                        x - 8,
-                        y - 9,
-                        55,
-                        16
-                    );
-
-                }
+            const y =
+                108 +
+                Math.floor(i / 2) * 24;
 
 
-                ctx.fillStyle =
+            if (i === b.menu) {
+
+                ctx.strokeStyle =
                     "#fff";
 
-                ctx.font =
-                    "7px monospace";
-
-                ctx.fillText(
-                    label,
-                    x,
-                    y + 2
+                ctx.strokeRect(
+                    x-7,
+                    y-9,
+                    55,
+                    16
                 );
 
             }
-        );
+
+
+            ctx.fillStyle =
+                "#fff";
+
+            ctx.font =
+                "6px monospace";
+
+            ctx.fillText(
+                label,
+                x,
+                y+2
+            );
+
+        });
 
     }
 
 
-    if (
-        b.phase === "act"
-    ) {
+    if (b.phase === "act") {
 
         ctx.fillStyle =
             "#fff";
@@ -2613,34 +2502,32 @@ function drawBattleMenu() {
 
         ctx.fillText(
             "ACT",
-            200,
-            110
+            190,
+            106
         );
 
         ctx.fillText(
-            "Поговорить",
-            200,
-            128
+            "ПОГОВОРИТЬ",
+            190,
+            122
         );
 
         ctx.fillText(
-            "Осмотреть",
-            200,
-            143
+            "ОСМОТРЕТЬ",
+            190,
+            138
         );
 
         ctx.fillText(
             "Z — выбрать",
-            200,
-            160
+            190,
+            155
         );
 
     }
 
 
-    if (
-        b.phase === "item"
-    ) {
+    if (b.phase === "item") {
 
         ctx.fillStyle =
             "#fff";
@@ -2650,34 +2537,32 @@ function drawBattleMenu() {
 
         ctx.fillText(
             "ITEM",
-            200,
-            110
+            190,
+            106
         );
 
         ctx.fillText(
-            "Potion +35 HP",
-            200,
-            128
+            "POTION +35 HP",
+            190,
+            122
         );
 
         ctx.fillText(
             "Z — использовать",
-            200,
-            143
+            190,
+            138
         );
 
         ctx.fillText(
             "X — назад",
-            200,
-            158
+            190,
+            153
         );
 
     }
 
 
-    if (
-        b.phase === "mercy"
-    ) {
+    if (b.phase === "mercy") {
 
         ctx.fillStyle =
             "#fff";
@@ -2687,26 +2572,26 @@ function drawBattleMenu() {
 
         ctx.fillText(
             "MERCY",
-            200,
-            110
+            190,
+            106
         );
 
         ctx.fillText(
-            "Пощадить",
-            200,
-            128
+            "ПОЩАДИТЬ",
+            190,
+            122
         );
 
         ctx.fillText(
             "Z — выбрать",
-            200,
-            143
+            190,
+            138
         );
 
         ctx.fillText(
             "X — назад",
-            200,
-            158
+            190,
+            153
         );
 
     }
@@ -2737,25 +2622,19 @@ function drawEnemyBox() {
 
     /* BULLETS */
 
-    b.bullets.forEach(
-        function(bullet) {
+    b.bullets.forEach(function(bullet) {
 
-            ctx.fillStyle =
-                "#fff";
+        ctx.fillStyle =
+            "#fff";
 
-            ctx.fillRect(
-                bullet.x -
-                bullet.size,
+        ctx.fillRect(
+            bullet.x - bullet.size,
+            bullet.y - bullet.size,
+            bullet.size * 2,
+            bullet.size * 2
+        );
 
-                bullet.y -
-                bullet.size,
-
-                bullet.size * 2,
-                bullet.size * 2
-            );
-
-        }
-    );
+    });
 
 
     /* SOUL */
@@ -2764,8 +2643,8 @@ function drawEnemyBox() {
         "#fff";
 
     ctx.fillRect(
-        b.soul.x - 3,
-        b.soul.y - 3,
+        b.soul.x-3,
+        b.soul.y-3,
         6,
         6
     );
@@ -2776,11 +2655,11 @@ function drawEnemyBox() {
     ) {
 
         ctx.fillStyle =
-            "#999";
+            "#aaa";
 
         ctx.fillRect(
-            b.soul.x - 5,
-            b.soul.y - 5,
+            b.soul.x-5,
+            b.soul.y-5,
             10,
             10
         );
@@ -2808,7 +2687,9 @@ function updateMenu() {
             game.menuPage =
                 "main";
 
-        } else {
+        }
+
+        else {
 
             game.mode =
                 "explore";
@@ -2936,42 +2817,38 @@ function drawMenu() {
         ];
 
 
-        items.forEach(
-            function(item,i) {
+        items.forEach(function(item,i) {
 
-                const y =
-                    55 + i * 24;
+            const y =
+                55 + i*24;
 
 
-                if (
-                    i ===
-                    game.menuIndex
-                ) {
-
-                    ctx.fillText(
-                        "▶",
-                        50,
-                        y
-                    );
-
-                }
-
+            if (
+                i === game.menuIndex
+            ) {
 
                 ctx.fillText(
-                    item,
-                    70,
+                    "▶",
+                    50,
                     y
                 );
 
             }
-        );
+
+
+            ctx.fillText(
+                item,
+                70,
+                y
+            );
+
+        });
 
     }
 
 
     if (
-        game.menuPage ===
-        "ITEM"
+        game.menuPage === "ITEM"
     ) {
 
         ctx.fillText(
@@ -3011,8 +2888,7 @@ function drawMenu() {
 
 
     if (
-        game.menuPage ===
-        "STATUS"
+        game.menuPage === "STATUS"
     ) {
 
         ctx.fillText(
@@ -3021,44 +2897,41 @@ function drawMenu() {
             30
         );
 
-        party.forEach(
-            function(p,i) {
+        party.forEach(function(p,i) {
 
-                const y =
-                    48 + i * 22;
-
-
-                ctx.fillStyle =
-                    p.color;
-
-                ctx.fillText(
-                    p.name,
-                    40,
-                    y
-                );
+            const y =
+                48 + i*22;
 
 
-                ctx.fillStyle =
-                    "#fff";
+            ctx.fillStyle =
+                p.color;
 
-                ctx.fillText(
-                    "HP " +
-                    p.hp +
-                    "/" +
-                    p.maxHP,
-                    150,
-                    y
-                );
+            ctx.fillText(
+                p.name,
+                40,
+                y
+            );
 
-            }
-        );
+
+            ctx.fillStyle =
+                "#fff";
+
+            ctx.fillText(
+                "HP " +
+                p.hp +
+                "/" +
+                p.maxHP,
+                150,
+                y
+            );
+
+        });
 
     }
 
 
     if (
-        game.menuPage ===
-        "EQUIPMENT"
+        game.menuPage === "EQUIPMENT"
     ) {
 
         ctx.fillText(
@@ -3092,8 +2965,7 @@ function drawMenu() {
 
 
     if (
-        game.menuPage ===
-        "SETTINGS"
+        game.menuPage === "SETTINGS"
     ) {
 
         ctx.fillText(
@@ -3159,10 +3031,8 @@ function drawTransition() {
     ctx.fillStyle =
         "#000";
 
-
     ctx.globalAlpha =
         game.transition / 20;
-
 
     ctx.fillRect(
         0,
@@ -3171,9 +3041,7 @@ function drawTransition() {
         H
     );
 
-
     ctx.globalAlpha = 1;
-
 
     game.transition--;
 
@@ -3181,14 +3049,13 @@ function drawTransition() {
 
 
 /* =====================================================
-   MAIN UPDATE
+   UPDATE
 ===================================================== */
 
 function update() {
 
     if (
-        game.mode ===
-        "explore"
+        game.mode === "explore"
     ) {
 
         updatePlayer();
@@ -3205,8 +3072,7 @@ function update() {
 
 
     else if (
-        game.mode ===
-        "dialogue"
+        game.mode === "dialogue"
     ) {
 
         updateDialogue();
@@ -3215,8 +3081,7 @@ function update() {
 
 
     else if (
-        game.mode ===
-        "menu"
+        game.mode === "menu"
     ) {
 
         updateMenu();
@@ -3225,8 +3090,7 @@ function update() {
 
 
     else if (
-        game.mode ===
-        "battle"
+        game.mode === "battle"
     ) {
 
         updateBattle();
@@ -3234,20 +3098,19 @@ function update() {
     }
 
 
-    /* C = MENU */
+    /*
+       C открывает меню
+    */
 
     if (
         keys.c &&
         !previous.c &&
-        game.mode ===
-        "explore"
+        game.mode === "explore"
     ) {
 
-        game.mode =
-            "menu";
+        game.mode = "menu";
 
-        game.menuPage =
-            "main";
+        game.menuPage = "main";
 
         game.menuIndex = 0;
 
@@ -3281,8 +3144,7 @@ function draw() {
 
 
     if (
-        game.mode ===
-        "battle"
+        game.mode === "battle"
     ) {
 
         drawBattle();
@@ -3295,8 +3157,7 @@ function draw() {
 
 
         if (
-            game.mode ===
-            "dialogue"
+            game.mode === "dialogue"
         ) {
 
             drawDialogue();
@@ -3305,8 +3166,7 @@ function draw() {
 
 
         if (
-            game.mode ===
-            "menu"
+            game.mode === "menu"
         ) {
 
             drawMenu();
@@ -3331,9 +3191,7 @@ function loop() {
 
     draw();
 
-    requestAnimationFrame(
-        loop
-    );
+    requestAnimationFrame(loop);
 
 }
 
