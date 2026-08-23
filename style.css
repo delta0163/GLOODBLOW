@@ -1,6 +1,7 @@
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 html,
@@ -16,8 +17,6 @@ body {
     background: #000;
 
     font-family: monospace;
-
-    touch-action: none;
 }
 
 body {
@@ -33,6 +32,7 @@ body {
     height: 100vh;
 
     display: flex;
+
     justify-content: center;
     align-items: center;
 
@@ -41,122 +41,128 @@ body {
     overflow: hidden;
 }
 
-canvas {
-    width: min(100vw, 177.777vh);
-    height: min(100vh, 56.25vw);
+#game {
+    width: 100vw;
+    height: 100vh;
 
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 
     background: #000;
 
-    display: block;
+    touch-action: none;
 }
+
+/* FULLSCREEN */
 
 #fullscreen-button {
     position: fixed;
 
-    right: 12px;
-    top: 12px;
+    right: 14px;
+    top: 14px;
 
     width: 42px;
     height: 42px;
 
-    background: rgba(0,0,0,.45);
+    border: 2px solid rgba(255,255,255,.55);
+
+    background: rgba(0,0,0,.42);
 
     color: white;
 
-    border: 2px solid white;
-
     font-size: 22px;
 
-    border-radius: 5px;
+    border-radius: 7px;
 
     z-index: 20;
+
+    touch-action: none;
 }
 
-#controls {
-    position: fixed;
-
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    height: 145px;
-
-    pointer-events: none;
-
-    z-index: 10;
+#fullscreen-button:active {
+    background: rgba(255,255,255,.18);
 }
+
+/* JOYSTICK */
 
 #joystick {
-    position: absolute;
+    position: fixed;
 
     left: 18px;
     bottom: 18px;
 
-    width: 120px;
-    height: 120px;
+    width: 132px;
+    height: 132px;
 
+    z-index: 10;
+
+    opacity: .38;
+
+    transition: opacity .15s;
+}
+
+#joystick:active {
     opacity: .55;
-
-    pointer-events: auto;
 }
 
 .joy {
     position: absolute;
 
-    width: 42px;
-    height: 42px;
+    width: 43px;
+    height: 43px;
 
-    border: 2px solid white;
+    border-radius: 8px;
 
-    background: rgba(40,40,40,.5);
+    border: 2px solid rgba(255,255,255,.65);
 
-    color: white;
+    background: rgba(20,20,20,.30);
 
-    font-size: 18px;
+    color: rgba(255,255,255,.9);
 
-    border-radius: 7px;
+    font-size: 19px;
+
+    font-family: monospace;
 
     touch-action: none;
 }
 
-.joy:active {
-    background: rgba(255,255,255,.3);
-}
-
-.up {
-    left: 39px;
+.joy.up {
+    left: 44px;
     top: 0;
 }
 
-.down {
-    left: 39px;
+.joy.down {
+    left: 44px;
     bottom: 0;
 }
 
-.left {
+.joy.left {
     left: 0;
-    top: 39px;
+    top: 44px;
 }
 
-.right {
+.joy.right {
     right: 0;
-    top: 39px;
+    top: 44px;
 }
+
+.joy:active {
+    background: rgba(255,255,255,.22);
+}
+
+/* Z X C */
 
 #actions {
-    position: absolute;
+    position: fixed;
 
-    right: 20px;
-    bottom: 25px;
+    right: 18px;
+    bottom: 22px;
 
     display: flex;
 
     gap: 10px;
 
-    pointer-events: auto;
+    z-index: 10;
 }
 
 .action-button {
@@ -165,29 +171,113 @@ canvas {
 
     border-radius: 50%;
 
-    border: 2px solid white;
+    border: 2px solid rgba(255,255,255,.65);
 
-    background: rgba(0,0,0,.45);
+    background: rgba(10,10,10,.35);
 
     color: white;
 
     font-family: monospace;
 
-    font-size: 18px;
+    font-size: 17px;
 
     font-weight: bold;
+
+    opacity: .45;
 
     touch-action: none;
 }
 
 .action-button:active {
-    background: rgba(255,255,255,.3);
+    background: rgba(255,255,255,.22);
+    opacity: .8;
 }
 
-@media (min-width: 900px) {
+.z-button {
+    border-color: rgba(255,80,80,.8);
+}
 
-    #controls {
-        opacity: .75;
+.x-button {
+    border-color: rgba(255,220,80,.8);
+}
+
+.c-button {
+    border-color: rgba(80,160,255,.8);
+}
+
+/* RUN */
+
+#run-indicator {
+    position: fixed;
+
+    left: 170px;
+    bottom: 20px;
+
+    color: white;
+
+    font-size: 12px;
+
+    padding: 6px 9px;
+
+    border: 1px solid rgba(255,255,255,.3);
+
+    background: rgba(0,0,0,.3);
+
+    opacity: .3;
+
+    z-index: 10;
+}
+
+#run-indicator.active {
+    opacity: .8;
+}
+
+/* FULLSCREEN */
+
+:fullscreen #game {
+    width: 100vw;
+    height: 100vh;
+}
+
+:-webkit-full-screen #game {
+    width: 100vw;
+    height: 100vh;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    #joystick {
+        left: 10px;
+        bottom: 10px;
+
+        transform: scale(.9);
+
+        transform-origin: bottom left;
     }
 
+    #actions {
+        right: 10px;
+        bottom: 12px;
+
+        transform: scale(.9);
+
+        transform-origin: bottom right;
+    }
 }
+
+@media (max-height: 350px) {
+
+    #joystick {
+        transform: scale(.72);
+
+        transform-origin: bottom left;
+    }
+
+    #actions {
+        transform: scale(.72);
+
+        transform-origin: bottom right;
+    }
+    }
