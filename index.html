@@ -1,51 +1,67 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no">
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
-    <title>Blood Glow RPG</title>
+<title>Blood Glow RPG</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div id="game-wrapper">
 
-    <canvas id="game" width="320" height="180"></canvas>
+    <canvas id="game"
+            width="320"
+            height="180">
+    </canvas>
 
-    <!-- ФУЛЛСКРИН -->
     <button id="fullscreen-button">⛶</button>
 
-    <!-- Джойстик -->
-    <div id="joystick">
+    <!-- MOBILE CONTROLS -->
 
-        <button class="joy up" data-key="up">▲</button>
-        <button class="joy left" data-key="left">◀</button>
-        <button class="joy right" data-key="right">▶</button>
-        <button class="joy down" data-key="down">▼</button>
+    <div id="controls">
 
-    </div>
+        <div id="joystick">
 
-    <!-- Z X C -->
-    <div id="actions">
+            <button class="joy up"
+                    data-key="up">▲</button>
 
-        <button class="action-button z-button" data-key="z">
-            Z
-        </button>
+            <button class="joy left"
+                    data-key="left">◀</button>
 
-        <button class="action-button x-button" data-key="x">
-            X
-        </button>
+            <button class="joy right"
+                    data-key="right">▶</button>
 
-        <button class="action-button c-button" data-key="c">
-            C
-        </button>
+            <button class="joy down"
+                    data-key="down">▼</button>
+
+        </div>
+
+        <div id="action-buttons">
+
+            <button class="action-button"
+                    data-key="z">
+                Z
+            </button>
+
+            <button class="action-button"
+                    data-key="x">
+                X
+            </button>
+
+            <button class="action-button"
+                    data-key="c">
+                C
+            </button>
+
+        </div>
 
     </div>
 
