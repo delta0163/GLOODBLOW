@@ -5,7 +5,7 @@
 <meta name="viewport"
       content="width=device-width,initial-scale=1.0,user-scalable=no">
 
-<title>Delta Night</title>
+<title>Blood Glow Night RPG</title>
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -16,27 +16,28 @@
 
     <canvas id="game" width="320" height="180"></canvas>
 
-    <!-- МОБИЛЬНОЕ УПРАВЛЕНИЕ -->
+    <button id="fullscreen-button">⛶</button>
+
     <div id="controls">
 
         <div id="joystick">
+
             <button class="joy up" data-key="up">▲</button>
             <button class="joy left" data-key="left">◀</button>
             <button class="joy right" data-key="right">▶</button>
             <button class="joy down" data-key="down">▼</button>
+
         </div>
 
-        <div id="action-buttons">
-            <button class="action-button z" data-key="z">Z</button>
-            <button class="action-button x" data-key="x">X</button>
-            <button class="action-button c" data-key="c">C</button>
+        <div id="actions">
+
+            <button class="action-button" data-key="z">Z</button>
+            <button class="action-button" data-key="x">X</button>
+            <button class="action-button" data-key="c">C</button>
+
         </div>
 
     </div>
-
-    <button id="fullscreen-button">⛶</button>
-
-    <div id="run-indicator">RUN</div>
 
 </div>
 
