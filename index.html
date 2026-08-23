@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no,
+                   viewport-fit=cover">
 
-    <title>Blood Glow RPG</title>
-
+    <title>Blood Glow</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -14,28 +17,253 @@
 
 <div id="game">
 
-    <canvas id="canvas" width="320" height="180"></canvas>
+    <!-- ВЕРХ -->
+    <header class="topbar">
+        <div class="game-title">BLOOD GLOW</div>
+        <div id="clock">12:00</div>
 
-    <!-- Джойстик -->
-    <div id="joystick">
-        <button class="joy up" data-key="up">▲</button>
-        <button class="joy left" data-key="left">◀</button>
-        <button class="joy right" data-key="right">▶</button>
-        <button class="joy down" data-key="down">▼</button>
+        <button id="fullscreenBtn" class="pixel-button fullscreen">
+            ⛶
+        </button>
+    </header>
+
+    <!-- ИГРОВАЯ ОБЛАСТЬ -->
+    <main id="screen">
+
+        <!-- СЦЕНА -->
+        <section id="battleScene">
+
+            <div id="enemy">
+                <div class="enemy-shadow"></div>
+
+                <div class="enemy-body">
+                    <div class="enemy-eye left"></div>
+                    <div class="enemy-eye right"></div>
+                    <div class="enemy-mouth"></div>
+                </div>
+
+                <div id="enemyName">BLOOD BEAST</div>
+
+                <div class="enemy-hp">
+                    <div id="enemyHpBar"></div>
+                </div>
+            </div>
+
+            <!-- ОБЛАСТЬ УКЛОНЕНИЯ -->
+            <div id="dodgeArea">
+
+                <div id="heart">♥</div>
+
+                <div class="attack attack1"></div>
+                <div class="attack attack2"></div>
+                <div class="attack attack3"></div>
+                <div class="attack attack4"></div>
+
+            </div>
+
+            <!-- ПЕРСОНАЖИ -->
+            <div id="party">
+
+                <div class="character" data-id="delta">
+                    <div class="sprite delta"></div>
+                    <div class="char-info">
+                        <span class="char-name">ДЕЛЬТА</span>
+                        <span class="hp-text">
+                            <b id="deltaHp">90</b>/90
+                        </span>
+                    </div>
+                    <div class="hp-bar">
+                        <div id="deltaBar"></div>
+                    </div>
+                </div>
+
+                <div class="character" data-id="nemka">
+                    <div class="sprite nemka"></div>
+                    <div class="char-info">
+                        <span class="char-name">НЕМКА</span>
+                        <span class="hp-text">
+                            <b id="nemkaHp">120</b>/120
+                        </span>
+                    </div>
+                    <div class="hp-bar">
+                        <div id="nemkaBar"></div>
+                    </div>
+                </div>
+
+                <div class="character" data-id="lychee">
+                    <div class="sprite lychee"></div>
+                    <div class="char-info">
+                        <span class="char-name">ЛИЧИ</span>
+                        <span class="hp-text">
+                            <b id="lycheeHp">100</b>/100
+                        </span>
+                    </div>
+                    <div class="hp-bar">
+                        <div id="lycheeBar"></div>
+                    </div>
+                </div>
+
+                <div class="character" data-id="pancake">
+                    <div class="sprite pancake"></div>
+                    <div class="char-info">
+                        <span class="char-name">ПАНКЕЙК</span>
+                        <span class="hp-text">
+                            <b id="pancakeHp">80</b>/80
+                        </span>
+                    </div>
+                    <div class="hp-bar">
+                        <div id="pancakeBar"></div>
+                    </div>
+                </div>
+
+                <div class="character" data-id="chestnut">
+                    <div class="sprite chestnut"></div>
+                    <div class="char-info">
+                        <span class="char-name">КАШТАН</span>
+                        <span class="hp-text">
+                            <b id="chestnutHp">67</b>/67
+                        </span>
+                    </div>
+                    <div class="hp-bar">
+                        <div id="chestnutBar"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- НИЖНЕЕ МЕНЮ -->
+        <section id="battleUI">
+
+            <div id="message">
+                Что будет делать команда?
+            </div>
+
+            <div id="commandMenu">
+
+                <button class="command fight" data-command="fight">
+                    <span>⚔</span> БИТВА
+                </button>
+
+                <button class="command action" data-command="action">
+                    <span>★</span> ДЕЙСТВИЕ
+                </button>
+
+                <button class="command magic" data-command="magic">
+                    <span>✦</span> МАГИЯ
+                </button>
+
+                <button class="command defend" data-command="defend">
+                    <span>◆</span> ЗАЩИТА
+                </button>
+
+                <button class="command spare" data-command="spare">
+                    <span>♥</span> ПОЩАДА
+                </button>
+
+            </div>
+
+            <div id="subMenu"></div>
+
+        </section>
+
+        <!-- ИНВЕНТАРЬ -->
+        <section id="inventory" class="overlay hidden">
+
+            <div class="panel">
+
+                <div class="panel-title">
+                    ИНВЕНТАРЬ
+                </div>
+
+                <div id="inventoryItems">
+
+                    <button class="item">
+                        🍞 ХЛЕБ
+                        <span>x2</span>
+                    </button>
+
+                    <button class="item">
+                        🧪 GLOW TONIC
+                        <span>x1</span>
+                    </button>
+
+                    <button class="item">
+                        🩸 BLOOD CANDY
+                        <span>x3</span>
+                    </button>
+
+                </div>
+
+                <div class="panel-hint">
+                    X — закрыть
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ДИАЛОГ -->
+        <section id="dialogBox" class="dialog hidden">
+
+            <div id="dialogText"></div>
+
+            <div class="dialog-hint">
+                Z — продолжить &nbsp; X — пропустить
+            </div>
+
+        </section>
+
+        <!-- ПОБЕДА -->
+        <section id="victory" class="overlay hidden">
+
+            <div class="victory-box">
+
+                <h1>ПОБЕДА!</h1>
+
+                <p id="victoryText">
+                    Враг побеждён.
+                </p>
+
+                <button id="continueBtn" class="pixel-button">
+                    ПРОДОЛЖИТЬ
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- МОБИЛЬНОЕ УПРАВЛЕНИЕ -->
+    <div id="mobileControls">
+
+        <div id="joystick">
+            <div id="joystickKnob"></div>
+        </div>
+
+        <div id="actionButtons">
+
+            <button id="btnZ" class="control-button z">
+                Z
+            </button>
+
+            <button id="btnX" class="control-button x">
+                X
+            </button>
+
+            <button id="btnC" class="control-button c">
+                C
+            </button>
+
+        </div>
+
     </div>
-
-    <!-- Кнопки -->
-    <div id="buttons">
-        <button class="game-btn z" data-key="z">Z</button>
-        <button class="game-btn x" data-key="x">X</button>
-        <button class="game-btn c" data-key="c">C</button>
-    </div>
-
-    <button id="fullscreen">⛶</button>
 
 </div>
 
-<script src="script.js"></script>
+<script src="game.js"></script>
 
 </body>
 </html>
