@@ -1,6 +1,9 @@
 * {
     box-sizing: border-box;
-    image-rendering: pixelated;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -8,1127 +11,181 @@ html,
 body {
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
-
     overflow: hidden;
-
-    background: #050505;
-    color: white;
-
-    font-family:
-        "Courier New",
-        monospace;
-
-    touch-action: none;
+    background: #000;
+    font-family: monospace;
 }
 
-button {
-    font-family: inherit;
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #game {
-    position: fixed;
-
-    left: 0;
-    top: 0;
-
+    position: relative;
     width: 100vw;
     height: 100vh;
-
-    background: #080808;
-
     overflow: hidden;
+    background: #111;
 }
 
-/* =========================
-   TOP BAR
-========================= */
-
-.topbar {
+#canvas {
     position: absolute;
-
     left: 0;
     top: 0;
 
     width: 100%;
-    height: 52px;
+    height: 100%;
 
-    display: flex;
-    align-items: center;
-
-    padding: 0 12px;
-
-    border-bottom: 3px solid #fff;
-
-    background: #050505;
-
-    z-index: 50;
-}
-
-.game-title {
-    font-size: 20px;
-    font-weight: bold;
-
-    letter-spacing: 2px;
-
-    text-shadow:
-        2px 0 #6b0000,
-        -1px 0 #fff;
-}
-
-#clock {
-    position: absolute;
-
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.fullscreen {
-    margin-left: auto;
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
-.pixel-button {
-    border: 3px solid #fff;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 
     background: #111;
-
-    color: #fff;
-
-    padding: 6px 12px;
-
-    cursor: pointer;
-
-    box-shadow:
-        3px 3px 0 #000;
-
-    font-size: 16px;
-}
-
-.pixel-button:active {
-    transform: translate(2px, 2px);
-
-    box-shadow:
-        1px 1px 0 #000;
-}
-
-/* =========================
-   SCREEN
-========================= */
-
-#screen {
-    position: absolute;
-
-    left: 0;
-    top: 52px;
-
-    width: 100%;
-    height: calc(100% - 52px);
-
-    overflow: hidden;
-
-    background:
-        linear-gradient(
-            #121212 0 60%,
-            #080808 60% 100%
-        );
-}
-
-/* =========================
-   BATTLE SCENE
-========================= */
-
-#battleScene {
-    position: absolute;
-
-    left: 0;
-    top: 0;
-
-    width: 100%;
-    height: 68%;
-
-    border-bottom: 3px solid #fff;
-
-    overflow: hidden;
-}
-
-/* небольшие пиксели фона */
-
-#battleScene::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    opacity: 0.3;
-
-    background-image:
-        linear-gradient(
-            90deg,
-            transparent 95%,
-            #303030 95%
-        ),
-        linear-gradient(
-            transparent 95%,
-            #303030 95%
-        );
-
-    background-size: 24px 24px;
-
-    pointer-events: none;
-}
-
-/* =========================
-   ENEMY
-========================= */
-
-#enemy {
-    position: absolute;
-
-    left: 50%;
-    top: 25px;
-
-    transform: translateX(-50%);
-
-    width: 210px;
-
-    text-align: center;
-
-    z-index: 5;
-}
-
-.enemy-body {
-    position: relative;
-
-    width: 120px;
-    height: 100px;
-
-    margin: auto;
-
-    background: #5b0505;
-
-    border: 5px solid #fff;
-
-    box-shadow:
-        8px 8px 0 #000;
-}
-
-.enemy-eye {
-    position: absolute;
-
-    top: 28px;
-
-    width: 17px;
-    height: 24px;
-
-    background: #fff;
-}
-
-.enemy-eye.left {
-    left: 24px;
-}
-
-.enemy-eye.right {
-    right: 24px;
-}
-
-.enemy-mouth {
-    position: absolute;
-
-    left: 28px;
-    bottom: 18px;
-
-    width: 64px;
-    height: 10px;
-
-    background: #000;
-}
-
-.enemy-shadow {
-    position: absolute;
-
-    left: 50%;
-    bottom: -8px;
-
-    transform: translateX(-50%);
-
-    width: 150px;
-    height: 12px;
-
-    background: #000;
-}
-
-#enemyName {
-    margin-top: 10px;
-
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.enemy-hp {
-    width: 140px;
-    height: 9px;
-
-    margin: 5px auto;
-
-    background: #300;
-    border: 2px solid #fff;
-}
-
-#enemyHpBar {
-    width: 100%;
-    height: 100%;
-
-    background: #d00000;
-}
-
-/* =========================
-   DODGE AREA
-========================= */
-
-#dodgeArea {
-    position: absolute;
-
-    left: 50%;
-    top: 180px;
-
-    transform: translateX(-50%);
-
-    width: 310px;
-    height: 170px;
-
-    border: 4px solid #fff;
-
-    background: #000;
-
-    display: none;
-
-    overflow: hidden;
-
-    z-index: 10;
-}
-
-#dodgeArea.active {
-    display: block;
-}
-
-#heart {
-    position: absolute;
-
-    width: 20px;
-    height: 20px;
-
-    left: 145px;
-    top: 75px;
-
-    color: #ff2020;
-
-    font-size: 20px;
-
-    line-height: 20px;
-
-    text-align: center;
-
-    z-index: 20;
-
-    text-shadow:
-        2px 2px 0 #600;
-}
-
-/* атаки */
-
-.attack {
-    position: absolute;
-
-    width: 15px;
-    height: 15px;
-
-    background: #fff;
-
-    box-shadow:
-        2px 2px 0 #777;
-}
-
-.attack1 {
-    left: 0;
-    top: 20px;
-}
-
-.attack2 {
-    left: 100px;
-    top: 0;
-}
-
-.attack3 {
-    right: 0;
-    top: 90px;
-}
-
-.attack4 {
-    left: 220px;
-    bottom: 0;
-}
-
-/* =========================
-   PARTY
-========================= */
-
-#party {
-    position: absolute;
-
-    left: 0;
-    bottom: 10px;
-
-    width: 100%;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: flex-end;
-
-    gap: 10px;
-
-    padding: 0 10px;
-
-    z-index: 20;
-}
-
-.character {
-    width: 125px;
-
-    min-width: 90px;
-
-    border: 2px solid #777;
-
-    background: #080808;
-
-    padding: 5px;
-
-    cursor: pointer;
-}
-
-.character.selected {
-    border-color: #fff;
-
-    background: #1b1b1b;
-
-    box-shadow:
-        4px 4px 0 #000;
-}
-
-.sprite {
-    position: relative;
-
-    width: 42px;
-    height: 50px;
-
-    margin: 0 auto 4px;
-
-    border: 3px solid #fff;
-}
-
-/* пиксельные персонажи */
-
-.sprite::before,
-.sprite::after {
-    content: "";
-
-    position: absolute;
-
-    background: #fff;
-}
-
-.delta {
-    background: #303030;
-}
-
-.delta::before {
-    width: 8px;
-    height: 8px;
-
-    left: 8px;
-    top: 10px;
-}
-
-.delta::after {
-    width: 8px;
-    height: 8px;
-
-    right: 8px;
-    top: 10px;
-}
-
-.nemka {
-    background: #622626;
-}
-
-.nemka::before {
-    width: 25px;
-    height: 8px;
-
-    left: 5px;
-    top: -7px;
-
-    background: #ddd;
-}
-
-.nemka::after {
-    width: 7px;
-    height: 7px;
-
-    left: 14px;
-    bottom: 8px;
-}
-
-.lychee {
-    background: #4d244d;
-}
-
-.lychee::before {
-    width: 9px;
-    height: 9px;
-
-    left: 7px;
-    top: 10px;
-}
-
-.lychee::after {
-    width: 9px;
-    height: 9px;
-
-    right: 7px;
-    top: 10px;
-}
-
-.pancake {
-    background: #70551c;
-}
-
-.pancake::before {
-    width: 28px;
-    height: 8px;
-
-    left: 4px;
-    top: 10px;
-}
-
-.pancake::after {
-    width: 8px;
-    height: 8px;
-
-    left: 14px;
-    bottom: 8px;
-}
-
-.chestnut {
-    background: #3b1e0c;
-}
-
-.chestnut::before {
-    width: 8px;
-    height: 8px;
-
-    left: 7px;
-    top: 13px;
-}
-
-.chestnut::after {
-    width: 8px;
-    height: 8px;
-
-    right: 7px;
-    top: 13px;
-}
-
-.char-info {
-    display: flex;
-
-    justify-content: space-between;
-
-    font-size: 11px;
-}
-
-.char-name {
-    font-weight: bold;
-}
-
-.hp-text {
-    white-space: nowrap;
-}
-
-.hp-bar {
-    width: 100%;
-    height: 8px;
-
-    margin-top: 4px;
-
-    background: #350000;
-
-    border: 1px solid #fff;
-}
-
-.hp-bar div {
-    height: 100%;
-
-    background: #d00000;
-
-    width: 100%;
-}
-
-/* =========================
-   BATTLE UI
-========================= */
-
-#battleUI {
-    position: absolute;
-
-    left: 0;
-    bottom: 0;
-
-    width: 100%;
-    height: 32%;
-
-    background: #050505;
-
-    padding: 8px;
-
-    z-index: 30;
-}
-
-#message {
-    width: 100%;
-
-    min-height: 35px;
-
-    border: 3px solid #fff;
-
-    padding: 6px 10px;
-
-    font-size: 14px;
-
-    display: flex;
-
-    align-items: center;
-
-    margin-bottom: 7px;
-}
-
-#commandMenu {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 6px;
-
-    width: 100%;
-
-    max-width: 850px;
-
-    margin: auto;
-}
-
-.command {
-    min-height: 43px;
-
-    background: #080808;
-
-    border: 3px solid #fff;
-
-    color: white;
-
-    font-weight: bold;
-
-    font-size: 14px;
-
-    cursor: pointer;
-
-    box-shadow:
-        3px 3px 0 #000;
-}
-
-.command:hover,
-.command.selected {
-    background: #fff;
-
-    color: #000;
-}
-
-.command:active {
-    transform: translate(2px, 2px);
-}
-
-.command span {
-    margin-right: 5px;
-}
-
-.spare {
-    grid-column: span 3;
-}
-
-/* =========================
-   SUB MENU
-========================= */
-
-#subMenu {
-    position: absolute;
-
-    left: 50%;
-    bottom: 7px;
-
-    transform: translateX(-50%);
-
-    width: min(600px, 94%);
-
-    display: none;
-
-    background: #050505;
-
-    border: 3px solid #fff;
-
-    padding: 8px;
-
-    z-index: 50;
-}
-
-.sub-title {
-    font-weight: bold;
-
-    margin-bottom: 7px;
-}
-
-.sub-option {
-    display: block;
-
-    width: 100%;
-
-    background: #000;
-
-    color: #fff;
-
-    border: 2px solid #aaa;
-
-    padding: 7px;
-
-    margin-top: 5px;
-
-    text-align: left;
-
-    font-family: inherit;
-}
-
-.sub-option:hover {
-    background: #fff;
-
-    color: #000;
-}
-
-/* =========================
-   OVERLAYS
-========================= */
-
-.overlay {
-    position: absolute;
-
-    inset: 0;
-
-    background: rgba(0, 0, 0, 0.9);
-
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-
-    z-index: 100;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.panel,
-.victory-box {
-    width: min(500px, 90%);
-
-    border: 4px solid #fff;
-
-    background: #050505;
-
-    padding: 20px;
-
-    box-shadow:
-        8px 8px 0 #000;
-}
-
-.panel-title,
-.victory-box h1 {
-    font-size: 25px;
-
-    text-align: center;
-
-    margin: 0 0 20px;
-}
-
-.item {
-    display: flex;
-
-    justify-content: space-between;
-
-    width: 100%;
-
-    padding: 10px;
-
-    margin: 6px 0;
-
-    color: #fff;
-
-    background: #080808;
-
-    border: 2px solid #fff;
-
-    font-family: inherit;
-}
-
-.panel-hint {
-    margin-top: 15px;
-
-    text-align: center;
-
-    color: #aaa;
-}
-
-.victory-box {
-    text-align: center;
-}
-
-.victory-box h1 {
-    color: #fff;
-}
-
-/* =========================
-   DIALOG
-========================= */
-
-.dialog {
-    position: absolute;
-
-    left: 5%;
-    right: 5%;
-    bottom: 15%;
-
-    padding: 18px;
-
-    min-height: 110px;
-
-    background: #050505;
-
-    border: 4px solid #fff;
-
-    z-index: 120;
-}
-
-#dialogText {
-    line-height: 1.5;
-
-    font-size: 16px;
-}
-
-.dialog-hint {
-    margin-top: 15px;
-
-    color: #aaa;
-
-    font-size: 12px;
 }
 
-/* =========================
-   MOBILE CONTROLS
-========================= */
+/* FULLSCREEN */
 
-#mobileControls {
+#fullscreen {
     position: fixed;
-
-    left: 0;
-    bottom: 0;
-
-    width: 100%;
-
-    pointer-events: none;
-
-    z-index: 200;
-}
-
-#joystick {
-    position: absolute;
-
-    left: 18px;
-    bottom: 18px;
-
-    width: 105px;
-    height: 105px;
-
-    border: 3px solid #aaa;
-
-    background: rgba(0, 0, 0, 0.65);
-
-    border-radius: 50%;
-
-    pointer-events: auto;
-}
-
-#joystickKnob {
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    transform: translate(-50%, -50%);
+    right: 12px;
+    top: 12px;
 
     width: 44px;
     height: 44px;
 
-    background: #777;
+    z-index: 20;
 
-    border: 3px solid #fff;
+    border: 2px solid rgba(255,255,255,.5);
+    border-radius: 7px;
 
-    border-radius: 50%;
+    background: rgba(0,0,0,.5);
+    color: white;
+
+    font-size: 23px;
 }
 
-#actionButtons {
+/* JOYSTICK */
+
+#joystick {
+    position: fixed;
+
+    left: 15px;
+    bottom: 15px;
+
+    width: 135px;
+    height: 135px;
+
+    z-index: 10;
+
+    opacity: .45;
+}
+
+#joystick button {
     position: absolute;
 
-    right: 18px;
-    bottom: 18px;
+    width: 43px;
+    height: 43px;
 
-    width: 160px;
-    height: 115px;
+    border: 2px solid white;
+    border-radius: 9px;
 
-    pointer-events: none;
+    background: rgba(20,20,20,.45);
+    color: white;
+
+    font-size: 18px;
+
+    touch-action: none;
 }
 
-.control-button {
-    position: absolute;
-
-    width: 55px;
-    height: 55px;
-
-    border-radius: 50%;
-
-    background: #080808;
-
-    color: #fff;
-
-    border: 3px solid #fff;
-
-    font-size: 19px;
-
-    font-weight: bold;
-
-    pointer-events: auto;
-
-    box-shadow:
-        4px 4px 0 #000;
+#joystick button:active {
+    background: rgba(255,255,255,.25);
 }
 
-.control-button:active {
-    transform: scale(0.92);
+#joystick .up {
+    left: 46px;
+    top: 0;
 }
 
-.z {
-    right: 90px;
-    top: 30px;
-}
-
-.x {
-    right: 25px;
-    top: 5px;
-}
-
-.c {
-    right: 5px;
+#joystick .down {
+    left: 46px;
     bottom: 0;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 700px) {
-
-    .game-title {
-        font-size: 15px;
-    }
-
-    #clock {
-        font-size: 15px;
-    }
-
-    #battleScene {
-        height: 64%;
-    }
-
-    #enemy {
-        top: 12px;
-        transform: translateX(-50%) scale(0.8);
-    }
-
-    #dodgeArea {
-        top: 135px;
-
-        width: 260px;
-        height: 145px;
-    }
-
-    #party {
-        gap: 3px;
-        padding: 0 4px;
-    }
-
-    .character {
-        min-width: 0;
-
-        width: 20%;
-
-        padding: 3px;
-    }
-
-    .sprite {
-        transform: scale(0.75);
-        transform-origin: center bottom;
-
-        margin-bottom: -5px;
-    }
-
-    .char-info {
-        display: block;
-
-        text-align: center;
-
-        font-size: 8px;
-    }
-
-    .hp-bar {
-        height: 6px;
-    }
-
-    #battleUI {
-        height: 36%;
-    }
-
-    #message {
-        font-size: 11px;
-
-        min-height: 30px;
-    }
-
-    .command {
-        min-height: 38px;
-
-        font-size: 10px;
-    }
-
-    #joystick {
-        width: 85px;
-        height: 85px;
-    }
-
-    #joystickKnob {
-        width: 36px;
-        height: 36px;
-    }
-
-    #actionButtons {
-        transform: scale(0.82);
-        transform-origin: bottom right;
-    }
+#joystick .left {
+    left: 0;
+    top: 46px;
 }
 
-/* landscape */
+#joystick .right {
+    right: 0;
+    top: 46px;
+}
 
-@media (orientation: landscape) and (max-height: 500px) {
+/* Z X C */
 
-    .topbar {
-        height: 38px;
-    }
+#buttons {
+    position: fixed;
 
-    #screen {
-        top: 38px;
-        height: calc(100% - 38px);
-    }
+    right: 15px;
+    bottom: 18px;
 
-    #battleScene {
-        height: 70%;
-    }
+    display: flex;
+    gap: 10px;
 
-    #battleUI {
-        height: 30%;
-    }
+    z-index: 10;
 
-    #enemy {
-        top: 4px;
+    opacity: .48;
+}
 
-        transform:
-            translateX(-50%)
-            scale(0.65);
-    }
+#buttons button {
+    width: 53px;
+    height: 53px;
 
-    #dodgeArea {
-        top: 80px;
+    border-radius: 50%;
 
-        width: 230px;
-        height: 110px;
-    }
+    border: 2px solid white;
 
-    #party {
-        bottom: 3px;
-    }
+    background: rgba(0,0,0,.5);
 
-    .character {
-        padding: 2px;
-    }
+    color: white;
 
-    .sprite {
-        transform: scale(0.55);
+    font-family: monospace;
+    font-size: 17px;
+    font-weight: bold;
 
-        margin-bottom: -15px;
-    }
+    touch-action: none;
+}
 
-    #message {
-        min-height: 25px;
+#buttons .z {
+    border-color: #ff5555;
+}
 
-        padding: 3px 7px;
+#buttons .x {
+    border-color: #ffdd55;
+}
 
-        margin-bottom: 3px;
-    }
+#buttons .c {
+    border-color: #5599ff;
+}
 
-    .command {
-        min-height: 30px;
+#buttons button:active {
+    background: rgba(255,255,255,.25);
+}
 
-        font-size: 9px;
-    }
+@media (max-width: 600px) {
 
     #joystick {
-        width: 70px;
-        height: 70px;
-
+        transform: scale(.9);
+        transform-origin: bottom left;
         left: 8px;
         bottom: 8px;
     }
 
-    #actionButtons {
+    #buttons {
+        transform: scale(.9);
+        transform-origin: bottom right;
         right: 8px;
         bottom: 8px;
-
-        transform: scale(0.65);
     }
-    }
+}
