@@ -7,207 +7,43 @@
 
 html,
 body {
-
     margin: 0;
     padding: 0;
-
     width: 100%;
     height: 100%;
-
     overflow: hidden;
-
     background: #000;
-
     font-family: monospace;
 }
 
 body {
-
     display: flex;
-
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
 #game {
-
     position: relative;
-
     width: 100vw;
     height: 100vh;
-
     overflow: hidden;
-
     background: #000;
 }
 
-canvas {
-
+#canvas {
     position: absolute;
-
     left: 0;
     top: 0;
 
     width: 100%;
     height: 100%;
 
-    image-rendering: pixelated;
-
     background: #080808;
 
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+
     touch-action: none;
-}
-
-
-/* =========================
-   MAIN MENU
-========================= */
-
-#mainMenu {
-
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 20;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background:
-        radial-gradient(
-            circle,
-            #321010 0%,
-            #090909 45%,
-            #000 100%
-        );
-}
-
-.title {
-
-    color: #fff;
-
-    font-size: clamp(25px, 8vw, 45px);
-
-    letter-spacing: 4px;
-
-    margin-bottom: 35px;
-
-    text-shadow:
-        3px 3px 0 #550000;
-}
-
-#mainMenu button {
-
-    width: 220px;
-
-    padding: 13px;
-
-    margin: 6px;
-
-    border: 2px solid #aaa;
-
-    background: #111;
-
-    color: #fff;
-
-    font-family: monospace;
-
-    font-size: 14px;
-}
-
-#mainMenu button:active {
-
-    background: #333;
-}
-
-
-/* =========================
-   SAVE MENU
-========================= */
-
-#saveMenu {
-
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 30;
-
-    display: none;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background: #050505;
-
-    color: white;
-}
-
-.saveTitle {
-
-    font-size: 20px;
-
-    margin-bottom: 20px;
-}
-
-.saveSlot {
-
-    width: 270px;
-
-    padding: 13px;
-
-    margin: 5px;
-
-    border: 2px solid #555;
-
-    background: #111;
-
-    font-size: 13px;
-}
-
-.saveSlot:active {
-
-    background: #333;
-}
-
-.saveSlot span {
-
-    float: right;
-
-    color: #aaa;
-}
-
-.saveHint {
-
-    margin-top: 15px;
-
-    color: #777;
-
-    font-size: 11px;
-}
-
-#saveBack {
-
-    margin-top: 20px;
-
-    padding: 9px 35px;
-
-    background: #111;
-
-    color: white;
-
-    border: 1px solid white;
-
-    font-family: monospace;
 }
 
 
@@ -216,134 +52,114 @@ canvas {
 ========================= */
 
 #joystick {
-
-    position: absolute;
-
+    position: fixed;
     left: 15px;
     bottom: 15px;
 
     width: 125px;
     height: 125px;
 
-    z-index: 10;
+    z-index: 20;
 
-    opacity: .42;
+    opacity: 0.38;
 }
 
 .joy {
-
     position: absolute;
 
-    width: 42px;
-    height: 42px;
-
-    border-radius: 8px;
+    width: 40px;
+    height: 40px;
 
     border: 2px solid #fff;
+    border-radius: 8px;
 
-    background: rgba(0,0,0,.45);
+    background: rgba(30,30,30,0.35);
 
-    color: white;
+    color: #fff;
 
-    font-size: 18px;
-
+    font-size: 17px;
     font-family: monospace;
 
     touch-action: none;
 }
 
-.joy.up {
-
-    top: 0;
-    left: 41px;
-}
-
-.joy.down {
-
-    bottom: 0;
-    left: 41px;
-}
-
-.joy.left {
-
-    left: 0;
-    top: 41px;
-}
-
-.joy.right {
-
-    right: 0;
-    top: 41px;
-}
-
 .joy:active {
+    background: rgba(255,255,255,0.25);
+}
 
-    background: rgba(255,255,255,.25);
+.up {
+    left: 42px;
+    top: 0;
+}
+
+.down {
+    left: 42px;
+    bottom: 0;
+}
+
+.left {
+    left: 0;
+    top: 42px;
+}
+
+.right {
+    right: 0;
+    top: 42px;
 }
 
 
 /* =========================
-   ACTION BUTTONS
+   Z X C
 ========================= */
 
 #buttons {
+    position: fixed;
 
-    position: absolute;
-
-    right: 18px;
-    bottom: 20px;
-
-    z-index: 10;
+    right: 15px;
+    bottom: 18px;
 
     display: flex;
-
     gap: 10px;
+
+    z-index: 20;
 }
 
-#buttons button {
-
-    width: 55px;
-    height: 55px;
+.game-btn {
+    width: 52px;
+    height: 52px;
 
     border-radius: 50%;
 
-    border: 2px solid white;
+    border: 2px solid #fff;
 
-    background: rgba(0,0,0,.45);
+    background: rgba(0,0,0,0.4);
 
-    color: white;
+    color: #fff;
 
     font-family: monospace;
-
-    font-size: 18px;
-
+    font-size: 17px;
     font-weight: bold;
 
-    opacity: .55;
+    opacity: 0.45;
 
     touch-action: none;
 }
 
-#buttons button:active {
-
-    background: rgba(255,255,255,.25);
-
-    opacity: .9;
+.game-btn:active {
+    opacity: 0.9;
+    background: rgba(255,255,255,0.2);
 }
 
-#zButton {
-
-    border-color: #ff5555 !important;
+.z {
+    border-color: #ff5555;
 }
 
-#xButton {
-
-    border-color: #55aaff !important;
+.x {
+    border-color: #55aaff;
 }
 
-#cButton {
-
-    border-color: #ffff55 !important;
+.c {
+    border-color: #55ff77;
 }
 
 
@@ -352,24 +168,25 @@ canvas {
 ========================= */
 
 #fullscreen {
+    position: fixed;
 
-    position: absolute;
+    right: 12px;
+    top: 12px;
 
-    right: 10px;
-    top: 10px;
+    width: 42px;
+    height: 42px;
 
-    z-index: 40;
+    z-index: 30;
 
-    width: 40px;
-    height: 40px;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 6px;
+
+    background: rgba(0,0,0,0.4);
 
     color: white;
-
-    background: rgba(0,0,0,.5);
-
-    border: 1px solid #aaa;
-
     font-size: 20px;
+
+    touch-action: none;
 }
 
 
@@ -377,25 +194,19 @@ canvas {
    MOBILE
 ========================= */
 
-@media(max-width:600px) {
+@media (max-width: 600px) {
 
     #joystick {
-
-        transform: scale(.9);
-
+        transform: scale(0.9);
         transform-origin: bottom left;
-
         left: 8px;
         bottom: 8px;
     }
 
     #buttons {
-
-        transform: scale(.9);
-
+        transform: scale(0.9);
         transform-origin: bottom right;
-
         right: 8px;
-        bottom: 10px;
+        bottom: 8px;
     }
-}
+    }
