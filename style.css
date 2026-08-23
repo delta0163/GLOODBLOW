@@ -7,6 +7,7 @@ html,
 body {
     margin: 0;
     padding: 0;
+
     width: 100%;
     height: 100%;
 
@@ -14,15 +15,15 @@ body {
 
     background: #000;
 
-    font-family:
-        monospace,
-        "Courier New";
+    font-family: monospace;
+
+    touch-action: none;
 }
 
 body {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
 #game-wrapper {
@@ -31,35 +32,61 @@ body {
     width: 100vw;
     height: 100vh;
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     background: #000;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
 }
 
-#game {
+canvas {
     width: min(100vw, 177.777vh);
-    height: min(56.25vw, 100vh);
-
-    background: #000;
+    height: min(100vh, 56.25vw);
 
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 
-    touch-action: none;
+    background: #000;
+
+    display: block;
+}
+
+#fullscreen-button {
+    position: fixed;
+
+    right: 12px;
+    top: 12px;
+
+    width: 42px;
+    height: 42px;
+
+    background: rgba(0,0,0,.45);
+
+    color: white;
+
+    border: 2px solid white;
+
+    font-size: 22px;
+
+    border-radius: 5px;
+
+    z-index: 20;
 }
 
 #controls {
-    position: absolute;
+    position: fixed;
 
     left: 0;
     right: 0;
     bottom: 0;
 
-    height: 38%;
+    height: 145px;
 
     pointer-events: none;
+
+    z-index: 10;
 }
 
 #joystick {
@@ -68,10 +95,10 @@ body {
     left: 18px;
     bottom: 18px;
 
-    width: 116px;
-    height: 116px;
+    width: 120px;
+    height: 120px;
 
-    opacity: 0.55;
+    opacity: .55;
 
     pointer-events: auto;
 }
@@ -79,51 +106,50 @@ body {
 .joy {
     position: absolute;
 
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
 
-    border: 2px solid #fff;
-    border-radius: 7px;
+    border: 2px solid white;
 
-    background: rgba(30,30,30,0.45);
+    background: rgba(40,40,40,.5);
 
     color: white;
 
     font-size: 18px;
 
-    touch-action: none;
+    border-radius: 7px;
 
-    user-select: none;
+    touch-action: none;
 }
 
 .joy:active {
-    background: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,.3);
 }
 
-.joy.up {
+.up {
     left: 39px;
     top: 0;
 }
 
-.joy.down {
+.down {
     left: 39px;
     bottom: 0;
 }
 
-.joy.left {
+.left {
     left: 0;
     top: 39px;
 }
 
-.joy.right {
+.right {
     right: 0;
     top: 39px;
 }
 
-#action-buttons {
+#actions {
     position: absolute;
 
-    right: 18px;
+    right: 20px;
     bottom: 25px;
 
     display: flex;
@@ -131,113 +157,37 @@ body {
     gap: 10px;
 
     pointer-events: auto;
-
-    opacity: 0.72;
 }
 
 .action-button {
-    width: 54px;
-    height: 54px;
+    width: 52px;
+    height: 52px;
 
     border-radius: 50%;
 
     border: 2px solid white;
 
-    background: rgba(0,0,0,0.55);
+    background: rgba(0,0,0,.45);
 
     color: white;
 
-    font-weight: bold;
+    font-family: monospace;
 
     font-size: 18px;
 
-    touch-action: none;
+    font-weight: bold;
 
-    user-select: none;
+    touch-action: none;
 }
 
 .action-button:active {
-    background: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,.3);
 }
 
-#fullscreen-button {
-    position: absolute;
+@media (min-width: 900px) {
 
-    top: 12px;
-    right: 12px;
-
-    width: 42px;
-    height: 42px;
-
-    border: 2px solid white;
-    border-radius: 6px;
-
-    background: rgba(0,0,0,0.55);
-
-    color: white;
-
-    font-size: 21px;
-
-    z-index: 20;
-
-    touch-action: none;
-}
-
-#run-indicator {
-    position: absolute;
-
-    left: 145px;
-    bottom: 12px;
-
-    padding: 4px 7px;
-
-    border: 1px solid white;
-
-    color: white;
-
-    background: black;
-
-    font-size: 8px;
-
-    opacity: 0;
-
-    pointer-events: none;
-}
-
-#run-indicator.active {
-    opacity: 0.8;
-}
-
-/* В полноэкранном режиме управление остаётся поверх canvas */
-
-:fullscreen #game-wrapper {
-    width: 100vw;
-    height: 100vh;
-}
-
-:fullscreen #game {
-    width: min(100vw, 177.777vh);
-    height: min(56.25vw, 100vh);
-}
-
-/* На маленьких экранах */
-
-@media (max-width: 500px) {
-
-    #joystick {
-        left: 10px;
-        bottom: 12px;
-    }
-
-    #action-buttons {
-        right: 10px;
-        bottom: 18px;
-        gap: 7px;
-    }
-
-    .action-button {
-        width: 48px;
-        height: 48px;
+    #controls {
+        opacity: .75;
     }
 
 }
