@@ -4,9 +4,13 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no,
+viewport-fit=cover">
 
-<meta name="theme-color" content="#000">
+<meta name="theme-color" content="#000000">
 
 <title>Blood Glow RPG</title>
 
@@ -17,30 +21,50 @@ content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no
 
 <div id="game-wrapper">
 
-<canvas id="game" width="320" height="180"></canvas>
+    <canvas id="game" width="320" height="180"></canvas>
 
-<div id="mobile-ui">
+    <div id="mobile-ui">
 
-    <div id="joystick">
+        <!-- FULLSCREEN -->
+        <button id="fullscreen-button">
+            FULLSCREEN
+        </button>
 
-        <button class="joy up" data-key="up">▲</button>
-        <button class="joy left" data-key="left">◀</button>
-        <button class="joy down" data-key="down">▼</button>
-        <button class="joy right" data-key="right">▶</button>
+        <!-- JOYSTICK -->
+        <div id="joystick">
+
+            <button class="joy up" data-key="up">▲</button>
+            <button class="joy left" data-key="left">◀</button>
+            <button class="joy down" data-key="down">▼</button>
+            <button class="joy right" data-key="right">▶</button>
+
+        </div>
+
+        <!-- Z X C -->
+        <div id="action-buttons">
+
+            <button class="action-button"
+                    data-key="z">
+                Z
+            </button>
+
+            <button class="action-button"
+                    data-key="x">
+                X
+            </button>
+
+            <button class="action-button"
+                    data-key="c">
+                C
+            </button>
+
+        </div>
 
     </div>
 
-    <div id="action-buttons">
-
-        <button class="action-button" data-key="z">Z</button>
-        <button class="action-button" data-key="x">X</button>
-        <button class="action-button" data-key="c">C</button>
-
+    <div id="run-indicator">
+        RUN
     </div>
-
-</div>
-
-<div id="run-indicator">RUN</div>
 
 </div>
 
