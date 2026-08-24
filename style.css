@@ -1,21 +1,18 @@
 * {
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+    margin: 0;
+    padding: 0;
     user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html,
 body {
-    margin: 0;
-    padding: 0;
-
     width: 100%;
     height: 100%;
-
     overflow: hidden;
-
     background: #000;
-
     font-family: monospace;
 }
 
@@ -25,34 +22,24 @@ body {
     align-items: center;
 }
 
-#game-wrapper {
+#game {
     position: relative;
-
     width: 100vw;
     height: 100vh;
-
     overflow: hidden;
-
     background: #000;
 }
 
-#game {
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    transform: translate(-50%, -50%);
-
-    width: 100vw;
-    height: 100vh;
-
+#canvas {
     display: block;
 
-    background: #090b12;
+    width: 100%;
+    height: 100%;
 
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+
+    background: #080808;
 
     touch-action: none;
 }
@@ -61,31 +48,25 @@ body {
    FULLSCREEN
 ========================= */
 
-#fullscreen-button {
+#fullscreen {
     position: fixed;
 
-    top: 12px;
-    right: 12px;
+    top: 10px;
+    right: 10px;
 
     width: 42px;
     height: 42px;
 
-    z-index: 50;
-
-    border: 2px solid rgba(255,255,255,.55);
-    border-radius: 7px;
-
-    background: rgba(0,0,0,.4);
-
     color: white;
 
-    font-size: 21px;
+    background: rgba(0,0,0,.45);
 
-    touch-action: none;
-}
+    border: 2px solid rgba(255,255,255,.5);
+    border-radius: 7px;
 
-#fullscreen-button:active {
-    background: rgba(255,255,255,.2);
+    font-size: 22px;
+
+    z-index: 50;
 }
 
 /* =========================
@@ -95,28 +76,27 @@ body {
 #joystick {
     position: fixed;
 
-    left: 14px;
-    bottom: 14px;
+    left: 15px;
+    bottom: 15px;
 
-    width: 128px;
-    height: 128px;
+    width: 130px;
+    height: 130px;
 
-    z-index: 40;
+    opacity: .45;
 
-    opacity: .48;
+    z-index: 30;
 }
 
 .joy {
     position: absolute;
 
-    width: 42px;
-    height: 42px;
+    width: 43px;
+    height: 43px;
 
+    border: 2px solid white;
     border-radius: 8px;
 
-    border: 2px solid rgba(255,255,255,.7);
-
-    background: rgba(15,15,20,.35);
+    background: rgba(30,30,30,.4);
 
     color: white;
 
@@ -151,33 +131,32 @@ body {
 }
 
 /* =========================
-   ACTION BUTTONS
+   Z X C
 ========================= */
 
-#actions {
+#buttons {
     position: fixed;
 
-    right: 14px;
+    right: 15px;
     bottom: 18px;
 
-    z-index: 40;
-
     display: flex;
+    gap: 10px;
 
-    gap: 9px;
-
-    opacity: .52;
+    z-index: 30;
 }
 
-.action-button {
-    width: 52px;
-    height: 52px;
+.action {
+    width: 54px;
+    height: 54px;
 
     border-radius: 50%;
 
-    background: rgba(10,10,10,.45);
+    background: rgba(0,0,0,.45);
 
     color: white;
+
+    border: 2px solid white;
 
     font-family: monospace;
     font-size: 17px;
@@ -186,19 +165,19 @@ body {
     touch-action: none;
 }
 
-.z-button {
-    border: 2px solid #ff6666;
+.action.z {
+    border-color: #ff5555;
 }
 
-.x-button {
-    border: 2px solid #ffee66;
+.action.x {
+    border-color: #ffdd55;
 }
 
-.c-button {
-    border: 2px solid #66aaff;
+.action.c {
+    border-color: #5599ff;
 }
 
-.action-button:active {
+.action:active {
     background: rgba(255,255,255,.25);
 }
 
@@ -211,23 +190,28 @@ body {
     #joystick {
         transform: scale(.9);
         transform-origin: bottom left;
+        left: 8px;
+        bottom: 8px;
     }
 
-    #actions {
+    #buttons {
         transform: scale(.9);
         transform-origin: bottom right;
+        right: 8px;
+        bottom: 8px;
     }
 }
 
-@media (max-height: 350px) {
+/* =========================
+   FULLSCREEN
+========================= */
 
-    #joystick {
-        transform: scale(.72);
-        transform-origin: bottom left;
-    }
+:fullscreen #canvas {
+    width: 100vw;
+    height: 100vh;
+}
 
-    #actions {
-        transform: scale(.72);
-        transform-origin: bottom right;
-    }
-        }
+:-webkit-full-screen #canvas {
+    width: 100vw;
+    height: 100vh;
+}
