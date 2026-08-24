@@ -4,176 +4,44 @@
    CANVAS
 ===================================================== */
 
-const canvas = document.getElementById("canvas");
+const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-
-const W = 320;
-const H = 180;
 
 ctx.imageSmoothingEnabled = false;
 
+const W = 640;
+const H = 360;
+
 
 /* =====================================================
-   IMAGES
+   ИЗОБРАЖЕНИЯ
 ===================================================== */
 
 const images = {
-
     delta: new Image(),
     deltaLeft: new Image(),
     deltaRight: new Image(),
     deltaBack: new Image(),
     error: new Image()
-
 };
 
 images.delta.src = "images/delta.png";
-images.deltaLeft.src = "images/deltalef.png";
+images.deltaLeft.src = "images/deltaleft.png";
 images.deltaRight.src = "images/deltaright.png";
-images.deltaBack.src = "images/deltabach.png";
+images.deltaBack.src = "images/deltaback.png";
 images.error.src = "images/error.png";
 
 
 /* =====================================================
-   INPUT
+   ПОЛНОЭКРАННЫЙ РЕЖИМ
 ===================================================== */
 
-const keys = {
-    up: false,
-    down: false,
-    left: false,
-    right: false,
+const fullscreenButton =
+    document.getElementById("fullscreenButton");
 
-    z: false,
-    x: false,
-    c: false
-};
-
-const oldKeys = {
-    up: false,
-    down: false,
-    left: false,
-    right: false,
-
-    z: false,
-    x: false,
-    c: false
-};
-
-
-/* =====================================================
-   KEYBOARD
-===================================================== */
-
-window.addEventListener("keydown", function(e) {
-
-    const k = e.key.toLowerCase();
-
-    if (e.key === "ArrowUp" || k === "w")
-        keys.up = true;
-
-    if (e.key === "ArrowDown" || k === "s")
-        keys.down = true;
-
-    if (e.key === "ArrowLeft" || k === "a")
-        keys.left = true;
-
-    if (e.key === "ArrowRight" || k === "d")
-        keys.right = true;
-
-    if (k === "z")
-        keys.z = true;
-
-    if (k === "x")
-        keys.x = true;
-
-    if (k === "c")
-        keys.c = true;
-
-    e.preventDefault();
-
-}, { passive:false });
-
-
-window.addEventListener("keyup", function(e) {
-
-    const k = e.key.toLowerCase();
-
-    if (e.key === "ArrowUp" || k === "w")
-        keys.up = false;
-
-    if (e.key === "ArrowDown" || k === "s")
-        keys.down = false;
-
-    if (e.key === "ArrowLeft" || k === "a")
-        keys.left = false;
-
-    if (e.key === "ArrowRight" || k === "d")
-        keys.right = false;
-
-    if (k === "z")
-        keys.z = false;
-
-    if (k === "x")
-        keys.x = false;
-
-    if (k === "c")
-        keys.c = false;
-
-    e.preventDefault();
-
-}, { passive:false });
-
-
-/* =====================================================
-   MOBILE CONTROLS
-===================================================== */
-
-document.querySelectorAll(".joy, .action").forEach(button => {
-
-    const key = button.dataset.key;
-
-    button.addEventListener("pointerdown", e => {
-
-        e.preventDefault();
-
-        keys[key] = true;
-
-        try {
-            button.setPointerCapture(e.pointerId);
-        } catch {}
-
-    });
-
-    button.addEventListener("pointerup", e => {
-
-        e.preventDefault();
-
-        keys[key] = false;
-
-    });
-
-    button.addEventListener("pointercancel", () => {
-
-        keys[key] = false;
-
-    });
-
-    button.addEventListener("pointerleave", () => {
-
-        keys[key] = false;
-
-    });
-
-});
-
-
-/* =====================================================
-   FULLSCREEN
-===================================================== */
-
-document.getElementById("fullscreen")
-    .addEventListener("pointerdown", async e => {
+fullscreenButton.addEventListener(
+    "pointerdown",
+    async function(e) {
 
         e.preventDefault();
 
@@ -189,81 +57,297 @@ document.getElementById("fullscreen")
 
             }
 
-        } catch {}
+        } catch(error) {
 
-    });
+            console.log(error);
+
+        }
+
+    }
+);
 
 
 /* =====================================================
-   GAME STATE
+   INPUT
+===================================================== */
+
+const keys = {
+
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+
+    z: false,
+    x: false,
+    c: false
+
+};
+
+
+const pressed = {
+
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+
+    z: false,
+    x: false,
+    c: false
+
+};
+
+
+/* =====================================================
+   КЛАВИАТУРА
+===================================================== */
+
+window.addEventListener(
+    "keydown",
+    function(e) {
+
+        let key = e.key.toLowerCase();
+
+        let mapped = null;
+
+        if (e.key === "ArrowUp" || key === "w")
+            mapped = "up";
+
+        if (e.key === "ArrowDown" || key === "s")
+            mapped = "down";
+
+        if (e.key === "ArrowLeft" || key === "a")
+            mapped = "left";
+
+        if (e.key === "ArrowRight" || key === "d")
+            mapped = "right";
+
+        if (key === "z")
+            mapped = "z";
+
+        if (key === "x")
+            mapped = "x";
+
+        if (key === "c")
+            mapped = "c";
+
+        if (mapped) {
+
+            keys[mapped] = true;
+
+            e.preventDefault();
+
+        }
+
+    },
+    { passive:false }
+);
+
+
+window.addEventListener(
+    "keyup",
+    function(e) {
+
+        let key = e.key.toLowerCase();
+
+        let mapped = null;
+
+        if (e.key === "ArrowUp" || key === "w")
+            mapped = "up";
+
+        if (e.key === "ArrowDown" || key === "s")
+            mapped = "down";
+
+        if (e.key === "ArrowLeft" || key === "a")
+            mapped = "left";
+
+        if (e.key === "ArrowRight" || key === "d")
+            mapped = "right";
+
+        if (key === "z")
+            mapped = "z";
+
+        if (key === "x")
+            mapped = "x";
+
+        if (key === "c")
+            mapped = "c";
+
+        if (mapped) {
+
+            keys[mapped] = false;
+
+            e.preventDefault();
+
+        }
+
+    },
+    { passive:false }
+);
+
+
+/* =====================================================
+   МОБИЛЬНЫЕ КНОПКИ
+===================================================== */
+
+document.querySelectorAll(".joy").forEach(
+    function(button) {
+
+        const key = button.dataset.key;
+
+        button.addEventListener(
+            "pointerdown",
+            function(e) {
+
+                e.preventDefault();
+
+                keys[key] = true;
+
+                button.setPointerCapture(
+                    e.pointerId
+                );
+
+            }
+        );
+
+        button.addEventListener(
+            "pointerup",
+            function(e) {
+
+                e.preventDefault();
+
+                keys[key] = false;
+
+            }
+        );
+
+        button.addEventListener(
+            "pointercancel",
+            function() {
+
+                keys[key] = false;
+
+            }
+        );
+
+    }
+);
+
+
+document.querySelectorAll(".action").forEach(
+    function(button) {
+
+        const key = button.dataset.key;
+
+        button.addEventListener(
+            "pointerdown",
+            function(e) {
+
+                e.preventDefault();
+
+                keys[key] = true;
+
+                button.setPointerCapture(
+                    e.pointerId
+                );
+
+            }
+        );
+
+        button.addEventListener(
+            "pointerup",
+            function() {
+
+                keys[key] = false;
+
+            }
+        );
+
+        button.addEventListener(
+            "pointercancel",
+            function() {
+
+                keys[key] = false;
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   НАЖАТИЕ ОДИН РАЗ
+===================================================== */
+
+function justPressed(key) {
+
+    if (keys[key] && !pressed[key]) {
+
+        pressed[key] = true;
+
+        return true;
+
+    }
+
+    return false;
+}
+
+
+function updatePressed() {
+
+    const list = [
+        "up",
+        "down",
+        "left",
+        "right",
+        "z",
+        "x",
+        "c"
+    ];
+
+    list.forEach(function(key) {
+
+        if (!keys[key])
+            pressed[key] = false;
+
+    });
+
+}
+
+
+/* =====================================================
+   СОСТОЯНИЕ ИГРЫ
 ===================================================== */
 
 const game = {
 
     state: "title",
 
+    scene: "room",
+
     dialogue: null,
-    dialogueIndex: 0,
+
+    dialogueLine: 0,
+
+    room: "room",
+
+    menuIndex: 0,
 
     battle: null,
 
     started: false,
 
-    battleCooldown: 0,
+    encounterTimer: 0,
 
-    encounterSteps: 0
-
-};
-
-
-/* =====================================================
-   PLAYER
-===================================================== */
-
-const player = {
-
-    x: 70,
-    y: 125,
-
-    width: 12,
-    height: 16,
-
-    direction: "down"
+    transition: 0
 
 };
 
 
 /* =====================================================
-   DIGITAL WASTELAND
-===================================================== */
-
-const wasteland = {
-
-    width: 1000,
-
-    walls: [
-
-        {
-            x: 0,
-            y: 0,
-            w: 1000,
-            h: 7
-        },
-
-        {
-            x: 0,
-            y: 173,
-            w: 1000,
-            h: 7
-        }
-
-    ]
-
-};
-
-
-/* =====================================================
-   PARTY
+   ПАРТИЯ
 ===================================================== */
 
 const party = [
@@ -273,8 +357,7 @@ const party = [
         hp: 90,
         maxHP: 90,
         atk: 14,
-        def: 8,
-        color: "#ffffff"
+        def: 8
     },
 
     {
@@ -282,8 +365,7 @@ const party = [
         hp: 80,
         maxHP: 80,
         atk: 13,
-        def: 6,
-        color: "#66aaff"
+        def: 6
     },
 
     {
@@ -291,8 +373,7 @@ const party = [
         hp: 70,
         maxHP: 70,
         atk: 10,
-        def: 11,
-        color: "#66dd77"
+        def: 11
     },
 
     {
@@ -300,8 +381,7 @@ const party = [
         hp: 110,
         maxHP: 110,
         atk: 12,
-        def: 12,
-        color: "#cc8844"
+        def: 12
     },
 
     {
@@ -309,7 +389,58 @@ const party = [
         hp: 100,
         maxHP: 100,
         atk: 13,
-        def: 9,
+        def: 10
+    }
+
+];
+
+
+/* =====================================================
+   ДЕЛЬТА
+===================================================== */
+
+const player = {
+
+    x: 70,
+    y: 230,
+
+    speed: 2.2,
+
+    direction: "down",
+
+    width: 22,
+    height: 30
+
+};
+
+
+/* =====================================================
+   ОТРЯД
+===================================================== */
+
+const followers = [
+
+    {
+        x: 42,
+        y: 230,
+        color: "#66aaff"
+    },
+
+    {
+        x: 15,
+        y: 230,
+        color: "#ffcc55"
+    },
+
+    {
+        x: -12,
+        y: 230,
+        color: "#cc8844"
+    },
+
+    {
+        x: -39,
+        y: 230,
         color: "#ff77cc"
     }
 
@@ -317,19 +448,29 @@ const party = [
 
 
 /* =====================================================
-   DIALOGUE
+   ТЕКСТЫ
 ===================================================== */
 
-const firstDialogue = [
+const introText = [
+
+    "Дельта медленно открывает глаза.",
+
+    "Комната выглядит непривычно тихой.",
+
+    "За окном мерцают строки неизвестного кода.",
+
+    "Это не обычный мир.",
+
+    "Это цифровая пустошь."
+
+];
+
+
+const partyDialogue = [
 
     {
         name: "ЛИЧИ",
-        text: "Надо проверить Немку..."
-    },
-
-    {
-        name: "ЛИЧИ",
-        text: "Она изменилась."
+        text: "Надо проверить Немку... она изменилась."
     },
 
     {
@@ -348,883 +489,563 @@ const firstDialogue = [
     },
 
     {
+        name: "ПАНКЕЙК",
+        text: "Надеюсь, с ней всё в порядке."
+    },
+
+    {
         name: "ШАРЛОТА",
-        text: "Тогда не будем терять время."
+        text: "Сначала найдём её. Потом разберёмся."
     }
 
 ];
 
 
 /* =====================================================
-   START
+   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 ===================================================== */
 
-function startGame() {
+function clamp(value, min, max) {
 
-    game.state = "intro";
+    return Math.max(
+        min,
+        Math.min(max, value)
+    );
 
-    player.x = 70;
-    player.y = 125;
+}
 
-    game.dialogue = firstDialogue;
-    game.dialogueIndex = 0;
+
+function rectsOverlap(a, b) {
+
+    return (
+
+        a.x < b.x + b.w &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.height > b.y
+
+    );
 
 }
 
 
 /* =====================================================
-   TITLE
+   ПЕРЕХОД
+===================================================== */
+
+function changeState(state) {
+
+    game.state = state;
+
+}
+
+
+/* =====================================================
+   ГЛАВНОЕ МЕНЮ
 ===================================================== */
 
 function updateTitle() {
 
-    if (pressed("z")) {
+    if (justPressed("z")) {
 
-        startGame();
+        game.state = "save";
 
     }
 
 }
 
 
+function drawTitle() {
+
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.textAlign = "center";
+
+    ctx.fillStyle = "#fff";
+
+    ctx.font = "38px monospace";
+
+    ctx.fillText(
+        "BLOOD GLOW",
+        W / 2,
+        105
+    );
+
+    ctx.font = "14px monospace";
+
+    ctx.fillStyle = "#aaa";
+
+    ctx.fillText(
+        "DIGITAL WASTELAND",
+        W / 2,
+        130
+    );
+
+    ctx.fillStyle = "#fff";
+
+    ctx.font = "16px monospace";
+
+    ctx.fillText(
+        "▶ НАЧАТЬ",
+        W / 2,
+        205
+    );
+
+    ctx.font = "11px monospace";
+
+    ctx.fillStyle = "#777";
+
+    ctx.fillText(
+        "Z — выбрать",
+        W / 2,
+        240
+    );
+
+    ctx.textAlign = "left";
+
+}
+
+
 /* =====================================================
-   INTRO
+   МЕНЮ СОХРАНЕНИЙ
 ===================================================== */
 
-function updateIntro() {
+function updateSave() {
 
-    if (pressed("z")) {
+    if (justPressed("x")) {
 
-        game.dialogueIndex++;
+        game.state = "title";
 
-        if (
-            game.dialogueIndex >=
-            game.dialogue.length
-        ) {
+        return;
 
-            game.dialogue = null;
+    }
 
-            game.state = "wasteland";
+
+    if (justPressed("up")) {
+
+        game.menuIndex--;
+
+        if (game.menuIndex < 0)
+            game.menuIndex = 2;
+
+    }
+
+
+    if (justPressed("down")) {
+
+        game.menuIndex++;
+
+        if (game.menuIndex > 2)
+            game.menuIndex = 0;
+
+    }
+
+
+    if (justPressed("z")) {
+
+        if (game.menuIndex === 0) {
+
+            localStorage.setItem(
+                "bloodGlowSave1",
+                "new"
+            );
+
+            game.state = "intro";
+
+            game.dialogueLine = 0;
+
+        }
+
+        if (game.menuIndex === 1) {
+
+            const save =
+                localStorage.getItem(
+                    "bloodGlowSave1"
+                );
+
+            if (save) {
+
+                game.state = "world";
+
+            } else {
+
+                game.state = "intro";
+
+                game.dialogueLine = 0;
+
+            }
+
+        }
+
+        if (game.menuIndex === 2) {
+
+            game.state = "title";
 
         }
 
     }
 
-    if (pressed("x")) {
+}
 
-        game.dialogue = null;
 
-        game.state = "wasteland";
+function drawSave() {
+
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 3;
+
+    ctx.strokeRect(
+        100,
+        45,
+        440,
+        270
+    );
+
+    ctx.fillStyle = "#fff";
+
+    ctx.font = "22px monospace";
+
+    ctx.fillText(
+        "СОХРАНЕНИЕ",
+        245,
+        80
+    );
+
+    const options = [
+        "НОВАЯ ИГРА",
+        "ЗАГРУЗИТЬ",
+        "НАЗАД"
+    ];
+
+    options.forEach(
+        function(text, i) {
+
+            const y =
+                135 + i * 50;
+
+            if (i === game.menuIndex) {
+
+                ctx.fillText(
+                    "▶",
+                    170,
+                    y
+                );
+
+            }
+
+            ctx.fillText(
+                text,
+                205,
+                y
+            );
+
+        }
+    );
+
+    ctx.font = "12px monospace";
+
+    ctx.fillStyle = "#888";
+
+    ctx.fillText(
+        "Z — выбрать    X — назад",
+        220,
+        285
+    );
+
+}
+
+
+/* =====================================================
+   ВСТУПЛЕНИЕ
+===================================================== */
+
+function updateIntro() {
+
+    if (justPressed("z")) {
+
+        game.dialogueLine++;
+
+        if (
+            game.dialogueLine >=
+            introText.length
+        ) {
+
+            game.state = "world";
+
+            player.x = 90;
+            player.y = 220;
+
+            followers[0].x = 60;
+            followers[1].x = 30;
+            followers[2].x = 0;
+            followers[3].x = -30;
+
+        }
 
     }
 
 }
 
 
+function drawIntro() {
+
+    ctx.fillStyle = "#050505";
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = "#111";
+
+    ctx.fillRect(
+        160,
+        65,
+        320,
+        210
+    );
+
+    ctx.fillStyle = "#222";
+
+    ctx.fillRect(
+        190,
+        100,
+        260,
+        100
+    );
+
+    ctx.fillStyle = "#fff";
+
+    ctx.font = "16px monospace";
+
+    drawWrapped(
+        introText[game.dialogueLine],
+        120,
+        290,
+        400,
+        22
+    );
+
+    ctx.font = "11px monospace";
+
+    ctx.fillStyle = "#888";
+
+    ctx.fillText(
+        "Z — далее",
+        520,
+        330
+    );
+
+}
+
+
 /* =====================================================
-   MOVEMENT
+   МИР
 ===================================================== */
 
-function updateWasteland() {
+function updateWorld() {
+
+    if (justPressed("c")) {
+
+        game.state = "menu";
+
+        game.menuIndex = 0;
+
+        return;
+
+    }
+
+
+    if (justPressed("z")) {
+
+        if (
+            player.x > 430 &&
+            player.x < 550 &&
+            player.y > 170 &&
+            player.y < 270
+        ) {
+
+            game.dialogue = partyDialogue;
+
+            game.dialogueLine = 0;
+
+            game.state = "dialogue";
+
+            return;
+
+        }
+
+    }
+
 
     let dx = 0;
     let dy = 0;
 
-    const speed = 1.45;
 
     if (keys.up) {
 
-        dy -= speed;
-        player.direction = "up";
+        dy -= player.speed;
+
+        player.direction = "back";
 
     }
 
     if (keys.down) {
 
-        dy += speed;
+        dy += player.speed;
+
         player.direction = "down";
 
     }
 
     if (keys.left) {
 
-        dx -= speed;
+        dx -= player.speed;
+
         player.direction = "left";
 
     }
 
     if (keys.right) {
 
-        dx += speed;
+        dx += player.speed;
+
         player.direction = "right";
 
     }
 
-    if (dx !== 0 && dy !== 0) {
-
-        dx *= .707;
-        dy *= .707;
-
-    }
 
     player.x += dx;
     player.y += dy;
 
-    player.x = Math.max(
-        10,
-        Math.min(
-            wasteland.width - 20,
-            player.x
-        )
-    );
 
-    player.y = Math.max(
-        15,
-        Math.min(
-            160,
-            player.y
-        )
-    );
+    player.x =
+        clamp(
+            player.x,
+            20,
+            W - 45
+        );
+
+    player.y =
+        clamp(
+            player.y,
+            65,
+            285
+        );
 
 
-    if (dx !== 0 || dy !== 0) {
-
-        game.encounterSteps++;
-
-    }
+    updateFollowers();
 
 
     /*
-       Случайные враги не появляются
-       каждые два шага.
-       Нужно пройти некоторое расстояние.
+       Встречи происходят не через
+       каждые несколько шагов.
     */
 
+    game.encounterTimer++;
+
     if (
-        game.encounterSteps > 450 &&
-        game.battleCooldown <= 0
+        game.encounterTimer > 900
     ) {
 
-        if (Math.random() < 0.012) {
+        if (
+            Math.random() < 0.0015
+        ) {
 
             startBattle();
 
-            game.encounterSteps = 0;
+            game.encounterTimer = 0;
 
         }
-
-    }
-
-
-    if (game.battleCooldown > 0) {
-
-        game.battleCooldown--;
 
     }
 
 }
 
 
-/* =====================================================
-   BATTLE
-===================================================== */
+function updateFollowers() {
 
-function startBattle() {
+    const targets = [
 
-    game.state = "battle";
-
-    game.battle = {
-
-        enemy: {
-
-            name: "ОШИБКА СИСТЕМЫ",
-
-            hp: 250,
-
-            maxHP: 250
-
+        {
+            x: player.x - 30,
+            y: player.y
         },
 
-        menu: 0,
-
-        actor: 0,
-
-        mercy: 0,
-
-        phase: "menu",
-
-        message: "ОШИБКА ОБНАРУЖЕНА.",
-
-        soul: {
-
-            x: 160,
-            y: 130
-
+        {
+            x: player.x - 60,
+            y: player.y
         },
 
-        bullets: [],
+        {
+            x: player.x - 90,
+            y: player.y
+        },
 
-        attackTime: 0,
-
-        defend: false
-
-    };
-
-}
-
-
-/* =====================================================
-   BATTLE UPDATE
-===================================================== */
-
-function updateBattle() {
-
-    const b = game.battle;
-
-    if (!b)
-        return;
-
-
-    /* MENU */
-
-    if (b.phase === "menu") {
-
-        if (pressed("left")) {
-
-            b.menu--;
-
-            if (b.menu < 0)
-                b.menu = 3;
-
+        {
+            x: player.x - 120,
+            y: player.y
         }
 
-        if (pressed("right")) {
+    ];
 
-            b.menu++;
 
-            if (b.menu > 3)
-                b.menu = 0;
+    followers.forEach(
+        function(f, i) {
 
-        }
+            const target = targets[i];
 
-        if (pressed("z")) {
+            f.x +=
+                (target.x - f.x) * .08;
 
-            if (b.menu === 0) {
-
-                attackEnemy();
-
-            }
-
-            else if (b.menu === 1) {
-
-                b.phase = "act";
-
-            }
-
-            else if (b.menu === 2) {
-
-                defend();
-
-            }
-
-            else {
-
-                if (b.mercy >= 100) {
-
-                    b.message =
-                        "ОШИБКА БЫЛА УДАЛЕНА.";
-
-                    b.phase = "victory";
-
-                }
-                else {
-
-                    b.message =
-                        "ОШИБКА ЕЩЁ НЕ ГОТОВА.";
-
-                    startEnemyAttack();
-
-                }
-
-            }
+            f.y +=
+                (target.y - f.y) * .08;
 
         }
-
-    }
-
-
-    /* ACT */
-
-    else if (b.phase === "act") {
-
-        if (pressed("x")) {
-
-            b.phase = "menu";
-
-        }
-
-        if (pressed("z")) {
-
-            b.mercy = Math.min(
-                100,
-                b.mercy + 25
-            );
-
-            b.message =
-                "Вы изучили структуру ошибки.";
-
-            startEnemyAttack();
-
-        }
-
-    }
-
-
-    /* ENEMY */
-
-    else if (b.phase === "enemy") {
-
-        updateEnemyAttack();
-
-    }
-
-
-    /* VICTORY */
-
-    else if (b.phase === "victory") {
-
-        if (pressed("z")) {
-
-            game.state = "wasteland";
-            game.battle = null;
-
-            game.battleCooldown = 250;
-
-        }
-
-    }
-
-}
-
-
-/* =====================================================
-   ATTACK
-===================================================== */
-
-function attackEnemy() {
-
-    const b = game.battle;
-
-    const p = party[b.actor];
-
-    const damage =
-        p.atk +
-        Math.floor(Math.random() * 6);
-
-    b.enemy.hp -= damage;
-
-    b.message =
-        p.name +
-        " атакует!  -" +
-        damage;
-
-    if (b.enemy.hp <= 0) {
-
-        b.enemy.hp = 0;
-
-        b.phase = "victory";
-
-        return;
-
-    }
-
-    b.actor++;
-
-    if (b.actor >= party.length)
-        b.actor = 0;
-
-    startEnemyAttack();
-
-}
-
-
-/* =====================================================
-   DEFEND
-===================================================== */
-
-function defend() {
-
-    const b = game.battle;
-
-    /*
-       Защита увеличивает RD.
-    */
-
-    b.mercy = Math.min(
-        100,
-        b.mercy + 18
-    );
-
-    b.defend = true;
-
-    b.message =
-        party[b.actor].name +
-        " защищается.";
-
-    startEnemyAttack();
-
-}
-
-
-/* =====================================================
-   ENEMY ATTACK
-===================================================== */
-
-function startEnemyAttack() {
-
-    const b = game.battle;
-
-    b.phase = "enemy";
-
-    b.attackTime = 360;
-
-    b.bullets = [];
-
-    /*
-       Один ERROR — лазер.
-       Здесь создаётся одна атака.
-    */
-
-    for (let i = 0; i < 3; i++) {
-
-        b.bullets.push({
-
-            x: 60 + Math.random() * 200,
-
-            y: 92,
-
-            targetX:
-                60 + Math.random() * 200,
-
-            warning: 45,
-
-            speed: 3,
-
-            active: false
-
-        });
-
-    }
-
-}
-
-
-/* =====================================================
-   ENEMY ATTACK UPDATE
-===================================================== */
-
-function updateEnemyAttack() {
-
-    const b = game.battle;
-
-    if (pressed("up"))
-        b.soul.y -= 2.3;
-
-    if (pressed("down"))
-        b.soul.y += 2.3;
-
-    if (pressed("left"))
-        b.soul.x -= 2.3;
-
-    if (pressed("right"))
-        b.soul.x += 2.3;
-
-
-    b.soul.x = Math.max(
-        55,
-        Math.min(265, b.soul.x)
-    );
-
-    b.soul.y = Math.max(
-        100,
-        Math.min(158, b.soul.y)
-    );
-
-
-    b.bullets.forEach(laser => {
-
-        if (laser.warning > 0) {
-
-            laser.warning--;
-
-        }
-        else {
-
-            laser.active = true;
-
-            laser.y += laser.speed;
-
-            if (
-                Math.abs(
-                    b.soul.x -
-                    laser.targetX
-                ) < 6 &&
-                Math.abs(
-                    b.soul.y -
-                    laser.y
-                ) < 8
-            ) {
-
-                damageParty();
-
-                laser.y = 999;
-
-            }
-
-        }
-
-    });
-
-
-    b.attackTime--;
-
-    if (b.attackTime <= 0) {
-
-        b.phase = "menu";
-
-        b.defend = false;
-
-        b.message =
-            "Ход: " +
-            party[b.actor].name;
-
-    }
-
-}
-
-
-/* =====================================================
-   DAMAGE
-===================================================== */
-
-function damageParty() {
-
-    const b = game.battle;
-
-    const p = party[b.actor];
-
-    let damage = 10;
-
-    if (b.defend)
-        damage = 5;
-
-    p.hp = Math.max(
-        0,
-        p.hp - damage
-    );
-
-    b.message =
-        p.name +
-        " получил " +
-        damage +
-        " урона!";
-
-    if (p.hp <= 0) {
-
-        let alive = party.some(
-            member => member.hp > 0
-        );
-
-        if (!alive) {
-
-            b.phase = "victory";
-
-            b.message =
-                "Система остановила бой.";
-
-        }
-
-    }
-
-}
-
-
-/* =====================================================
-   INPUT EDGE
-===================================================== */
-
-function pressed(key) {
-
-    return (
-        keys[key] &&
-        !oldKeys[key]
     );
 
 }
 
 
 /* =====================================================
-   DRAW TITLE
+   ДИАЛОГ
 ===================================================== */
 
-function drawTitle() {
+function updateDialogue() {
 
-    ctx.fillStyle = "#050505";
-    ctx.fillRect(0, 0, W, H);
+    if (justPressed("z")) {
 
-    ctx.fillStyle = "#fff";
-
-    ctx.font = "20px monospace";
-
-    ctx.fillText(
-        "BLOOD GLOW",
-        92,
-        65
-    );
-
-    ctx.font = "8px monospace";
-
-    ctx.fillText(
-        "DIGITAL WASTELAND",
-        103,
-        82
-    );
-
-    ctx.font = "9px monospace";
-
-    ctx.fillText(
-        "Z — НАЧАТЬ",
-        118,
-        120
-    );
-
-}
-
-
-/* =====================================================
-   DRAW WASTELAND
-===================================================== */
-
-function drawWasteland() {
-
-    ctx.fillStyle = "#11151c";
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    /*
-       Длинная цифровая пустошь.
-    */
-
-    const cameraX =
-        Math.max(
-            0,
-            Math.min(
-                wasteland.width - W,
-                player.x - 160
-            )
-        );
-
-
-    /* фон */
-
-    for (
-        let x = -cameraX % 20;
-        x < W;
-        x += 20
-    ) {
-
-        ctx.fillStyle = "#18202a";
-
-        ctx.fillRect(
-            x,
-            20,
-            1,
-            150
-        );
-
-    }
-
-
-    for (
-        let x = -cameraX % 32;
-        x < W;
-        x += 32
-    ) {
-
-        ctx.fillStyle = "#27313c";
-
-        ctx.fillRect(
-            x,
-            150,
-            2,
-            2
-        );
-
-    }
-
-
-    /* дальние ошибки */
-
-    for (
-        let x = 30;
-        x < wasteland.width;
-        x += 120
-    ) {
-
-        const sx = x - cameraX;
+        game.dialogueLine++;
 
         if (
-            sx > -30 &&
-            sx < W + 30
+            game.dialogueLine >=
+            game.dialogue.length
         ) {
 
-            drawSmallError(
-                sx,
-                75
-            );
+            game.state = "world";
+
+            game.dialogue = null;
 
         }
 
     }
 
 
-    /* путь */
+    if (justPressed("x")) {
 
-    ctx.fillStyle = "#20262e";
+        game.state = "world";
 
-    ctx.fillRect(
-        -cameraX,
-        108,
-        wasteland.width,
-        45
-    );
-
-
-    /* player */
-
-    drawDelta(
-        player.x - cameraX,
-        player.y
-    );
-
-
-    ctx.fillStyle = "#fff";
-
-    ctx.font = "7px monospace";
-
-    ctx.fillText(
-        "ЦИФРОВАЯ ПУСТОШЬ",
-        10,
-        18
-    );
-
-}
-
-
-/* =====================================================
-   DELTA SPRITE
-===================================================== */
-
-function drawDelta(x, y) {
-
-    let img = images.delta;
-
-    if (player.direction === "left")
-        img = images.deltaLeft;
-
-    if (player.direction === "right")
-        img = images.deltaRight;
-
-    if (player.direction === "up")
-        img = images.deltaBack;
-
-
-    if (
-        img.complete &&
-        img.naturalWidth > 0
-    ) {
-
-        ctx.drawImage(
-            img,
-            Math.round(x - 10),
-            Math.round(y - 17),
-            20,
-            24
-        );
-
-    }
-    else {
-
-        /*
-           Запасной вариант, чтобы
-           игра никогда не превращалась
-           в пустой экран, если картинки
-           ещё не загрузились.
-        */
-
-        ctx.fillStyle = "#fff";
-
-        ctx.fillRect(
-            x - 5,
-            y - 10,
-            10,
-            14
-        );
+        game.dialogue = null;
 
     }
 
 }
 
-
-/* =====================================================
-   SMALL ERROR
-===================================================== */
-
-function drawSmallError(x, y) {
-
-    if (
-        images.error.complete &&
-        images.error.naturalWidth > 0
-    ) {
-
-        ctx.drawImage(
-            images.error,
-            x - 8,
-            y - 8,
-            16,
-            16
-        );
-
-    }
-    else {
-
-        ctx.fillStyle = "#aa44ff";
-
-        ctx.fillRect(
-            x - 6,
-            y - 6,
-            12,
-            12
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   DRAW DIALOGUE
-===================================================== */
 
 function drawDialogue() {
 
-    ctx.fillStyle = "rgba(0,0,0,.45)";
+    drawWorld();
+
+    ctx.fillStyle = "rgba(0,0,0,.65)";
 
     ctx.fillRect(
         0,
@@ -1237,130 +1058,77 @@ function drawDialogue() {
     ctx.fillStyle = "#000";
 
     ctx.fillRect(
-        12,
-        108,
-        296,
-        58
+        50,
+        220,
+        540,
+        105
     );
 
 
     ctx.strokeStyle = "#fff";
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
 
     ctx.strokeRect(
-        12,
-        108,
-        296,
-        58
+        50,
+        220,
+        540,
+        105
     );
 
 
     const d =
         game.dialogue[
-            game.dialogueIndex
+            game.dialogueLine
         ];
 
 
     ctx.fillStyle = "#fff";
 
-    ctx.font = "8px monospace";
+    ctx.font = "16px monospace";
 
     ctx.fillText(
         d.name,
-        23,
-        124
+        75,
+        250
     );
 
 
-    ctx.font = "7px monospace";
+    ctx.font = "13px monospace";
 
-    drawText(
+    drawWrapped(
         d.text,
-        23,
-        140,
-        270,
-        9
+        75,
+        275,
+        490,
+        18
     );
 
 
-    ctx.font = "6px monospace";
+    ctx.font = "10px monospace";
+
+    ctx.fillStyle = "#888";
 
     ctx.fillText(
         "Z — далее",
-        235,
-        158
+        485,
+        310
     );
 
 }
 
 
 /* =====================================================
-   TEXT WRAP
+   МИР — РИСОВКА
 ===================================================== */
 
-function drawText(
-    text,
-    x,
-    y,
-    maxWidth,
-    lineHeight
-) {
+function drawWorld() {
 
-    const words = text.split(" ");
+    /*
+       Цифровая пустошь
+    */
 
-    let line = "";
-
-    for (const word of words) {
-
-        const test =
-            line +
-            word +
-            " ";
-
-        if (
-            ctx.measureText(test).width >
-            maxWidth &&
-            line !== ""
-        ) {
-
-            ctx.fillText(
-                line,
-                x,
-                y
-            );
-
-            line = word + " ";
-
-            y += lineHeight;
-
-        }
-        else {
-
-            line = test;
-
-        }
-
-    }
-
-    ctx.fillText(
-        line,
-        x,
-        y
-    );
-
-}
-
-
-/* =====================================================
-   DRAW BATTLE
-===================================================== */
-
-function drawBattle() {
-
-    const b = game.battle;
-
-    ctx.fillStyle = "#050505";
+    ctx.fillStyle = "#090b12";
 
     ctx.fillRect(
         0,
@@ -1370,206 +1138,1346 @@ function drawBattle() {
     );
 
 
-    /* ВРАГ */
+    /*
+       Небо
+    */
 
-    if (
-        images.error.complete &&
-        images.error.naturalWidth > 0
+    ctx.fillStyle = "#101522";
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        190
+    );
+
+
+    /*
+       горизонт
+    */
+
+    ctx.fillStyle = "#171b26";
+
+    ctx.fillRect(
+        0,
+        190,
+        W,
+        170
+    );
+
+
+    /*
+       цифровая земля
+    */
+
+    ctx.fillStyle = "#252a35";
+
+    for (
+        let y = 195;
+        y < H;
+        y += 20
     ) {
 
-        ctx.drawImage(
-            images.error,
-            136,
-            15,
-            48,
-            48
+        ctx.fillRect(
+            0,
+            y,
+            W,
+            1
         );
 
     }
-    else {
 
-        ctx.fillStyle = "#aa44ff";
+
+    /*
+       случайные пиксели
+    */
+
+    ctx.fillStyle = "#353b48";
+
+    for (
+        let i = 0;
+        i < 80;
+        i++
+    ) {
+
+        const x =
+            (i * 83) % W;
+
+        const y =
+            205 +
+            ((i * 47) % 145);
 
         ctx.fillRect(
-            143,
-            22,
-            34,
-            34
+            x,
+            y,
+            2,
+            2
         );
 
     }
 
 
-    ctx.fillStyle = "#fff";
+    /*
+       цифровые столбы
+    */
 
-    ctx.font = "7px monospace";
+    ctx.fillStyle = "#191e2a";
 
-    ctx.fillText(
-        b.enemy.name,
+    ctx.fillRect(
         20,
-        20
+        110,
+        18,
+        90
+    );
+
+    ctx.fillRect(
+        575,
+        90,
+        22,
+        110
     );
 
 
-    /* ENEMY HP */
+    /*
+       команда
+    */
 
-    ctx.fillText(
-        "HP",
-        230,
-        20
-    );
+    followers.forEach(
+        function(f) {
 
-    drawBar(
-        248,
-        15,
-        50,
-        6,
-        b.enemy.hp,
-        b.enemy.maxHP
-    );
+            drawCharacter(
+                f.x,
+                f.y,
+                f.color
+            );
 
-
-    ctx.fillText(
-        b.enemy.hp +
-        "/" +
-        b.enemy.maxHP,
-        248,
-        31
+        }
     );
 
 
-    /* MESSAGE */
+    /*
+       Дельта
+    */
 
-    ctx.font = "6px monospace";
-
-    drawText(
-        b.message,
-        25,
-        78,
-        270,
-        8
-    );
+    drawDelta();
 
 
-    /* RD */
+    /*
+       зона разговора
+    */
 
-    ctx.fillStyle = "#fff";
+    ctx.strokeStyle = "#666";
 
-    ctx.font = "6px monospace";
-
-    ctx.fillText(
-        "RD",
-        175,
-        88
-    );
-
-    drawBar(
-        195,
-        83,
-        105,
-        8,
-        b.mercy,
+    ctx.strokeRect(
+        430,
+        170,
+        120,
         100
     );
 
 
+    ctx.fillStyle = "#aaa";
+
+    ctx.font = "10px monospace";
+
     ctx.fillText(
-        Math.floor(b.mercy) + "%",
-        270,
-        98
+        "Z",
+        485,
+        190
     );
 
 
-    /* BATTLE BOX */
+    ctx.fillStyle = "#fff";
+
+    ctx.font = "12px monospace";
+
+    ctx.fillText(
+        "ЦИФРОВАЯ ПУСТОШЬ",
+        20,
+        30
+    );
+
+
+    ctx.fillStyle = "#777";
+
+    ctx.font = "10px monospace";
+
+    ctx.fillText(
+        "Идите вперёд.",
+        20,
+        48
+    );
+
+}
+
+
+/* =====================================================
+   ДЕЛЬТА
+===================================================== */
+
+function getDeltaImage() {
+
+    if (
+        player.direction === "left" &&
+        images.deltaLeft.complete &&
+        images.deltaLeft.naturalWidth
+    )
+        return images.deltaLeft;
+
+    if (
+        player.direction === "right" &&
+        images.deltaRight.complete &&
+        images.deltaRight.naturalWidth
+    )
+        return images.deltaRight;
+
+    if (
+        player.direction === "back" &&
+        images.deltaBack.complete &&
+        images.deltaBack.naturalWidth
+    )
+        return images.deltaBack;
+
+    if (
+        images.delta.complete &&
+        images.delta.naturalWidth
+    )
+        return images.delta;
+
+    return null;
+
+}
+
+
+function drawDelta() {
+
+    const img = getDeltaImage();
+
+
+    if (img) {
+
+        ctx.drawImage(
+            img,
+            player.x - 12,
+            player.y - 18,
+            32,
+            42
+        );
+
+        return;
+
+    }
+
+
+    drawCharacter(
+        player.x,
+        player.y,
+        "#ffffff"
+    );
+
+}
+
+
+/* =====================================================
+   ПИКСЕЛЬНЫЙ ПЕРСОНАЖ
+===================================================== */
+
+function drawCharacter(
+    x,
+    y,
+    color
+) {
+
+    x = Math.round(x);
+    y = Math.round(y);
+
+
+    ctx.fillStyle = "#000";
+
+    ctx.fillRect(
+        x - 2,
+        y - 3,
+        24,
+        34
+    );
+
+
+    ctx.fillStyle = color;
+
+    ctx.fillRect(
+        x + 3,
+        y,
+        15,
+        13
+    );
+
+
+    ctx.fillRect(
+        x + 2,
+        y + 12,
+        17,
+        16
+    );
+
+
+    ctx.fillRect(
+        x + 3,
+        y + 28,
+        5,
+        5
+    );
+
+
+    ctx.fillRect(
+        x + 13,
+        y + 28,
+        5,
+        5
+    );
+
+}
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+function updateMenu() {
+
+    if (justPressed("x")) {
+
+        game.state = "world";
+
+        return;
+
+    }
+
+
+    if (justPressed("up")) {
+
+        game.menuIndex--;
+
+        if (game.menuIndex < 0)
+            game.menuIndex = 3;
+
+    }
+
+
+    if (justPressed("down")) {
+
+        game.menuIndex++;
+
+        if (game.menuIndex > 3)
+            game.menuIndex = 0;
+
+    }
+
+}
+
+
+function drawMenu() {
+
+    drawWorld();
+
+
+    ctx.fillStyle = "rgba(0,0,0,.9)";
+
+    ctx.fillRect(
+        80,
+        35,
+        480,
+        290
+    );
+
 
     ctx.strokeStyle = "#fff";
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
 
     ctx.strokeRect(
-        45,
-        101,
-        225,
-        59
+        80,
+        35,
+        480,
+        290
     );
 
 
+    ctx.fillStyle = "#fff";
+
+    ctx.font = "24px monospace";
+
+    ctx.fillText(
+        "MENU",
+        115,
+        75
+    );
+
+
+    const items = [
+        "ПРЕДМЕТЫ",
+        "КОМАНДА",
+        "СОХРАНЕНИЕ",
+        "НАСТРОЙКИ"
+    ];
+
+
+    items.forEach(
+        function(item, i) {
+
+            const y =
+                120 + i * 42;
+
+            if (
+                i === game.menuIndex
+            ) {
+
+                ctx.fillText(
+                    "▶",
+                    125,
+                    y
+                );
+
+            }
+
+            ctx.fillText(
+                item,
+                165,
+                y
+            );
+
+        }
+    );
+
+
+    ctx.font = "11px monospace";
+
+    ctx.fillStyle = "#888";
+
+    ctx.fillText(
+        "C — меню",
+        110,
+        300
+    );
+
+    ctx.fillText(
+        "X — закрыть",
+        430,
+        300
+    );
+
+}
+
+
+/* =====================================================
+   БОЙ
+===================================================== */
+
+function startBattle() {
+
+    game.state = "battle";
+
+
+    game.battle = {
+
+        enemyHP: 250,
+
+        enemyMaxHP: 250,
+
+        mercy: 0,
+
+        actor: 0,
+
+        menu: 0,
+
+        phase: "menu",
+
+        message:
+            "ОШИБКА СИСТЕМЫ появилась перед вами.",
+
+        soul: {
+
+            x: 320,
+
+            y: 250,
+
+            size: 7,
+
+            speed: 3.2
+
+        },
+
+        bullets: [],
+
+        attackTime: 0,
+
+        laser: null,
+
+        explosions: [],
+
+        errorCount:
+            1 + Math.floor(
+                Math.random() * 2
+            )
+
+    };
+
+}
+
+
+function updateBattle() {
+
+    const b = game.battle;
+
+
+    if (!b)
+        return;
+
+
+    /*
+       МЕНЮ
+    */
+
+    if (b.phase === "menu") {
+
+        if (justPressed("left")) {
+
+            b.menu--;
+
+            if (b.menu < 0)
+                b.menu = 3;
+
+        }
+
+
+        if (justPressed("right")) {
+
+            b.menu++;
+
+            if (b.menu > 3)
+                b.menu = 0;
+
+        }
+
+
+        if (justPressed("z")) {
+
+            if (b.menu === 0) {
+
+                attackEnemy();
+
+            }
+
+
+            if (b.menu === 1) {
+
+                b.phase = "act";
+
+            }
+
+
+            if (b.menu === 2) {
+
+                healParty();
+
+            }
+
+
+            if (b.menu === 3) {
+
+                b.mercy += 10;
+
+                b.message =
+                    "Вы пытаетесь пощадить ошибку.";
+
+                nextTurn();
+
+            }
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+       ACT
+    */
+
+    if (b.phase === "act") {
+
+        if (justPressed("x")) {
+
+            b.phase = "menu";
+
+            return;
+
+        }
+
+
+        if (justPressed("z")) {
+
+            b.mercy += 25;
+
+            b.mercy =
+                clamp(
+                    b.mercy,
+                    0,
+                    100
+                );
+
+            b.message =
+                "Вы нашли нестабильный фрагмент системы.";
+
+            nextTurn();
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+       ВРАЖЕСКАЯ АТАКА
+    */
+
     if (b.phase === "enemy") {
+
+        updateEnemyAttack();
+
+        return;
+
+    }
+
+
+    /*
+       ПОБЕДА
+    */
+
+    if (b.phase === "victory") {
+
+        if (justPressed("z")) {
+
+            game.state = "world";
+
+            game.battle = null;
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   АТАКА
+===================================================== */
+
+function attackEnemy() {
+
+    const b = game.battle;
+
+    const actor =
+        party[b.actor];
+
+
+    const damage =
+        actor.atk +
+        Math.floor(
+            Math.random() * 8
+        );
+
+
+    b.enemyHP -= damage;
+
+
+    b.enemyHP =
+        Math.max(
+            0,
+            b.enemyHP
+        );
+
+
+    b.message =
+        actor.name +
+        " атакует!  -" +
+        damage +
+        " HP";
+
+
+    if (b.enemyHP <= 0) {
+
+        b.phase = "victory";
+
+        b.message =
+            "Ошибка системы исчезла.";
+
+        return;
+
+    }
+
+
+    nextTurn();
+
+}
+
+
+/* =====================================================
+   ЛЕЧЕНИЕ
+===================================================== */
+
+function healParty() {
+
+    const p =
+        party[
+            game.battle.actor
+        ];
+
+
+    p.hp =
+        Math.min(
+            p.maxHP,
+            p.hp + 25
+        );
+
+
+    game.battle.message =
+        p.name +
+        " восстановил 25 HP.";
+
+
+    nextTurn();
+
+}
+
+
+/* =====================================================
+   СЛЕДУЮЩИЙ ХОД
+===================================================== */
+
+function nextTurn() {
+
+    const b = game.battle;
+
+
+    b.actor++;
+
+
+    if (
+        b.actor >=
+        party.length
+    ) {
+
+        b.actor = 0;
+
+        startEnemyAttack();
+
+    }
+
+    else {
+
+        b.phase = "menu";
+
+        b.menu = 0;
+
+        b.message =
+            "Ход " +
+            party[b.actor].name +
+            ".";
+
+    }
+
+}
+
+
+/* =====================================================
+   ВРАЖЕСКАЯ АТАКА
+===================================================== */
+
+function startEnemyAttack() {
+
+    const b = game.battle;
+
+    b.phase = "enemy";
+
+    b.attackTime = 0;
+
+    b.bullets = [];
+
+    b.laser = null;
+
+    b.explosions = [];
+
+
+    /*
+       Один враг — лазер.
+       Два врага — взрывы.
+    */
+
+    if (b.errorCount === 1) {
+
+        b.laser = {
+
+            x:
+                100 +
+                Math.random() * 440,
+
+            warning: 70,
+
+            active: 35
+
+        };
+
+    }
+
+    else {
+
+        for (
+            let i = 0;
+            i < 6;
+            i++
+        ) {
+
+            b.explosions.push({
+
+                x:
+                    120 +
+                    Math.random() * 400,
+
+                y:
+                    155 +
+                    Math.random() * 100,
+
+                radius: 0,
+
+                maxRadius: 25,
+
+                timer: 80 +
+                    Math.random() * 80
+
+            });
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   ОБНОВЛЕНИЕ ВРАЖЕСКОЙ АТАКИ
+===================================================== */
+
+function updateEnemyAttack() {
+
+    const b = game.battle;
+
+
+    /*
+       ДВИЖЕНИЕ ДУШИ
+    */
+
+    if (keys.up)
+        b.soul.y -= b.soul.speed;
+
+    if (keys.down)
+        b.soul.y += b.soul.speed;
+
+    if (keys.left)
+        b.soul.x -= b.soul.speed;
+
+    if (keys.right)
+        b.soul.x += b.soul.speed;
+
+
+    /*
+       ГРАНИЦЫ КАК В DELTARUNE
+    */
+
+    b.soul.x =
+        clamp(
+            b.soul.x,
+            145,
+            495
+        );
+
+
+    b.soul.y =
+        clamp(
+            b.soul.y,
+            145,
+            285
+        );
+
+
+    b.attackTime++;
+
+
+    /*
+       ЛАЗЕР
+    */
+
+    if (b.laser) {
+
+        if (b.laser.warning > 0) {
+
+            b.laser.warning--;
+
+        }
+
+        else if (b.laser.active > 0) {
+
+            b.laser.active--;
+
+            const distance =
+                Math.abs(
+                    b.soul.x -
+                    b.laser.x
+                );
+
+
+            if (distance < 9) {
+
+                damageParty();
+
+            }
+
+        }
+
+    }
+
+
+    /*
+       ВЗРЫВЫ
+    */
+
+    b.explosions.forEach(
+        function(explosion) {
+
+            explosion.timer--;
+
+            if (
+                explosion.timer < 35
+            ) {
+
+                explosion.radius =
+                    Math.min(
+                        explosion.maxRadius,
+                        explosion.radius + 1.5
+                    );
+
+            }
+
+
+            const dx =
+                b.soul.x -
+                explosion.x;
+
+            const dy =
+                b.soul.y -
+                explosion.y;
+
+            const dist =
+                Math.sqrt(
+                    dx * dx +
+                    dy * dy
+                );
+
+
+            if (
+                dist <
+                explosion.radius + 8
+            ) {
+
+                damageParty();
+
+            }
+
+        }
+    );
+
+
+    if (
+        b.attackTime > 480
+    ) {
+
+        b.phase = "menu";
+
+        b.actor = 0;
+
+        b.menu = 0;
+
+        b.message =
+            "Ход Дельты.";
+
+    }
+
+}
+
+
+/* =====================================================
+   УРОН
+===================================================== */
+
+let damageCooldown = 0;
+
+
+function damageParty() {
+
+    if (damageCooldown > 0)
+        return;
+
+
+    damageCooldown = 45;
+
+
+    const b = game.battle;
+
+    const p =
+        party[b.actor];
+
+
+    p.hp -= 8;
+
+
+    p.hp =
+        Math.max(
+            0,
+            p.hp
+        );
+
+
+    b.message =
+        p.name +
+        " получил 8 урона!";
+
+
+    if (p.hp <= 0) {
+
+        let alive = false;
+
+        party.forEach(
+            function(member) {
+
+                if (member.hp > 0)
+                    alive = true;
+
+            }
+        );
+
+
+        if (!alive) {
+
+            party.forEach(
+                function(member) {
+
+                    member.hp =
+                        member.maxHP;
+
+                }
+            );
+
+            b.phase = "menu";
+
+            b.message =
+                "Отряд восстановился.";
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   РИСОВКА БОЯ
+===================================================== */
+
+function drawBattle() {
+
+    const b = game.battle;
+
+
+    ctx.fillStyle = "#000";
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /*
+       ВРАГ
+    */
+
+    drawErrorEnemy();
+
+
+    ctx.fillStyle = "#fff";
+
+    ctx.font = "15px monospace";
+
+    ctx.fillText(
+        "ERROR",
+        45,
+        35
+    );
+
+
+    /*
+       HP ВРАГА
+    */
+
+    ctx.font = "11px monospace";
+
+    ctx.fillText(
+        "HP",
+        440,
+        30
+    );
+
+
+    drawBar(
+        470,
+        21,
+        110,
+        12,
+        b.enemyHP,
+        b.enemyMaxHP
+    );
+
+
+    /*
+       ОБЛАСТЬ БОЯ
+    */
+
+    ctx.strokeStyle = "#fff";
+
+    ctx.lineWidth = 4;
+
+    ctx.strokeRect(
+        130,
+        130,
+        390,
+        165
+    );
+
+
+    /*
+       ВРАЖЕСКАЯ АТАКА
+    */
+
+    if (
+        b.phase === "enemy"
+    ) {
 
         drawEnemyAttack();
 
     }
     else {
 
-        drawSoulBox();
+        drawSoul(
+            b.soul.x,
+            b.soul.y
+        );
 
     }
 
 
-    /* MENU */
+    /*
+       ТЕКСТ
+    */
+
+    ctx.fillStyle = "#fff";
+
+    ctx.font = "12px monospace";
+
+    drawWrapped(
+        b.message,
+        30,
+        80,
+        580,
+        16
+    );
+
+
+    /*
+       НИЖНЯЯ ЧАСТЬ
+    */
+
+    drawPartyBattle();
+
 
     if (
-        b.phase === "menu" ||
-        b.phase === "act"
+        b.phase !== "enemy" &&
+        b.phase !== "victory"
     ) {
 
-        drawBattleMenu();
+        drawBattleCommands();
 
     }
 
 
-    /* PARTY */
-
-    drawBattleParty();
-
-
-    if (b.phase === "victory") {
+    if (
+        b.phase === "victory"
+    ) {
 
         ctx.fillStyle = "#fff";
 
-        ctx.font = "11px monospace";
+        ctx.font = "24px monospace";
 
         ctx.fillText(
-            "ПОБЕДА",
-            125,
-            125
+            "ПОБЕДА!",
+            260,
+            330
         );
 
-        ctx.font = "6px monospace";
+        ctx.font = "11px monospace";
+
+        ctx.fillStyle = "#aaa";
 
         ctx.fillText(
             "Z — продолжить",
-            110,
-            142
+            450,
+            330
         );
 
     }
+
+
+    if (damageCooldown > 0)
+        damageCooldown--;
 
 }
 
 
 /* =====================================================
-   SOUL BOX
+   ОШИБКА
 ===================================================== */
 
-function drawSoulBox() {
+function drawErrorEnemy() {
 
-    const b = game.battle;
+    const img = images.error;
+
+
+    if (
+        img.complete &&
+        img.naturalWidth
+    ) {
+
+        ctx.drawImage(
+            img,
+            255,
+            20,
+            130,
+            100
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Запасной вариант,
+       если error.png отсутствует
+    */
+
+    ctx.fillStyle = "#331144";
+
+    ctx.fillRect(
+        270,
+        35,
+        100,
+        75
+    );
+
+
+    ctx.fillStyle = "#ff00ff";
+
+    ctx.fillRect(
+        285,
+        50,
+        20,
+        15
+    );
+
+    ctx.fillRect(
+        335,
+        50,
+        20,
+        15
+    );
+
 
     ctx.fillStyle = "#fff";
 
     ctx.fillRect(
-        b.soul.x - 3,
-        b.soul.y - 3,
-        6,
-        6
+        295,
+        88,
+        50,
+        5
     );
 
 }
 
 
 /* =====================================================
-   ENEMY ATTACK
+   ДУША
+===================================================== */
+
+function drawSoul(x, y) {
+
+    ctx.save();
+
+    ctx.translate(
+        Math.round(x),
+        Math.round(y)
+    );
+
+
+    ctx.fillStyle = "#ff2222";
+
+
+    /*
+       Классическая пиксельная душа
+    */
+
+    ctx.fillRect(
+        -6,
+        -7,
+        12,
+        14
+    );
+
+    ctx.fillRect(
+        -9,
+        -4,
+        18,
+        8
+    );
+
+
+    ctx.fillStyle = "#000";
+
+    ctx.fillRect(
+        -3,
+        -5,
+        6,
+        10
+    );
+
+
+    ctx.restore();
+
+}
+
+
+/* =====================================================
+   АТАКИ
 ===================================================== */
 
 function drawEnemyAttack() {
@@ -1577,202 +2485,315 @@ function drawEnemyAttack() {
     const b = game.battle;
 
 
-    b.bullets.forEach(laser => {
+    /*
+       ЛАЗЕР
+    */
 
-        if (laser.warning > 0) {
+    if (b.laser) {
 
-            ctx.strokeStyle = "#ff5555";
+        ctx.fillStyle =
+            "rgba(255,0,0,.25)";
 
-            ctx.lineWidth = 1;
+        ctx.fillRect(
+            b.laser.x - 12,
+            134,
+            24,
+            158
+        );
 
-            ctx.beginPath();
 
-            ctx.moveTo(
-                laser.targetX,
-                103
+        if (
+            b.laser.warning > 0
+        ) {
+
+            ctx.strokeStyle = "#ff4444";
+
+            ctx.lineWidth = 3;
+
+            ctx.strokeRect(
+                b.laser.x - 5,
+                135,
+                10,
+                157
             );
 
-            ctx.lineTo(
-                laser.targetX,
-                158
-            );
+            ctx.fillStyle = "#ff4444";
 
-            ctx.stroke();
+            ctx.font = "10px monospace";
+
+            ctx.fillText(
+                "!",
+                b.laser.x - 3,
+                150
+            );
 
         }
         else {
 
-            ctx.fillStyle = "#ff4444";
+            ctx.fillStyle =
+                "rgba(255,0,0,.8)";
 
             ctx.fillRect(
-                laser.targetX - 2,
-                103,
-                4,
-                55
+                b.laser.x - 4,
+                135,
+                8,
+                157
             );
 
         }
 
-    });
+    }
 
 
-    drawSoulBox();
+    /*
+       ВЗРЫВЫ
+    */
+
+    b.explosions.forEach(
+        function(explosion) {
+
+            ctx.strokeStyle = "#ff5555";
+
+            ctx.lineWidth = 3;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                explosion.x,
+                explosion.y,
+                explosion.radius,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.stroke();
+
+
+            if (
+                explosion.radius >
+                15
+            ) {
+
+                ctx.fillStyle = "#ffaaaa";
+
+                for (
+                    let i = 0;
+                    i < 8;
+                    i++
+                ) {
+
+                    const angle =
+                        i *
+                        Math.PI /
+                        4;
+
+                    const px =
+                        explosion.x +
+                        Math.cos(angle) *
+                        explosion.radius;
+
+                    const py =
+                        explosion.y +
+                        Math.sin(angle) *
+                        explosion.radius;
+
+                    ctx.fillRect(
+                        px - 2,
+                        py - 2,
+                        4,
+                        4
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+
+    drawSoul(
+        game.battle.soul.x,
+        game.battle.soul.y
+    );
 
 }
 
 
 /* =====================================================
-   BATTLE MENU
+   ПАРТИЯ В БОЮ
 ===================================================== */
 
-function drawBattleMenu() {
+function drawPartyBattle() {
 
     const b = game.battle;
 
-    if (b.phase === "menu") {
 
-        const options = [
-            "FIGHT",
-            "ACT",
-            "DEFEND",
-            "MERCY"
-        ];
-
-
-        options.forEach((text, i) => {
+    party.forEach(
+        function(p, i) {
 
             const x =
-                180 +
-                (i % 2) * 65;
-
-            const y =
-                113 +
-                Math.floor(i / 2) * 23;
+                20 + i * 120;
 
 
-            if (b.menu === i) {
+            const y = 315;
 
-                ctx.strokeStyle = "#fff";
 
-                ctx.strokeRect(
-                    x - 6,
-                    y - 8,
-                    57,
-                    15
+            if (
+                i === b.actor
+            ) {
+
+                ctx.fillStyle = "#fff";
+
+                ctx.font = "12px monospace";
+
+                ctx.fillText(
+                    "▶",
+                    x,
+                    y
                 );
 
             }
 
 
-            ctx.fillStyle =
-                i === 0 ? "#ff5555" :
-                i === 1 ? "#ffdd55" :
-                i === 2 ? "#55aaff" :
-                "#fff";
+            ctx.fillStyle = "#fff";
 
-
-            ctx.font = "6px monospace";
+            ctx.font = "11px monospace";
 
             ctx.fillText(
-                text,
-                x,
-                y + 2
+                p.name,
+                x + 15,
+                y
             );
 
-        });
 
-    }
+            drawBar(
+                x + 15,
+                y + 7,
+                70,
+                7,
+                p.hp,
+                p.maxHP
+            );
 
 
-    if (b.phase === "act") {
+            ctx.font = "8px monospace";
 
-        ctx.fillStyle = "#fff";
+            ctx.fillStyle = "#aaa";
 
-        ctx.font = "7px monospace";
+            ctx.fillText(
+                p.hp + "/" + p.maxHP,
+                x + 15,
+                y + 25
+            );
 
-        ctx.fillText(
-            "ACT",
-            180,
-            112
-        );
-
-        ctx.font = "6px monospace";
-
-        ctx.fillText(
-            "Z — изучить ошибку",
-            180,
-            128
-        );
-
-        ctx.fillText(
-            "X — назад",
-            180,
-            145
-        );
-
-    }
+        }
+    );
 
 }
 
 
 /* =====================================================
-   PARTY
+   КОМАНДЫ
 ===================================================== */
 
-function drawBattleParty() {
+function drawBattleCommands() {
 
-    party.forEach((p, i) => {
-
-        const y =
-            107 + i * 13;
-
-        ctx.fillStyle = p.color;
-
-        ctx.font = "5px monospace";
-
-        ctx.fillText(
-            p.name,
-            3,
-            y
-        );
+    const b = game.battle;
 
 
-        ctx.fillStyle = "#333";
+    const commands = [
+        "FIGHT",
+        "ACT",
+        "ITEM",
+        "MERCY"
+    ];
+
+
+    commands.forEach(
+        function(command, i) {
+
+            const x =
+                150 +
+                (i * 120);
+
+
+            const y = 105;
+
+
+            if (
+                i === b.menu &&
+                b.phase === "menu"
+            ) {
+
+                ctx.strokeStyle = "#fff";
+
+                ctx.lineWidth = 2;
+
+                ctx.strokeRect(
+                    x - 8,
+                    y - 20,
+                    100,
+                    30
+                );
+
+            }
+
+
+            ctx.fillStyle = "#fff";
+
+            ctx.font = "13px monospace";
+
+            ctx.fillText(
+                command,
+                x,
+                y
+            );
+
+        }
+    );
+
+
+    if (
+        b.phase === "act"
+    ) {
+
+        ctx.fillStyle = "#000";
 
         ctx.fillRect(
-            45,
-            y - 5,
-            35,
-            5
+            145,
+            95,
+            350,
+            45
+        );
+
+        ctx.strokeStyle = "#fff";
+
+        ctx.strokeRect(
+            145,
+            95,
+            350,
+            45
         );
 
 
         ctx.fillStyle = "#fff";
 
-        ctx.fillRect(
-            45,
-            y - 5,
-            35 *
-            (p.hp / p.maxHP),
-            5
-        );
-
-
-        ctx.fillStyle = "#fff";
+        ctx.font = "11px monospace";
 
         ctx.fillText(
-            p.hp + "/" + p.maxHP,
-            83,
-            y
+            "Z — исследовать ошибку",
+            170,
+            122
         );
 
-    });
+    }
 
 }
 
 
 /* =====================================================
-   BAR
+   ПОЛОСА
 ===================================================== */
 
 function drawBar(
@@ -1794,21 +2815,152 @@ function drawBar(
     );
 
 
+    const amount =
+        clamp(
+            value / max,
+            0,
+            1
+        );
+
+
     ctx.fillStyle = "#fff";
 
     ctx.fillRect(
         x,
         y,
-        w *
-        Math.max(
-            0,
-            Math.min(
-                1,
-                value / max
-            )
-        ),
+        w * amount,
         h
     );
+
+
+    ctx.strokeStyle = "#fff";
+
+    ctx.strokeRect(
+        x,
+        y,
+        w,
+        h
+    );
+
+}
+
+
+/* =====================================================
+   ТЕКСТ
+===================================================== */
+
+function drawWrapped(
+    text,
+    x,
+    y,
+    width,
+    lineHeight
+) {
+
+    const words =
+        String(text).split(" ");
+
+    let line = "";
+
+
+    for (
+        let i = 0;
+        i < words.length;
+        i++
+    ) {
+
+        const test =
+            line +
+            words[i] +
+            " ";
+
+
+        if (
+            ctx.measureText(test).width >
+            width &&
+            line !== ""
+        ) {
+
+            ctx.fillText(
+                line,
+                x,
+                y
+            );
+
+            line =
+                words[i] + " ";
+
+            y += lineHeight;
+
+        }
+        else {
+
+            line = test;
+
+        }
+
+    }
+
+
+    if (line) {
+
+        ctx.fillText(
+            line,
+            x,
+            y
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   UPDATE
+===================================================== */
+
+function update() {
+
+    switch (game.state) {
+
+        case "title":
+            updateTitle();
+            break;
+
+
+        case "save":
+            updateSave();
+            break;
+
+
+        case "intro":
+            updateIntro();
+            break;
+
+
+        case "world":
+            updateWorld();
+            break;
+
+
+        case "dialogue":
+            updateDialogue();
+            break;
+
+
+        case "menu":
+            updateMenu();
+            break;
+
+
+        case "battle":
+            updateBattle();
+            break;
+
+    }
+
+
+    updatePressed();
 
 }
 
@@ -1819,6 +2971,13 @@ function drawBar(
 
 function draw() {
 
+    /*
+       ВАЖНО:
+       сначала всегда очищаем canvas.
+       Поэтому чёрный экран не останется
+       из-за отсутствующей картинки.
+    */
+
     ctx.clearRect(
         0,
         0,
@@ -1827,29 +2986,65 @@ function draw() {
     );
 
 
-    if (game.state === "title") {
+    switch (game.state) {
 
-        drawTitle();
+        case "title":
+            drawTitle();
+            break;
 
-    }
 
-    else if (game.state === "intro") {
+        case "save":
+            drawSave();
+            break;
 
-        drawWasteland();
 
-        drawDialogue();
+        case "intro":
+            drawIntro();
+            break;
 
-    }
 
-    else if (game.state === "wasteland") {
+        case "world":
+            drawWorld();
+            break;
 
-        drawWasteland();
 
-    }
+        case "dialogue":
+            drawDialogue();
+            break;
 
-    else if (game.state === "battle") {
 
-        drawBattle();
+        case "menu":
+            drawMenu();
+            break;
+
+
+        case "battle":
+            drawBattle();
+            break;
+
+
+        default:
+
+            ctx.fillStyle = "#000";
+
+            ctx.fillRect(
+                0,
+                0,
+                W,
+                H
+            );
+
+            ctx.fillStyle = "#fff";
+
+            ctx.font = "16px monospace";
+
+            ctx.fillText(
+                "BLOOD GLOW",
+                250,
+                180
+            );
+
+            break;
 
     }
 
@@ -1857,85 +3052,14 @@ function draw() {
 
 
 /* =====================================================
-   UPDATE OLD KEYS
-===================================================== */
-
-function updateOldKeys() {
-
-    for (const key in keys) {
-
-        oldKeys[key] = keys[key];
-
-    }
-
-}
-
-
-/* =====================================================
-   MAIN LOOP
+   GAME LOOP
 ===================================================== */
 
 function loop() {
 
-    try {
+    update();
 
-        if (game.state === "title") {
-
-            updateTitle();
-
-        }
-
-        else if (game.state === "intro") {
-
-            updateIntro();
-
-        }
-
-        else if (game.state === "wasteland") {
-
-            updateWasteland();
-
-        }
-
-        else if (game.state === "battle") {
-
-            updateBattle();
-
-        }
-
-        draw();
-
-        updateOldKeys();
-
-    }
-    catch (error) {
-
-        /*
-           Ошибка игры больше не оставляет
-           пользователя с полностью чёрным экраном.
-        */
-
-        console.error(error);
-
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0, 0, W, H);
-
-        ctx.fillStyle = "#fff";
-        ctx.font = "7px monospace";
-
-        ctx.fillText(
-            "BLOOD GLOW",
-            15,
-            25
-        );
-
-        ctx.fillText(
-            "ОШИБКА ИГРЫ",
-            15,
-            40
-        );
-
-    }
+    draw();
 
     requestAnimationFrame(loop);
 
@@ -1943,7 +3067,9 @@ function loop() {
 
 
 /* =====================================================
-   START LOOP
+   ЗАПУСК
 ===================================================== */
+
+game.state = "title";
 
 loop();
