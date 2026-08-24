@@ -2,43 +2,35 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-
-    -webkit-tap-highlight-color: transparent;
     user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html,
 body {
     width: 100%;
     height: 100%;
-
     overflow: hidden;
-
     background: #000;
-
-    font-family: monospace;
 }
 
 body {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
 #game {
     position: relative;
-
     width: 100vw;
     height: 100vh;
-
-    background: #000;
-
     overflow: hidden;
+    background: #000;
 }
 
-#canvas {
+#screen {
     position: absolute;
-
     left: 0;
     top: 0;
 
@@ -47,261 +39,156 @@ body {
 
     display: block;
 
+    background: #080808;
+
     image-rendering: pixelated;
     image-rendering: crisp-edges;
-
-    background: #050505;
-
-    touch-action: none;
 
     z-index: 1;
 }
 
-
-/* =========================
-   FULLSCREEN
-========================= */
-
 #fullscreen {
-
     position: fixed;
 
-    top: 12px;
-    right: 12px;
+    right: 10px;
+    top: 10px;
 
     width: 42px;
     height: 42px;
 
-    z-index: 100;
+    z-index: 20;
 
     color: white;
-
-    background: rgba(0,0,0,.55);
-
-    border: 2px solid rgba(255,255,255,.7);
-
-    border-radius: 6px;
-
-    font-size: 22px;
-
-    touch-action: manipulation;
-}
-
-
-/* =========================
-   CONTROLS
-========================= */
-
-#controls {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 50;
-
-    pointer-events: none;
-}
-
-
-/* =========================
-   D-PAD
-========================= */
-
-#dpad {
-
-    position: absolute;
-
-    left: 18px;
-    bottom: 18px;
-
-    width: 140px;
-    height: 140px;
-
-    pointer-events: none;
-
-    opacity: .55;
-}
-
-.control {
-
-    position: absolute;
-
-    width: 44px;
-    height: 44px;
-
-    border-radius: 8px;
-
-    border: 2px solid rgba(255,255,255,.7);
-
-    background: rgba(0,0,0,.45);
-
-    color: white;
-
-    font-family: monospace;
-
-    font-size: 20px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    pointer-events: auto;
-
-    touch-action: none;
-}
-
-.control:active {
-
-    background: rgba(255,255,255,.25);
-
-}
-
-.up {
-
-    left: 48px;
-    top: 0;
-
-}
-
-.down {
-
-    left: 48px;
-    bottom: 0;
-
-}
-
-.left {
-
-    left: 0;
-    top: 48px;
-
-}
-
-.right {
-
-    right: 0;
-    top: 48px;
-
-}
-
-
-/* =========================
-   Z X C
-========================= */
-
-#buttons {
-
-    position: absolute;
-
-    right: 18px;
-    bottom: 20px;
-
-    display: flex;
-
-    gap: 12px;
-
-    pointer-events: none;
-}
-
-.gameButton {
-
-    width: 56px;
-    height: 56px;
-
-    border-radius: 50%;
-
-    background: rgba(0,0,0,.5);
-
-    color: white;
+    background: rgba(0,0,0,.6);
 
     border: 2px solid white;
+    border-radius: 6px;
 
-    font-family: monospace;
+    font-size: 20px;
+}
 
-    font-weight: bold;
+#mobileControls {
+    position: fixed;
+    inset: 0;
+
+    z-index: 10;
+
+    pointer-events: none;
+}
+
+#dpad {
+    position: absolute;
+
+    left: 15px;
+    bottom: 15px;
+
+    width: 135px;
+    height: 135px;
+
+    opacity: .55;
+
+    pointer-events: none;
+}
+
+#dpad button {
+    position: absolute;
+
+    width: 42px;
+    height: 42px;
+
+    color: white;
+    background: rgba(0,0,0,.55);
+
+    border: 2px solid white;
+    border-radius: 8px;
 
     font-size: 18px;
 
     pointer-events: auto;
-
     touch-action: none;
-
-    opacity: .65;
 }
 
-.gameButton:active {
-
-    background: rgba(255,255,255,.25);
-
-    transform: scale(.94);
-
+#dpad button:nth-child(1) {
+    left: 46px;
+    top: 0;
 }
 
-.gameButton.z {
+#dpad button:nth-child(2) {
+    left: 0;
+    top: 46px;
+}
+
+#dpad button:nth-child(3) {
+    right: 0;
+    top: 46px;
+}
+
+#dpad button:nth-child(4) {
+    left: 46px;
+    bottom: 0;
+}
+
+#actionButtons {
+    position: absolute;
+
+    right: 15px;
+    bottom: 20px;
+
+    display: flex;
+    gap: 10px;
+
+    pointer-events: none;
+}
+
+#actionButtons button {
+    width: 54px;
+    height: 54px;
+
+    border-radius: 50%;
+
+    color: white;
+    background: rgba(0,0,0,.55);
+
+    border: 2px solid white;
+
+    font-family: monospace;
+    font-size: 17px;
+    font-weight: bold;
+
+    pointer-events: auto;
+    touch-action: none;
+}
+
+#actionButtons button:nth-child(1) {
     border-color: #ff5555;
 }
 
-.gameButton.x {
-    border-color: #ffd83d;
+#actionButtons button:nth-child(2) {
+    border-color: #ffff55;
 }
 
-.gameButton.c {
+#actionButtons button:nth-child(3) {
     border-color: #55aaff;
 }
 
-
-/* =========================
-   SMALL SCREENS
-========================= */
-
-@media(max-width:600px) {
-
-    #dpad {
-
-        left: 8px;
-        bottom: 8px;
-
-        transform: scale(.85);
-
-        transform-origin: bottom left;
-
-    }
-
-    #buttons {
-
-        right: 8px;
-        bottom: 10px;
-
-        transform: scale(.85);
-
-        transform-origin: bottom right;
-
-    }
-
+button:active {
+    transform: scale(.92);
+    background: rgba(255,255,255,.25) !important;
 }
 
-
-/* =========================
-   LANDSCAPE
-========================= */
-
-@media(max-height:400px) {
+@media (max-width: 600px) {
 
     #dpad {
-
-        transform: scale(.65);
-
+        left: 8px;
+        bottom: 8px;
+        transform: scale(.9);
         transform-origin: bottom left;
-
     }
 
-    #buttons {
-
-        transform: scale(.65);
-
+    #actionButtons {
+        right: 8px;
+        bottom: 10px;
+        transform: scale(.9);
         transform-origin: bottom right;
-
     }
-
 }
