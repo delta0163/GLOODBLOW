@@ -2,14 +2,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width,
-        initial-scale=1.0,
-        maximum-scale=1.0,
-        user-scalable=no"
-    >
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no">
 
     <title>Blood Glow</title>
 
@@ -18,14 +15,12 @@
 
 <body>
 
-<div id="game-wrapper">
+<div id="game">
 
-    <canvas id="game" width="640" height="360"></canvas>
+    <canvas id="canvas" width="320" height="180"></canvas>
 
-    <!-- Полноэкранный режим -->
-    <button id="fullscreenButton">⛶</button>
+    <button id="fullscreen">⛶</button>
 
-    <!-- Джойстик -->
     <div id="joystick">
 
         <button class="joy up" data-key="up">▲</button>
@@ -35,23 +30,11 @@
 
     </div>
 
-    <!-- Кнопки -->
     <div id="actions">
 
-        <button
-            class="action z"
-            data-key="z"
-        >Z</button>
-
-        <button
-            class="action x"
-            data-key="x"
-        >X</button>
-
-        <button
-            class="action c"
-            data-key="c"
-        >C</button>
+        <button class="action z" data-key="z">Z</button>
+        <button class="action x" data-key="x">X</button>
+        <button class="action c" data-key="c">C</button>
 
     </div>
 
