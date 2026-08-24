@@ -7,7 +7,6 @@
                    maximum-scale=1.0, user-scalable=no">
 
     <title>Blood Glow</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -15,26 +14,29 @@
 
 <div id="game">
 
-    <canvas id="canvas" width="320" height="180"></canvas>
+    <canvas id="canvas" width="480" height="270"></canvas>
 
     <button id="fullscreen">⛶</button>
 
-    <div id="joystick">
-        <button data-key="up">▲</button>
-        <button data-key="left">◀</button>
-        <button data-key="right">▶</button>
-        <button data-key="down">▼</button>
-    </div>
+    <div id="touch-controls">
 
-    <div id="buttons">
-        <button data-key="z">Z</button>
-        <button data-key="x">X</button>
-        <button data-key="c">C</button>
+        <div id="joystick">
+            <button data-key="up">▲</button>
+            <button data-key="left">◀</button>
+            <button data-key="right">▶</button>
+            <button data-key="down">▼</button>
+        </div>
+
+        <div id="action-buttons">
+            <button data-key="z">Z</button>
+            <button data-key="x">X</button>
+            <button data-key="c">C</button>
+        </div>
+
     </div>
 
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
