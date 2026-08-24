@@ -1,5 +1,8 @@
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -7,9 +10,6 @@
 
 html,
 body {
-    margin: 0;
-    padding: 0;
-
     width: 100%;
     height: 100%;
 
@@ -26,7 +26,7 @@ body {
     justify-content: center;
 }
 
-#game-wrapper {
+#gameWrapper {
     position: relative;
 
     width: 100vw;
@@ -48,15 +48,20 @@ body {
     width: 100vw;
     height: 100vh;
 
+    background: #000;
+
     image-rendering: pixelated;
     image-rendering: crisp-edges;
-
-    background: #000;
 
     touch-action: none;
 }
 
-#fullscreen-button {
+
+/* =========================
+   FULLSCREEN
+========================= */
+
+#fullscreen {
     position: fixed;
 
     right: 12px;
@@ -65,20 +70,23 @@ body {
     width: 42px;
     height: 42px;
 
-    border: 2px solid rgba(255,255,255,.55);
-
-    border-radius: 7px;
-
-    background: rgba(0,0,0,.45);
+    z-index: 20;
 
     color: white;
 
+    background: rgba(0,0,0,.45);
+
+    border: 2px solid rgba(255,255,255,.55);
+
+    border-radius: 6px;
+
     font-size: 22px;
-
-    z-index: 50;
-
-    touch-action: none;
 }
+
+
+/* =========================
+   JOYSTICK
+========================= */
 
 #joystick {
     position: fixed;
@@ -86,114 +94,141 @@ body {
     left: 14px;
     bottom: 14px;
 
-    width: 135px;
-    height: 135px;
+    width: 128px;
+    height: 128px;
+
+    z-index: 15;
 
     opacity: .38;
-
-    z-index: 40;
 }
 
 .joy {
     position: absolute;
 
-    width: 44px;
-    height: 44px;
-
-    border-radius: 9px;
-
-    border: 2px solid rgba(255,255,255,.7);
-
-    background: rgba(20,20,20,.35);
+    width: 42px;
+    height: 42px;
 
     color: white;
 
-    font-family: monospace;
-    font-size: 18px;
+    background: rgba(20,20,20,.35);
+
+    border: 2px solid rgba(255,255,255,.55);
+
+    border-radius: 8px;
+
+    font-size: 17px;
 
     touch-action: none;
 }
 
+.joy:active {
+    background: rgba(255,255,255,.2);
+}
+
 .joy.up {
-    left: 45px;
+    left: 43px;
     top: 0;
 }
 
 .joy.down {
-    left: 45px;
+    left: 43px;
     bottom: 0;
 }
 
 .joy.left {
     left: 0;
-    top: 45px;
+    top: 43px;
 }
 
 .joy.right {
     right: 0;
-    top: 45px;
+    top: 43px;
 }
+
+
+/* =========================
+   Z X C
+========================= */
 
 #actions {
     position: fixed;
 
     right: 14px;
-    bottom: 17px;
+    bottom: 18px;
 
     display: flex;
+
     gap: 9px;
 
-    z-index: 40;
+    z-index: 15;
 }
 
-.action-button {
-    width: 54px;
-    height: 54px;
+.action {
+    width: 52px;
+    height: 52px;
 
     border-radius: 50%;
 
-    border: 2px solid rgba(255,255,255,.65);
+    color: white;
 
     background: rgba(0,0,0,.4);
 
-    color: white;
+    border: 2px solid rgba(255,255,255,.55);
 
     font-family: monospace;
-    font-size: 17px;
+
     font-weight: bold;
 
-    opacity: .45;
+    font-size: 17px;
+
+    opacity: .48;
 
     touch-action: none;
 }
 
-.z-button {
-    border-color: rgba(255,70,70,.85);
+.action:active {
+    opacity: .9;
 }
 
-.x-button {
-    border-color: rgba(255,220,70,.85);
+.action.z {
+    border-color: rgba(255,80,80,.8);
 }
 
-.c-button {
-    border-color: rgba(80,160,255,.85);
+.action.x {
+    border-color: rgba(255,220,80,.8);
 }
 
-.joy:active,
-.action-button:active,
-#fullscreen-button:active {
-    background: rgba(255,255,255,.2);
+.action.c {
+    border-color: rgba(80,160,255,.8);
 }
 
-@media(max-width:600px) {
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
 
     #joystick {
-        transform: scale(.88);
+        transform: scale(.9);
         transform-origin: bottom left;
     }
 
     #actions {
-        transform: scale(.88);
+        transform: scale(.9);
+        transform-origin: bottom right;
+    }
+}
+
+@media (max-height: 350px) {
+
+    #joystick {
+        transform: scale(.72);
+        transform-origin: bottom left;
+    }
+
+    #actions {
+        transform: scale(.72);
         transform-origin: bottom right;
     }
 }
