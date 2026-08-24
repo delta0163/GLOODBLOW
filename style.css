@@ -1,18 +1,22 @@
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    user-select: none;
-    -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 html,
 body {
+    margin: 0;
+    padding: 0;
+
     width: 100%;
     height: 100%;
+
     overflow: hidden;
+
     background: #000;
+
+    font-family: monospace;
 }
 
 body {
@@ -21,174 +25,209 @@ body {
     align-items: center;
 }
 
-#game {
+#game-wrapper {
     position: relative;
+
     width: 100vw;
     height: 100vh;
+
     overflow: hidden;
+
     background: #000;
 }
 
-#screen {
+#game {
     position: absolute;
-    left: 0;
-    top: 0;
 
-    width: 100%;
-    height: 100%;
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 100vw;
+    height: 100vh;
 
     display: block;
 
-    background: #080808;
+    background: #090b12;
 
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 
-    z-index: 1;
-}
-
-#fullscreen {
-    position: fixed;
-
-    right: 10px;
-    top: 10px;
-
-    width: 42px;
-    height: 42px;
-
-    z-index: 20;
-
-    color: white;
-    background: rgba(0,0,0,.6);
-
-    border: 2px solid white;
-    border-radius: 6px;
-
-    font-size: 20px;
-}
-
-#mobileControls {
-    position: fixed;
-    inset: 0;
-
-    z-index: 10;
-
-    pointer-events: none;
-}
-
-#dpad {
-    position: absolute;
-
-    left: 15px;
-    bottom: 15px;
-
-    width: 135px;
-    height: 135px;
-
-    opacity: .55;
-
-    pointer-events: none;
-}
-
-#dpad button {
-    position: absolute;
-
-    width: 42px;
-    height: 42px;
-
-    color: white;
-    background: rgba(0,0,0,.55);
-
-    border: 2px solid white;
-    border-radius: 8px;
-
-    font-size: 18px;
-
-    pointer-events: auto;
     touch-action: none;
 }
 
-#dpad button:nth-child(1) {
-    left: 46px;
+/* =========================
+   FULLSCREEN
+========================= */
+
+#fullscreen-button {
+    position: fixed;
+
+    top: 12px;
+    right: 12px;
+
+    width: 42px;
+    height: 42px;
+
+    z-index: 50;
+
+    border: 2px solid rgba(255,255,255,.55);
+    border-radius: 7px;
+
+    background: rgba(0,0,0,.4);
+
+    color: white;
+
+    font-size: 21px;
+
+    touch-action: none;
+}
+
+#fullscreen-button:active {
+    background: rgba(255,255,255,.2);
+}
+
+/* =========================
+   JOYSTICK
+========================= */
+
+#joystick {
+    position: fixed;
+
+    left: 14px;
+    bottom: 14px;
+
+    width: 128px;
+    height: 128px;
+
+    z-index: 40;
+
+    opacity: .48;
+}
+
+.joy {
+    position: absolute;
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 8px;
+
+    border: 2px solid rgba(255,255,255,.7);
+
+    background: rgba(15,15,20,.35);
+
+    color: white;
+
+    font-family: monospace;
+    font-size: 18px;
+
+    touch-action: none;
+}
+
+.joy.up {
+    left: 43px;
     top: 0;
 }
 
-#dpad button:nth-child(2) {
-    left: 0;
-    top: 46px;
-}
-
-#dpad button:nth-child(3) {
-    right: 0;
-    top: 46px;
-}
-
-#dpad button:nth-child(4) {
-    left: 46px;
+.joy.down {
+    left: 43px;
     bottom: 0;
 }
 
-#actionButtons {
-    position: absolute;
-
-    right: 15px;
-    bottom: 20px;
-
-    display: flex;
-    gap: 10px;
-
-    pointer-events: none;
+.joy.left {
+    left: 0;
+    top: 43px;
 }
 
-#actionButtons button {
-    width: 54px;
-    height: 54px;
+.joy.right {
+    right: 0;
+    top: 43px;
+}
+
+.joy:active {
+    background: rgba(255,255,255,.25);
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+#actions {
+    position: fixed;
+
+    right: 14px;
+    bottom: 18px;
+
+    z-index: 40;
+
+    display: flex;
+
+    gap: 9px;
+
+    opacity: .52;
+}
+
+.action-button {
+    width: 52px;
+    height: 52px;
 
     border-radius: 50%;
 
-    color: white;
-    background: rgba(0,0,0,.55);
+    background: rgba(10,10,10,.45);
 
-    border: 2px solid white;
+    color: white;
 
     font-family: monospace;
     font-size: 17px;
     font-weight: bold;
 
-    pointer-events: auto;
     touch-action: none;
 }
 
-#actionButtons button:nth-child(1) {
-    border-color: #ff5555;
+.z-button {
+    border: 2px solid #ff6666;
 }
 
-#actionButtons button:nth-child(2) {
-    border-color: #ffff55;
+.x-button {
+    border: 2px solid #ffee66;
 }
 
-#actionButtons button:nth-child(3) {
-    border-color: #55aaff;
+.c-button {
+    border: 2px solid #66aaff;
 }
 
-button:active {
-    transform: scale(.92);
-    background: rgba(255,255,255,.25) !important;
+.action-button:active {
+    background: rgba(255,255,255,.25);
 }
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 600px) {
 
-    #dpad {
-        left: 8px;
-        bottom: 8px;
+    #joystick {
         transform: scale(.9);
         transform-origin: bottom left;
     }
 
-    #actionButtons {
-        right: 8px;
-        bottom: 10px;
+    #actions {
         transform: scale(.9);
         transform-origin: bottom right;
     }
 }
+
+@media (max-height: 350px) {
+
+    #joystick {
+        transform: scale(.72);
+        transform-origin: bottom left;
+    }
+
+    #actions {
+        transform: scale(.72);
+        transform-origin: bottom right;
+    }
+        }
