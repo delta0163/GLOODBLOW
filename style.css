@@ -2,191 +2,306 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    user-select: none;
-    -webkit-user-select: none;
+
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 html,
 body {
     width: 100%;
     height: 100%;
+
     overflow: hidden;
+
     background: #000;
+
     font-family: monospace;
 }
 
 body {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
 #game {
     position: relative;
+
     width: 100vw;
     height: 100vh;
+
     background: #000;
+
     overflow: hidden;
 }
 
 #canvas {
     position: absolute;
+
     left: 0;
     top: 0;
 
     width: 100%;
     height: 100%;
 
+    display: block;
+
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 
-    background: #09090d;
+    background: #050505;
+
     touch-action: none;
+
+    z-index: 1;
 }
 
+
+/* =========================
+   FULLSCREEN
+========================= */
+
 #fullscreen {
+
     position: fixed;
-    right: 12px;
+
     top: 12px;
+    right: 12px;
 
     width: 42px;
     height: 42px;
 
-    border: 2px solid #777;
-    border-radius: 7px;
+    z-index: 100;
+
+    color: white;
 
     background: rgba(0,0,0,.55);
-    color: white;
+
+    border: 2px solid rgba(255,255,255,.7);
+
+    border-radius: 6px;
 
     font-size: 22px;
-    z-index: 20;
 
-    touch-action: none;
+    touch-action: manipulation;
 }
 
-#fullscreen:active {
-    background: #333;
-}
 
-#touch-controls {
+/* =========================
+   CONTROLS
+========================= */
+
+#controls {
+
     position: fixed;
+
     inset: 0;
-    pointer-events: none;
-    z-index: 10;
-}
 
-#joystick {
-    position: absolute;
-    left: 15px;
-    bottom: 15px;
+    z-index: 50;
 
-    width: 145px;
-    height: 145px;
-
-    opacity: .42;
     pointer-events: none;
 }
 
-#joystick button {
+
+/* =========================
+   D-PAD
+========================= */
+
+#dpad {
+
     position: absolute;
 
-    width: 46px;
-    height: 46px;
+    left: 18px;
+    bottom: 18px;
 
-    border: 2px solid #aaa;
+    width: 140px;
+    height: 140px;
+
+    pointer-events: none;
+
+    opacity: .55;
+}
+
+.control {
+
+    position: absolute;
+
+    width: 44px;
+    height: 44px;
+
     border-radius: 8px;
 
-    background: rgba(20,20,20,.45);
-    color: white;
+    border: 2px solid rgba(255,255,255,.7);
 
-    font-size: 19px;
+    background: rgba(0,0,0,.45);
 
-    pointer-events: auto;
-    touch-action: none;
-}
-
-#joystick button:active {
-    background: rgba(255,255,255,.25);
-}
-
-#joystick button[data-key="up"] {
-    left: 49px;
-    top: 0;
-}
-
-#joystick button[data-key="down"] {
-    left: 49px;
-    bottom: 0;
-}
-
-#joystick button[data-key="left"] {
-    left: 0;
-    top: 49px;
-}
-
-#joystick button[data-key="right"] {
-    right: 0;
-    top: 49px;
-}
-
-#action-buttons {
-    position: absolute;
-    right: 15px;
-    bottom: 20px;
-
-    display: flex;
-    gap: 9px;
-
-    pointer-events: none;
-}
-
-#action-buttons button {
-    width: 54px;
-    height: 54px;
-
-    border-radius: 50%;
-    border: 2px solid #aaa;
-
-    background: rgba(10,10,10,.48);
     color: white;
 
     font-family: monospace;
-    font-size: 17px;
-    font-weight: bold;
+
+    font-size: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     pointer-events: auto;
+
     touch-action: none;
 }
 
-#action-buttons button:active {
+.control:active {
+
     background: rgba(255,255,255,.25);
+
 }
 
-#action-buttons button[data-key="z"] {
-    border-color: #ff6666;
+.up {
+
+    left: 48px;
+    top: 0;
+
 }
 
-#action-buttons button[data-key="x"] {
-    border-color: #ffdd66;
+.down {
+
+    left: 48px;
+    bottom: 0;
+
 }
 
-#action-buttons button[data-key="c"] {
-    border-color: #66aaff;
+.left {
+
+    left: 0;
+    top: 48px;
+
 }
 
-@media (max-width: 600px) {
-    #joystick {
-        transform: scale(.82);
-        transform-origin: bottom left;
-        left: 5px;
-        bottom: 5px;
-    }
+.right {
 
-    #action-buttons {
-        right: 7px;
+    right: 0;
+    top: 48px;
+
+}
+
+
+/* =========================
+   Z X C
+========================= */
+
+#buttons {
+
+    position: absolute;
+
+    right: 18px;
+    bottom: 20px;
+
+    display: flex;
+
+    gap: 12px;
+
+    pointer-events: none;
+}
+
+.gameButton {
+
+    width: 56px;
+    height: 56px;
+
+    border-radius: 50%;
+
+    background: rgba(0,0,0,.5);
+
+    color: white;
+
+    border: 2px solid white;
+
+    font-family: monospace;
+
+    font-weight: bold;
+
+    font-size: 18px;
+
+    pointer-events: auto;
+
+    touch-action: none;
+
+    opacity: .65;
+}
+
+.gameButton:active {
+
+    background: rgba(255,255,255,.25);
+
+    transform: scale(.94);
+
+}
+
+.gameButton.z {
+    border-color: #ff5555;
+}
+
+.gameButton.x {
+    border-color: #ffd83d;
+}
+
+.gameButton.c {
+    border-color: #55aaff;
+}
+
+
+/* =========================
+   SMALL SCREENS
+========================= */
+
+@media(max-width:600px) {
+
+    #dpad {
+
+        left: 8px;
         bottom: 8px;
-        transform: scale(.82);
-        transform-origin: bottom right;
+
+        transform: scale(.85);
+
+        transform-origin: bottom left;
+
     }
+
+    #buttons {
+
+        right: 8px;
+        bottom: 10px;
+
+        transform: scale(.85);
+
+        transform-origin: bottom right;
+
+    }
+
+}
+
+
+/* =========================
+   LANDSCAPE
+========================= */
+
+@media(max-height:400px) {
+
+    #dpad {
+
+        transform: scale(.65);
+
+        transform-origin: bottom left;
+
+    }
+
+    #buttons {
+
+        transform: scale(.65);
+
+        transform-origin: bottom right;
+
+    }
+
 }
