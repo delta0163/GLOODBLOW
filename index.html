@@ -7,7 +7,6 @@
                    maximum-scale=1.0, user-scalable=no">
 
     <title>Blood Glow</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -15,28 +14,26 @@
 
 <div id="game">
 
-    <canvas id="canvas" width="320" height="180"></canvas>
+    <canvas id="screen" width="320" height="180"></canvas>
 
-    <!-- Кнопка полноэкранного режима -->
     <button id="fullscreen">⛶</button>
 
-    <!-- МОБИЛЬНОЕ УПРАВЛЕНИЕ -->
-    <div id="controls">
+    <div id="mobileControls">
 
         <div id="dpad">
 
-            <button class="control up" data-key="up">▲</button>
-            <button class="control left" data-key="left">◀</button>
-            <button class="control right" data-key="right">▶</button>
-            <button class="control down" data-key="down">▼</button>
+            <button data-key="up">▲</button>
+            <button data-key="left">◀</button>
+            <button data-key="right">▶</button>
+            <button data-key="down">▼</button>
 
         </div>
 
-        <div id="buttons">
+        <div id="actionButtons">
 
-            <button class="gameButton z" data-key="z">Z</button>
-            <button class="gameButton x" data-key="x">X</button>
-            <button class="gameButton c" data-key="c">C</button>
+            <button data-key="z">Z</button>
+            <button data-key="x">X</button>
+            <button data-key="c">C</button>
 
         </div>
 
