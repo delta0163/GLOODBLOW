@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no">
+          content="width=device-width, initial-scale=1.0,
+                   maximum-scale=1.0, user-scalable=no">
 
     <title>Blood Glow</title>
 
@@ -15,30 +13,26 @@
 
 <body>
 
-<div id="game-wrapper">
+<div id="game">
 
-    <canvas id="game" width="320" height="180"></canvas>
+    <canvas id="canvas" width="320" height="180"></canvas>
 
-    <button id="fullscreen-button">⛶</button>
+    <!-- Экранные кнопки -->
 
-    <!-- ДЖОЙСТИК -->
     <div id="joystick">
-
         <button class="joy up" data-key="up">▲</button>
         <button class="joy left" data-key="left">◀</button>
         <button class="joy right" data-key="right">▶</button>
         <button class="joy down" data-key="down">▼</button>
-
     </div>
 
-    <!-- Z X C -->
-    <div id="actions">
-
-        <button class="action-button z-button" data-key="z">Z</button>
-        <button class="action-button x-button" data-key="x">X</button>
-        <button class="action-button c-button" data-key="c">C</button>
-
+    <div id="buttons">
+        <button class="action z" data-key="z">Z</button>
+        <button class="action x" data-key="x">X</button>
+        <button class="action c" data-key="c">C</button>
     </div>
+
+    <button id="fullscreen">⛶</button>
 
 </div>
 
