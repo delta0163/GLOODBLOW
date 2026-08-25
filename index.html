@@ -15,13 +15,14 @@
 
 <body>
 
-<div id="game-wrapper">
+<div id="game">
 
-    <canvas id="game" width="320" height="180"></canvas>
+    <canvas id="canvas" width="960" height="540"></canvas>
 
-    <button id="fullscreen-button">⛶</button>
+    <!-- FULLSCREEN -->
+    <button id="fullscreen">⛶</button>
 
-    <!-- МОБИЛЬНОЕ УПРАВЛЕНИЕ -->
+    <!-- JOYSTICK -->
     <div id="joystick">
 
         <button class="joy up" data-key="up">▲</button>
@@ -31,16 +32,12 @@
 
     </div>
 
-    <div id="actions">
+    <!-- Z X C -->
+    <div id="buttons">
 
-        <button class="action-button z-button"
-                data-key="z">Z</button>
-
-        <button class="action-button x-button"
-                data-key="x">X</button>
-
-        <button class="action-button c-button"
-                data-key="c">C</button>
+        <button class="action z" data-key="z">Z</button>
+        <button class="action x" data-key="x">X</button>
+        <button class="action c" data-key="c">C</button>
 
     </div>
 
