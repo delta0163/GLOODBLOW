@@ -1,45 +1,128 @@
 <!DOCTYPE html>
+
 <html lang="ru">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0,
-                   maximum-scale=1.0, user-scalable=no">
+
+    <meta
+        name="viewport"
+        content="
+            width=device-width,
+            initial-scale=1.0,
+            maximum-scale=1.0,
+            user-scalable=no
+        "
+    >
 
     <title>Blood Glow</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
 <div id="game">
 
-    <canvas id="canvas" width="640" height="360"></canvas>
+    <canvas
+        id="canvas"
+        width="640"
+        height="360"
+    ></canvas>
 
-    <button id="fullscreen">⛶</button>
 
-    <!-- ДЖОЙСТИК -->
+    <!-- FULLSCREEN -->
+
+    <button
+        id="fullscreen"
+        aria-label="Fullscreen"
+    >
+        ⛶
+    </button>
+
+
+    <!-- =================================================
+         JOYSTICK
+    ================================================== -->
+
     <div id="joystick">
 
-        <button class="joy up" data-key="up">▲</button>
-        <button class="joy left" data-key="left">◀</button>
-        <button class="joy right" data-key="right">▶</button>
-        <button class="joy down" data-key="down">▼</button>
+        <button
+            class="joy up"
+            data-key="up"
+        >
+            ▲
+        </button>
+
+
+        <button
+            class="joy left"
+            data-key="left"
+        >
+            ◀
+        </button>
+
+
+        <button
+            class="joy right"
+            data-key="right"
+        >
+            ▶
+        </button>
+
+
+        <button
+            class="joy down"
+            data-key="down"
+        >
+            ▼
+        </button>
 
     </div>
 
-    <!-- Z X C -->
+
+    <!-- =================================================
+         ACTION BUTTONS
+    ================================================== -->
+
     <div id="actions">
 
-        <button class="action z" data-key="z">Z</button>
-        <button class="action x" data-key="x">X</button>
-        <button class="action c" data-key="c">C</button>
+        <button
+            class="action z"
+            data-key="z"
+        >
+            Z
+        </button>
+
+
+        <button
+            class="action x"
+            data-key="x"
+        >
+            X
+        </button>
+
+
+        <button
+            class="action c"
+            data-key="c"
+        >
+            C
+        </button>
 
     </div>
 
 </div>
 
+
 <script src="script.js"></script>
 
 </body>
+
 </html>
