@@ -1,7 +1,8 @@
 * {
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
     user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html,
@@ -25,7 +26,7 @@ body {
     align-items: center;
 }
 
-#game-wrapper {
+#game {
     position: relative;
 
     width: 100vw;
@@ -34,17 +35,18 @@ body {
     overflow: hidden;
 
     background: #000;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-#game {
+canvas {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
     width: 100vw;
     height: 100vh;
-
-    display: block;
 
     image-rendering: pixelated;
     image-rendering: crisp-edges;
@@ -54,37 +56,34 @@ body {
     touch-action: none;
 }
 
-/* =========================
-   FULLSCREEN
-========================= */
-
-#fullscreen-button {
+#fullscreen {
     position: fixed;
 
-    right: 12px;
     top: 12px;
+    right: 12px;
 
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
 
-    border: 2px solid rgba(255,255,255,.55);
+    z-index: 20;
+
+    border: 2px solid #aaa;
 
     border-radius: 7px;
 
-    background: rgba(0,0,0,.45);
+    background: rgba(0,0,0,.55);
 
     color: white;
 
-    font-size: 22px;
-
-    z-index: 50;
+    font-size: 23px;
 
     touch-action: none;
 }
 
-#fullscreen-button:active {
-    background: rgba(255,255,255,.2);
+#fullscreen:active {
+    background: rgba(255,255,255,.25);
 }
+
 
 /* =========================
    JOYSTICK
@@ -93,63 +92,58 @@ body {
 #joystick {
     position: fixed;
 
-    left: 16px;
+    left: 18px;
     bottom: 18px;
 
-    width: 132px;
-    height: 132px;
+    width: 140px;
+    height: 140px;
 
     z-index: 20;
-
-    opacity: .42;
-
-    touch-action: none;
 }
 
 .joy {
     position: absolute;
 
-    width: 43px;
-    height: 43px;
+    width: 45px;
+    height: 45px;
+
+    border: 2px solid rgba(255,255,255,.65);
 
     border-radius: 8px;
 
-    border: 2px solid rgba(255,255,255,.7);
-
-    background: rgba(20,20,20,.35);
+    background: rgba(0,0,0,.42);
 
     color: white;
 
     font-size: 18px;
 
-    font-family: monospace;
-
     touch-action: none;
 }
 
+.joy:active {
+    background: rgba(255,255,255,.25);
+}
+
 .joy.up {
-    left: 44px;
+    left: 47px;
     top: 0;
 }
 
 .joy.down {
-    left: 44px;
+    left: 47px;
     bottom: 0;
 }
 
 .joy.left {
     left: 0;
-    top: 44px;
+    top: 47px;
 }
 
 .joy.right {
     right: 0;
-    top: 44px;
+    top: 47px;
 }
 
-.joy:active {
-    background: rgba(255,255,255,.22);
-}
 
 /* =========================
    Z X C
@@ -158,84 +152,52 @@ body {
 #actions {
     position: fixed;
 
-    right: 18px;
+    right: 20px;
     bottom: 22px;
+
+    z-index: 20;
 
     display: flex;
 
-    gap: 10px;
-
-    z-index: 20;
+    gap: 12px;
 }
 
-.action-button {
-    width: 52px;
-    height: 52px;
+.action {
+    width: 55px;
+    height: 55px;
 
     border-radius: 50%;
 
-    border: 2px solid rgba(255,255,255,.7);
-
-    background: rgba(10,10,10,.42);
+    background: rgba(0,0,0,.5);
 
     color: white;
 
     font-family: monospace;
 
-    font-size: 17px;
-
+    font-size: 18px;
     font-weight: bold;
 
-    opacity: .5;
+    border: 2px solid white;
 
     touch-action: none;
 }
 
-.action-button:active {
-    background: rgba(255,255,255,.22);
-    opacity: .9;
+.action:active {
+    background: rgba(255,255,255,.25);
 }
 
-.z-button {
-    border-color: rgba(255,70,70,.85);
+.action.z {
+    border-color: #ff6666;
 }
 
-.x-button {
-    border-color: rgba(255,220,70,.85);
+.action.x {
+    border-color: #ffff66;
 }
 
-.c-button {
-    border-color: rgba(70,160,255,.85);
+.action.c {
+    border-color: #66aaff;
 }
 
-/* =========================
-   RUN
-========================= */
-
-#run-indicator {
-    position: fixed;
-
-    left: 170px;
-    bottom: 20px;
-
-    padding: 5px 8px;
-
-    color: white;
-
-    font-size: 11px;
-
-    border: 1px solid rgba(255,255,255,.3);
-
-    background: rgba(0,0,0,.35);
-
-    opacity: .25;
-
-    z-index: 20;
-}
-
-#run-indicator.active {
-    opacity: .8;
-}
 
 /* =========================
    MOBILE
@@ -247,7 +209,7 @@ body {
         left: 8px;
         bottom: 8px;
 
-        transform: scale(.88);
+        transform: scale(.9);
 
         transform-origin: bottom left;
     }
@@ -256,23 +218,9 @@ body {
         right: 8px;
         bottom: 10px;
 
-        transform: scale(.88);
+        transform: scale(.9);
 
         transform-origin: bottom right;
     }
-}
 
-@media (max-height: 350px) {
-
-    #joystick {
-        transform: scale(.7);
-
-        transform-origin: bottom left;
-    }
-
-    #actions {
-        transform: scale(.7);
-
-        transform-origin: bottom right;
-    }
 }
