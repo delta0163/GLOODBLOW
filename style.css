@@ -1,39 +1,36 @@
 * {
     box-sizing: border-box;
-    user-select: none;
-    -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 html,
 body {
+    margin: 0;
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
     overflow: hidden;
     background: #000;
+    font-family: monospace;
 }
 
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: monospace;
 }
 
 #game {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background: #000;
     overflow: hidden;
+    background: #000;
 }
 
 #canvas {
     position: absolute;
-    left: 0;
-    top: 0;
+    inset: 0;
 
     width: 100%;
     height: 100%;
@@ -41,65 +38,58 @@ body {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 
-    background: #111;
-
     touch-action: none;
 }
 
-/* =========================
-   FULLSCREEN
-========================= */
+button {
+    font-family: monospace;
+}
 
 #fullscreen {
     position: fixed;
-
     top: 12px;
     right: 12px;
 
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
 
     z-index: 50;
 
-    border: 2px solid #aaa;
-    border-radius: 7px;
-
-    background: rgba(0,0,0,.55);
     color: white;
+    background: rgba(0,0,0,.55);
+
+    border: 2px solid rgba(255,255,255,.7);
+    border-radius: 6px;
 
     font-size: 22px;
 }
 
-/* =========================
-   JOYSTICK
-========================= */
-
 #joystick {
     position: fixed;
 
-    left: 18px;
-    bottom: 18px;
+    left: 15px;
+    bottom: 15px;
 
     width: 135px;
     height: 135px;
 
     z-index: 40;
 
-    opacity: .65;
+    opacity: .55;
 }
 
 .joy {
     position: absolute;
 
-    width: 43px;
-    height: 43px;
-
-    border: 2px solid #aaa;
-    border-radius: 8px;
-
-    background: rgba(0,0,0,.55);
+    width: 44px;
+    height: 44px;
 
     color: white;
+
+    background: rgba(0,0,0,.45);
+
+    border: 2px solid rgba(255,255,255,.7);
+    border-radius: 8px;
 
     font-size: 18px;
 
@@ -107,103 +97,111 @@ body {
 }
 
 .joy.up {
-    left: 46px;
+    left: 45px;
     top: 0;
 }
 
 .joy.down {
-    left: 46px;
+    left: 45px;
     bottom: 0;
 }
 
 .joy.left {
     left: 0;
-    top: 46px;
+    top: 45px;
 }
 
 .joy.right {
     right: 0;
-    top: 46px;
+    top: 45px;
 }
 
 .joy:active {
     background: rgba(255,255,255,.25);
 }
 
-/* =========================
-   Z X C
-========================= */
-
 #actions {
     position: fixed;
 
-    right: 22px;
-    bottom: 24px;
+    right: 18px;
+    bottom: 20px;
 
     display: flex;
-
     gap: 12px;
 
     z-index: 40;
 }
 
 .action {
-    width: 58px;
-    height: 58px;
+    width: 55px;
+    height: 55px;
 
     border-radius: 50%;
 
-    background: rgba(0,0,0,.58);
-
     color: white;
 
-    font-family: monospace;
+    background: rgba(0,0,0,.5);
+
+    border: 2px solid white;
+
     font-weight: bold;
     font-size: 18px;
-
-    border: 2px solid #aaa;
 
     touch-action: none;
 }
 
 .action.z {
-    border-color: #ff5555;
+    border-color: #ff6666;
 }
 
 .action.x {
-    border-color: #ffff55;
+    border-color: #ffff66;
 }
 
 .action.c {
-    border-color: #5599ff;
+    border-color: #66aaff;
 }
 
 .action:active {
     background: rgba(255,255,255,.25);
 }
 
-/* =========================
-   MOBILE
-========================= */
+#hint {
+    position: fixed;
 
-@media(max-width:600px) {
+    left: 50%;
+    bottom: 15px;
+
+    transform: translateX(-50%);
+
+    z-index: 45;
+
+    color: white;
+
+    font-size: 12px;
+
+    pointer-events: none;
+
+    text-shadow:
+        1px 1px #000,
+        -1px -1px #000;
+}
+
+@media (max-width: 600px) {
 
     #joystick {
-        left: 8px;
-        bottom: 10px;
-        transform: scale(.9);
+        transform: scale(.85);
         transform-origin: bottom left;
     }
 
     #actions {
-        right: 8px;
-        bottom: 12px;
-        transform: scale(.9);
+        transform: scale(.85);
         transform-origin: bottom right;
     }
 
-    #fullscreen {
-        top: 8px;
-        right: 8px;
-    }
+}
+
+:fullscreen #canvas {
+    width: 100vw;
+    height: 100vh;
 }
