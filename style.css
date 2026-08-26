@@ -1,6 +1,5 @@
 * {
     box-sizing: border-box;
-
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -8,63 +7,50 @@
 
 html,
 body {
-    margin: 0;
-    padding: 0;
-
     width: 100%;
     height: 100%;
-
+    margin: 0;
+    padding: 0;
     overflow: hidden;
-
     background: #000;
-
-    font-family: monospace;
 }
 
 body {
     display: flex;
-
     justify-content: center;
     align-items: center;
+    font-family: monospace;
 }
 
 #game {
     position: relative;
-
     width: 100vw;
     height: 100vh;
-
-    overflow: hidden;
-
     background: #000;
+    overflow: hidden;
 }
 
-canvas {
+#canvas {
     position: absolute;
+    left: 0;
+    top: 0;
 
-    left: 50%;
-    top: 50%;
-
-    transform: translate(-50%, -50%);
-
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
 
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 
-    background: #000;
+    background: #111;
 
     touch-action: none;
 }
 
-
-/* =====================================================
+/* =========================
    FULLSCREEN
-===================================================== */
+========================= */
 
 #fullscreen {
-
     position: fixed;
 
     top: 12px;
@@ -76,261 +62,148 @@ canvas {
     z-index: 50;
 
     border: 2px solid #aaa;
-
     border-radius: 7px;
 
-    background: rgba(0,0,0,.6);
-
+    background: rgba(0,0,0,.55);
     color: white;
 
-    font-size: 23px;
-
-    touch-action: none;
-
+    font-size: 22px;
 }
 
-#fullscreen:active {
-
-    background:
-        rgba(255,255,255,.25);
-
-}
-
-
-/* =====================================================
+/* =========================
    JOYSTICK
-===================================================== */
+========================= */
 
 #joystick {
-
     position: fixed;
 
     left: 18px;
     bottom: 18px;
 
-    width: 140px;
-    height: 140px;
+    width: 135px;
+    height: 135px;
 
-    z-index: 50;
+    z-index: 40;
 
+    opacity: .65;
 }
 
 .joy {
-
     position: absolute;
 
-    width: 45px;
-    height: 45px;
+    width: 43px;
+    height: 43px;
 
-    border:
-        2px solid
-        rgba(255,255,255,.65);
-
+    border: 2px solid #aaa;
     border-radius: 8px;
 
-    background:
-        rgba(0,0,0,.45);
+    background: rgba(0,0,0,.55);
 
     color: white;
 
     font-size: 18px;
 
     touch-action: none;
-
-}
-
-.joy:active {
-
-    background:
-        rgba(255,255,255,.25);
-
 }
 
 .joy.up {
-
-    left: 47px;
+    left: 46px;
     top: 0;
-
 }
 
 .joy.down {
-
-    left: 47px;
+    left: 46px;
     bottom: 0;
-
 }
 
 .joy.left {
-
     left: 0;
-    top: 47px;
-
+    top: 46px;
 }
 
 .joy.right {
-
     right: 0;
-    top: 47px;
-
+    top: 46px;
 }
 
+.joy:active {
+    background: rgba(255,255,255,.25);
+}
 
-/* =====================================================
-   ACTION BUTTONS
-===================================================== */
+/* =========================
+   Z X C
+========================= */
 
 #actions {
-
     position: fixed;
 
-    right: 20px;
-    bottom: 22px;
-
-    z-index: 50;
+    right: 22px;
+    bottom: 24px;
 
     display: flex;
 
     gap: 12px;
 
+    z-index: 40;
 }
 
 .action {
-
-    width: 55px;
-    height: 55px;
+    width: 58px;
+    height: 58px;
 
     border-radius: 50%;
 
-    background:
-        rgba(0,0,0,.55);
+    background: rgba(0,0,0,.58);
 
     color: white;
 
     font-family: monospace;
-
-    font-size: 18px;
     font-weight: bold;
+    font-size: 18px;
 
-    border: 2px solid white;
+    border: 2px solid #aaa;
 
     touch-action: none;
-
-}
-
-.action:active {
-
-    background:
-        rgba(255,255,255,.3);
-
-    transform:
-        scale(.94);
-
 }
 
 .action.z {
-
-    border-color: #ff6666;
-
-    box-shadow:
-        0 0 8px
-        rgba(255,70,70,.35);
-
+    border-color: #ff5555;
 }
 
 .action.x {
-
-    border-color: #ffff66;
-
-    box-shadow:
-        0 0 8px
-        rgba(255,255,70,.25);
-
+    border-color: #ffff55;
 }
 
 .action.c {
-
-    border-color: #66aaff;
-
-    box-shadow:
-        0 0 8px
-        rgba(70,150,255,.25);
-
+    border-color: #5599ff;
 }
 
-
-/* =====================================================
-   QTE
-===================================================== */
-
-#actions .z {
-
-    animation:
-        none;
-
+.action:active {
+    background: rgba(255,255,255,.25);
 }
 
-body:has(canvas) {
-
-    background: #000;
-
-}
-
-
-/* =====================================================
+/* =========================
    MOBILE
-===================================================== */
+========================= */
 
-@media (max-width: 600px) {
+@media(max-width:600px) {
 
     #joystick {
-
         left: 8px;
-        bottom: 8px;
-
-        transform:
-            scale(.9);
-
-        transform-origin:
-            bottom left;
-
-    }
-
-    #actions {
-
-        right: 8px;
         bottom: 10px;
-
-        transform:
-            scale(.9);
-
-        transform-origin:
-            bottom right;
-
-    }
-
-}
-
-
-@media (max-height: 500px) {
-
-    #joystick {
-
-        transform:
-            scale(.72);
-
-        transform-origin:
-            bottom left;
-
+        transform: scale(.9);
+        transform-origin: bottom left;
     }
 
     #actions {
-
-        transform:
-            scale(.72);
-
-        transform-origin:
-            bottom right;
-
+        right: 8px;
+        bottom: 12px;
+        transform: scale(.9);
+        transform-origin: bottom right;
     }
 
+    #fullscreen {
+        top: 8px;
+        right: 8px;
+    }
 }
