@@ -8,14 +8,10 @@ html,
 body {
     margin: 0;
     padding: 0;
-
     width: 100%;
     height: 100%;
-
     overflow: hidden;
-
     background: #000;
-
     font-family: monospace;
 }
 
@@ -27,36 +23,29 @@ body {
 
 #game-wrapper {
     position: relative;
-
     width: 100vw;
     height: 100vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: #000;
-
     overflow: hidden;
+    background: #000;
 }
 
 #game {
-    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
 
     width: 100vw;
     height: 100vh;
 
-    background: #111;
+    transform: translate(-50%, -50%);
 
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 
+    background: #111;
+
     touch-action: none;
 }
-
-/* =====================================================
-   FULLSCREEN
-===================================================== */
 
 #fullscreen-button {
     position: fixed;
@@ -67,17 +56,15 @@ body {
     width: 42px;
     height: 42px;
 
-    border: 2px solid rgba(255,255,255,.55);
-
+    border: 2px solid rgba(255,255,255,.6);
     border-radius: 7px;
 
-    background: rgba(0,0,0,.55);
-
-    color: #fff;
+    background: rgba(0,0,0,.45);
+    color: white;
 
     font-size: 22px;
 
-    z-index: 100;
+    z-index: 50;
 
     touch-action: none;
 }
@@ -86,22 +73,22 @@ body {
     background: rgba(255,255,255,.2);
 }
 
-/* =====================================================
+/* =========================
    JOYSTICK
-===================================================== */
+========================= */
 
 #joystick {
     position: fixed;
 
-    left: 18px;
-    bottom: 18px;
+    left: 16px;
+    bottom: 16px;
 
     width: 132px;
     height: 132px;
 
-    z-index: 90;
+    z-index: 40;
 
-    opacity: .52;
+    opacity: .55;
 }
 
 .joy {
@@ -110,16 +97,15 @@ body {
     width: 43px;
     height: 43px;
 
+    border: 2px solid rgba(255,255,255,.7);
     border-radius: 8px;
 
-    border: 2px solid rgba(255,255,255,.7);
+    background: rgba(20,20,20,.4);
 
-    background: rgba(15,15,15,.5);
+    color: white;
 
-    color: #fff;
-
-    font-family: monospace;
     font-size: 18px;
+    font-family: monospace;
 
     touch-action: none;
 }
@@ -148,21 +134,20 @@ body {
     background: rgba(255,255,255,.25);
 }
 
-/* =====================================================
-   Z X C
-===================================================== */
+/* =========================
+   ACTION BUTTONS
+========================= */
 
 #actions {
     position: fixed;
 
     right: 18px;
-    bottom: 22px;
+    bottom: 20px;
 
     display: flex;
-
     gap: 10px;
 
-    z-index: 90;
+    z-index: 40;
 }
 
 .action-button {
@@ -173,26 +158,19 @@ body {
 
     border: 2px solid rgba(255,255,255,.7);
 
-    background: rgba(10,10,10,.55);
+    background: rgba(0,0,0,.45);
 
-    color: #fff;
+    color: white;
 
     font-family: monospace;
     font-size: 17px;
     font-weight: bold;
 
-    opacity: .58;
-
     touch-action: none;
 }
 
-.action-button:active {
-    background: rgba(255,255,255,.25);
-    opacity: .9;
-}
-
 .z-button {
-    border-color: #ff5555;
+    border-color: #ff6666;
 }
 
 .x-button {
@@ -200,88 +178,80 @@ body {
 }
 
 .c-button {
-    border-color: #5599ff;
+    border-color: #66aaff;
 }
 
-/* =====================================================
+.action-button:active {
+    background: rgba(255,255,255,.25);
+}
+
+/* =========================
    RUN
-===================================================== */
+========================= */
 
 #run-indicator {
     position: fixed;
 
-    left: 170px;
-    bottom: 20px;
+    left: 50%;
+    bottom: 15px;
 
-    padding: 6px 9px;
+    transform: translateX(-50%);
 
-    color: #fff;
+    padding: 5px 9px;
 
     border: 1px solid rgba(255,255,255,.35);
 
-    background: rgba(0,0,0,.45);
+    color: white;
+
+    background: rgba(0,0,0,.35);
+
+    opacity: .25;
+
+    z-index: 40;
 
     font-size: 11px;
-
-    opacity: .3;
-
-    z-index: 90;
 }
 
 #run-indicator.active {
     opacity: .85;
 }
 
-/* =====================================================
-   FULLSCREEN
-===================================================== */
+/* =========================
+   MOBILE
+========================= */
 
-:fullscreen #game {
-    width: 100vw;
-    height: 100vh;
+@media (max-width:600px) {
+
+    #joystick {
+        left: 8px;
+        bottom: 8px;
+        transform: scale(.9);
+        transform-origin: bottom left;
+    }
+
+    #actions {
+        right: 8px;
+        bottom: 10px;
+        transform: scale(.9);
+        transform-origin: bottom right;
+    }
 }
 
+@media (max-height:350px) {
+
+    #joystick {
+        transform: scale(.7);
+        transform-origin: bottom left;
+    }
+
+    #actions {
+        transform: scale(.7);
+        transform-origin: bottom right;
+    }
+}
+
+:fullscreen #game,
 :-webkit-full-screen #game {
     width: 100vw;
     height: 100vh;
-}
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 600px) {
-
-    #joystick {
-        left: 9px;
-        bottom: 9px;
-
-        transform: scale(.9);
-
-        transform-origin: bottom left;
-    }
-
-    #actions {
-        right: 9px;
-        bottom: 12px;
-
-        transform: scale(.9);
-
-        transform-origin: bottom right;
-    }
-}
-
-@media (max-height: 350px) {
-
-    #joystick {
-        transform: scale(.7);
-
-        transform-origin: bottom left;
-    }
-
-    #actions {
-        transform: scale(.7);
-
-        transform-origin: bottom right;
-    }
 }
