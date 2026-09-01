@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no">
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
 
-    <title>Blood Glow</title>
+<title>Blood Glow</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -19,14 +19,20 @@
 <div id="game-wrapper">
 
     <canvas id="game"
-            width="320"
-            height="180">
+            width="640"
+            height="360">
     </canvas>
 
     <button id="fullscreen-button">⛶</button>
 
-    <!-- ДЖОЙСТИК -->
+    <!-- ПОСТОЯННЫЙ ИНВЕНТАРЬ -->
+    <div id="inventory-hud">
+        <div>G <span id="gold">100</span></div>
+        <div>🍞 <span id="food">3</span></div>
+        <div>♥ <span id="potions">3</span></div>
+    </div>
 
+    <!-- JOYSTICK -->
     <div id="joystick">
 
         <button class="joy up"
@@ -44,7 +50,6 @@
     </div>
 
     <!-- Z X C -->
-
     <div id="actions">
 
         <button class="action-button z-button"
