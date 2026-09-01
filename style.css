@@ -52,9 +52,9 @@ body {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 
-    background: #080808;
-
     touch-action: none;
+
+    background: #08080c;
 }
 
 /* =========================
@@ -65,32 +65,57 @@ body {
 
     position: fixed;
 
-    right: 12px;
-    top: 12px;
+    top: 10px;
+    right: 10px;
 
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
 
-    border: 2px solid
-        rgba(255,255,255,.65);
+    z-index: 100;
+
+    border: 2px solid #aaa;
 
     border-radius: 7px;
 
-    background:
-        rgba(0,0,0,.5);
+    background: rgba(0,0,0,.65);
 
     color: white;
 
     font-size: 22px;
 
-    z-index: 100;
-
     touch-action: none;
 }
 
-#fullscreen-button:active {
-    background:
-        rgba(255,255,255,.25);
+/* =========================
+   INVENTORY
+========================= */
+
+#inventory-hud {
+
+    position: fixed;
+
+    top: 10px;
+    left: 10px;
+
+    z-index: 90;
+
+    display: flex;
+
+    gap: 8px;
+
+    padding: 7px 10px;
+
+    border: 2px solid rgba(255,255,255,.45);
+
+    border-radius: 7px;
+
+    background: rgba(0,0,0,.7);
+
+    color: white;
+
+    font-size: 13px;
+
+    pointer-events: none;
 }
 
 /* =========================
@@ -101,71 +126,59 @@ body {
 
     position: fixed;
 
-    left: 16px;
-    bottom: 16px;
+    left: 15px;
+    bottom: 15px;
 
-    width: 132px;
-    height: 132px;
+    width: 135px;
+    height: 135px;
 
-    z-index: 100;
+    z-index: 80;
 
-    opacity: .65;
+    opacity: .7;
 }
 
 .joy {
 
     position: absolute;
 
-    width: 43px;
-    height: 43px;
+    width: 44px;
+    height: 44px;
 
-    border: 2px solid
-        rgba(255,255,255,.7);
+    border: 2px solid white;
 
     border-radius: 8px;
 
-    background:
-        rgba(15,15,15,.55);
+    background: rgba(0,0,0,.45);
 
     color: white;
 
     font-size: 18px;
 
-    font-family: monospace;
-
     touch-action: none;
 }
 
 .joy.up {
-
-    left: 44px;
+    left: 45px;
     top: 0;
 }
 
 .joy.down {
-
-    left: 44px;
+    left: 45px;
     bottom: 0;
 }
 
 .joy.left {
-
     left: 0;
-    top: 44px;
+    top: 45px;
 }
 
 .joy.right {
-
     right: 0;
-    top: 44px;
+    top: 45px;
 }
 
 .joy:active {
-
-    background:
-        rgba(255,255,255,.3);
-
-    transform: scale(.94);
+    background: rgba(255,255,255,.3);
 }
 
 /* =========================
@@ -176,28 +189,26 @@ body {
 
     position: fixed;
 
-    right: 18px;
+    right: 15px;
     bottom: 20px;
 
     display: flex;
 
     gap: 10px;
 
-    z-index: 100;
+    z-index: 80;
 }
 
 .action-button {
 
-    width: 52px;
-    height: 52px;
+    width: 55px;
+    height: 55px;
 
     border-radius: 50%;
 
-    border: 2px solid
-        rgba(255,255,255,.7);
+    border: 2px solid white;
 
-    background:
-        rgba(0,0,0,.5);
+    background: rgba(0,0,0,.55);
 
     color: white;
 
@@ -211,7 +222,7 @@ body {
 }
 
 .z-button {
-    border-color: #ff6666;
+    border-color: #ff5555;
 }
 
 .x-button {
@@ -219,15 +230,11 @@ body {
 }
 
 .c-button {
-    border-color: #66aaff;
+    border-color: #5599ff;
 }
 
 .action-button:active {
-
-    background:
-        rgba(255,255,255,.25);
-
-    transform: scale(.94);
+    background: rgba(255,255,255,.3);
 }
 
 /* =========================
@@ -244,23 +251,17 @@ body {
     transform:
         translateX(-50%);
 
-    padding:
-        5px 9px;
+    z-index: 70;
 
-    border:
-        1px solid
-        rgba(255,255,255,.35);
+    padding: 5px 9px;
 
     color: white;
 
-    background:
-        rgba(0,0,0,.35);
+    background: rgba(0,0,0,.5);
+
+    border: 1px solid #555;
 
     opacity: .25;
-
-    z-index: 100;
-
-    font-size: 11px;
 }
 
 #run-indicator.active {
@@ -271,14 +272,14 @@ body {
    MOBILE
 ========================= */
 
-@media (max-width:600px) {
+@media(max-width:600px) {
 
     #joystick {
 
-        left: 8px;
-        bottom: 8px;
+        left: 7px;
+        bottom: 7px;
 
-        transform: scale(.9);
+        transform: scale(.85);
 
         transform-origin:
             bottom left;
@@ -286,32 +287,22 @@ body {
 
     #actions {
 
-        right: 8px;
-        bottom: 10px;
+        right: 7px;
+        bottom: 9px;
 
-        transform: scale(.9);
+        transform: scale(.85);
 
         transform-origin:
             bottom right;
     }
-}
 
-@media (max-height:350px) {
+    #inventory-hud {
 
-    #joystick {
+        font-size: 11px;
 
-        transform: scale(.7);
+        padding: 5px 7px;
 
-        transform-origin:
-            bottom left;
-    }
-
-    #actions {
-
-        transform: scale(.7);
-
-        transform-origin:
-            bottom right;
+        gap: 5px;
     }
 }
 
