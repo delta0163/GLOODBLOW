@@ -2,8 +2,7 @@
 
 /* =========================================================
    BLOOD GLOW
-   DIGITAL WASTELAND
-   Версия с новым боем Глючного зверя
+   НОВАЯ ВЕРСИЯ С НУЛЯ
 ========================================================= */
 
 const canvas =
@@ -14,8 +13,8 @@ const ctx =
 
 ctx.imageSmoothingEnabled = false;
 
-const W = 320;
-const H = 180;
+const W = 640;
+const H = 360;
 
 
 /* =========================================================
@@ -24,63 +23,46 @@ const H = 180;
 
 const images = {};
 
-const imageFiles = {
+const imageList = {
 
-    wasteland:
-        "images/wasteland.png",
+    wasteland: "images/wasteland.png",
+    trail: "images/trail.png",
 
-    trail:
-        "images/trail.png",
+    delta: "images/delta.png",
+    left: "images/deltalef.png",
+    right: "images/deltaright.png",
+    back: "images/deltabach.png",
 
-    delta:
-        "images/delta.png",
+    error: "images/error.png",
+    shop: "images/shop.png"
 
-    deltaLeft:
-        "images/deltalef.png",
-
-    deltaRight:
-        "images/deltaright.png",
-
-    deltaBack:
-        "images/deltabach.png",
-
-    error:
-        "images/error.png",
-
-    shop:
-        "images/shop.png"
 };
 
-for (const key in imageFiles) {
+for (const name in imageList) {
 
     const img = new Image();
 
-    img.src = imageFiles[key];
+    img.src = imageList[name];
 
-    images[key] = img;
+    images[name] = img;
 }
 
 
 /* =========================================================
-   SOUNDS
+   SOUND
 ========================================================= */
 
 const sounds = {
 
     world:
-        new Audio(
-            "sounds/wonderland.mp3"
-        ),
+        new Audio("sounds/wonderland.mp3"),
 
     battle:
-        new Audio(
-            "sounds/battle.mp3"
-        ),
+        new Audio("sounds/battle.mp3"),
 
     cemetery:
-        new Audio(
-            "sounds/cemetery.mp3"
-        )
+        new Audio("sounds/cemetery.mp3")
+
 };
 
 sounds.world.loop = true;
@@ -88,93 +70,71 @@ sounds.battle.loop = true;
 sounds.cemetery.loop = true;
 
 sounds.world.volume = .35;
-sounds.battle.volume = .3;
+sounds.battle.volume = .35;
 sounds.cemetery.volume = .35;
 
-let soundStarted = false;
+let audioStarted = false;
 
 
-function playSound(type) {
-
-    if (!sounds[type])
-        return;
+function music(name) {
 
     for (const key in sounds) {
 
-        if (key !== type) {
+        sounds[key].pause();
 
-            sounds[key].pause();
+        sounds[key].currentTime = 0;
 
-            sounds[key].currentTime = 0;
-        }
     }
 
-    sounds[type]
-        .play()
-        .catch(() => {});
-}
-
-
-function startMusic() {
-
-    if (soundStarted)
+    if (!sounds[name])
         return;
 
-    soundStarted = true;
+    sounds[name]
+        .play()
+        .catch(() => {});
 
-    playSound("world");
 }
 
 
-window.addEventListener(
-    "pointerdown",
-    startMusic,
-    { once:true }
-);
+function startAudio() {
+
+    if (audioStarted)
+        return;
+
+    audioStarted = true;
+
+    music("world");
+
+}
 
 
 /* =========================================================
    FULLSCREEN
 ========================================================= */
 
-const fullscreenButton =
-    document.getElementById(
-        "fullscreen-button"
-    );
+document
+.getElementById("fullscreen-button")
+.addEventListener("pointerdown", e => {
 
-fullscreenButton.addEventListener(
-    "pointerdown",
-    async e => {
+    e.preventDefault();
 
-        e.preventDefault();
+    startAudio();
 
-        try {
+    if (!document.fullscreenElement) {
 
-            if (
-                !document.fullscreenElement
-            ) {
+        document.documentElement
+            .requestFullscreen()
+            .catch(() => {});
 
-                await
-                document.documentElement
-                    .requestFullscreen();
+    } else {
 
-            }
-            else {
-
-                await
-                document.exitFullscreen();
-
-            }
-
-        }
-        catch(error) {
-
-            console.log(error);
-
-        }
+        document
+            .exitFullscreen()
+            .catch(() => {});
 
     }
-);
+
+});
 
 
 /* =========================================================
@@ -193,9 +153,10 @@ const keys = {
     c:false,
 
     run:false
+
 };
 
-const old = {
+const previous = {
 
     up:false,
     down:false,
@@ -205,15 +166,15 @@ const old = {
     z:false,
     x:false,
     c:false
+
 };
 
 
-function pressed(key) {
+function pressed(k) {
 
-    return (
-        keys[key] &&
-        !old[key]
-    );
+    return keys[k] &&
+           !previous[k];
+
 }
 
 
@@ -225,46 +186,52 @@ window.addEventListener(
     "keydown",
     e => {
 
-        const k =
-            e.key.toLowerCase();
+        startAudio();
 
-        if (
-            e.key === "ArrowUp" ||
-            k === "w"
-        )
-            keys.up = true;
+        switch(e.key.toLowerCase()) {
 
-        if (
-            e.key === "ArrowDown" ||
-            k === "s"
-        )
-            keys.down = true;
+            case "w":
+            case "arrowup":
+                keys.up = true;
+                break;
 
-        if (
-            e.key === "ArrowLeft" ||
-            k === "a"
-        )
-            keys.left = true;
+            case "s":
+            case "arrowdown":
+                keys.down = true;
+                break;
 
-        if (
-            e.key === "ArrowRight" ||
-            k === "d"
-        )
-            keys.right = true;
+            case "a":
+            case "arrowleft":
+                keys.left = true;
+                break;
 
-        if (k === "z")
-            keys.z = true;
+            case "d":
+            case "arrowright":
+                keys.right = true;
+                break;
 
-        if (k === "x")
-            keys.x = true;
+            case "z":
+                keys.z = true;
+                break;
 
-        if (k === "c")
-            keys.c = true;
+            case "x":
+                keys.x = true;
+                break;
+
+            case "c":
+                keys.c = true;
+                break;
+
+            case "shift":
+                keys.run = true;
+                break;
+
+        }
 
         e.preventDefault();
 
     },
-    { passive:false }
+    {passive:false}
 );
 
 
@@ -272,46 +239,50 @@ window.addEventListener(
     "keyup",
     e => {
 
-        const k =
-            e.key.toLowerCase();
+        switch(e.key.toLowerCase()) {
 
-        if (
-            e.key === "ArrowUp" ||
-            k === "w"
-        )
-            keys.up = false;
+            case "w":
+            case "arrowup":
+                keys.up = false;
+                break;
 
-        if (
-            e.key === "ArrowDown" ||
-            k === "s"
-        )
-            keys.down = false;
+            case "s":
+            case "arrowdown":
+                keys.down = false;
+                break;
 
-        if (
-            e.key === "ArrowLeft" ||
-            k === "a"
-        )
-            keys.left = false;
+            case "a":
+            case "arrowleft":
+                keys.left = false;
+                break;
 
-        if (
-            e.key === "ArrowRight" ||
-            k === "d"
-        )
-            keys.right = false;
+            case "d":
+            case "arrowright":
+                keys.right = false;
+                break;
 
-        if (k === "z")
-            keys.z = false;
+            case "z":
+                keys.z = false;
+                break;
 
-        if (k === "x")
-            keys.x = false;
+            case "x":
+                keys.x = false;
+                break;
 
-        if (k === "c")
-            keys.c = false;
+            case "c":
+                keys.c = false;
+                break;
+
+            case "shift":
+                keys.run = false;
+                break;
+
+        }
 
         e.preventDefault();
 
     },
-    { passive:false }
+    {passive:false}
 );
 
 
@@ -320,165 +291,50 @@ window.addEventListener(
 ========================================================= */
 
 document
-    .querySelectorAll(".joy")
-    .forEach(button => {
+.querySelectorAll(".joy, .action-button")
+.forEach(button => {
 
-        const key =
-            button.dataset.key;
+    const key =
+        button.dataset.key;
 
-        button.addEventListener(
-            "pointerdown",
-            e => {
+    button.addEventListener(
+        "pointerdown",
+        e => {
 
-                e.preventDefault();
+            e.preventDefault();
 
-                startMusic();
+            startAudio();
 
-                keys[key] = true;
+            keys[key] = true;
 
-                button.setPointerCapture(
-                    e.pointerId
-                );
+            button.setPointerCapture(
+                e.pointerId
+            );
 
-            }
-        );
-
-        button.addEventListener(
-            "pointerup",
-            e => {
-
-                e.preventDefault();
-
-                keys[key] = false;
-
-            }
-        );
-
-        button.addEventListener(
-            "pointercancel",
-            () => {
-
-                keys[key] = false;
-
-            }
-        );
-
-    });
-
-
-document
-    .querySelectorAll(".action-button")
-    .forEach(button => {
-
-        const key =
-            button.dataset.key;
-
-        button.addEventListener(
-            "pointerdown",
-            e => {
-
-                e.preventDefault();
-
-                startMusic();
-
-                keys[key] = true;
-
-                button.setPointerCapture(
-                    e.pointerId
-                );
-
-            }
-        );
-
-        button.addEventListener(
-            "pointerup",
-            e => {
-
-                e.preventDefault();
-
-                keys[key] = false;
-
-            }
-        );
-
-        button.addEventListener(
-            "pointercancel",
-            () => {
-
-                keys[key] = false;
-
-            }
-        );
-
-    });
-
-
-/* =========================================================
-   RUN
-========================================================= */
-
-const runIndicator =
-    document.getElementById(
-        "run-indicator"
+        }
     );
 
-let runPointer = null;
+    button.addEventListener(
+        "pointerup",
+        e => {
 
+            e.preventDefault();
 
-canvas.addEventListener(
-    "pointerdown",
-    e => {
+            keys[key] = false;
 
-        startMusic();
+        }
+    );
 
-        runPointer =
-            e.pointerId;
+    button.addEventListener(
+        "pointercancel",
+        () => {
 
-        keys.run = true;
+            keys[key] = false;
 
-        runIndicator
-            .classList
-            .add("active");
+        }
+    );
 
-    }
-);
-
-
-canvas.addEventListener(
-    "pointerup",
-    e => {
-
-        if (
-            e.pointerId !== runPointer
-        )
-            return;
-
-        runPointer = null;
-
-        keys.run = false;
-
-        runIndicator
-            .classList
-            .remove("active");
-
-    }
-);
-
-
-canvas.addEventListener(
-    "pointercancel",
-    () => {
-
-        runPointer = null;
-
-        keys.run = false;
-
-        runIndicator
-            .classList
-            .remove("active");
-
-    }
-);
+});
 
 
 /* =========================================================
@@ -487,35 +343,53 @@ canvas.addEventListener(
 
 const game = {
 
-    mode:"title",
+    started:false,
 
     room:"wasteland1",
 
-    started:false,
-
-    dialogue:null,
-
-    dialogueIndex:0,
+    mode:"title",
 
     transition:0,
 
     transitionTarget:null,
 
-    message:"",
+    dialogue:null,
 
-    messageTimer:0,
+    dialogueIndex:0,
 
     battle:null,
 
-    puzzle:null,
+    chase:null,
 
-    qte:null,
+    puzzle:null,
 
     shopIndex:0,
 
-    qteTriggered:false,
+    menuIndex:0,
 
-    beastTriggered:false
+    message:"",
+
+    messageTime:0
+
+};
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+const player = {
+
+    x:80,
+    y:260,
+
+    w:24,
+    h:30,
+
+    direction:"right",
+
+    walkFrame:0
+
 };
 
 
@@ -530,9 +404,7 @@ const party = [
         hp:90,
         maxHP:90,
         atk:14,
-        def:8,
-        weapon:"Старый клинок",
-        armor:"Старая одежда"
+        def:8
     },
 
     {
@@ -540,9 +412,7 @@ const party = [
         hp:80,
         maxHP:80,
         atk:13,
-        def:6,
-        weapon:"Цифровой жезл",
-        armor:"Синяя ткань"
+        def:6
     },
 
     {
@@ -550,9 +420,7 @@ const party = [
         hp:70,
         maxHP:70,
         atk:10,
-        def:11,
-        weapon:"Тяжёлый молот",
-        armor:"Защитная куртка"
+        def:11
     },
 
     {
@@ -560,9 +428,7 @@ const party = [
         hp:110,
         maxHP:110,
         atk:12,
-        def:12,
-        weapon:"Плазменный посох",
-        armor:"Тяжёлая броня"
+        def:12
     },
 
     {
@@ -570,9 +436,7 @@ const party = [
         hp:100,
         maxHP:100,
         atk:13,
-        def:9,
-        weapon:"Розовый клинок",
-        armor:"Тёмная мантия"
+        def:9
     }
 
 ];
@@ -586,63 +450,15 @@ const inventory = {
 
     food:3,
 
-    potion:3,
+    potions:3,
 
     weapons:0,
 
     armor:0
+
 };
 
-let money = 100;
-
-
-/* =========================================================
-   SHOP
-========================================================= */
-
-const shopItems = [
-
-    {
-        name:"ХЛЕБ",
-        price:10,
-        type:"food"
-    },
-
-    {
-        name:"ЗЕЛЬЕ",
-        price:20,
-        type:"potion"
-    },
-
-    {
-        name:"ОРУЖИЕ",
-        price:45,
-        type:"weapon"
-    },
-
-    {
-        name:"БРОНЯ",
-        price:40,
-        type:"armor"
-    }
-
-];
-
-
-/* =========================================================
-   PLAYER
-========================================================= */
-
-const player = {
-
-    x:35,
-    y:130,
-
-    w:10,
-    h:14,
-
-    direction:"right"
-};
+let gold = 100;
 
 
 /* =========================================================
@@ -652,27 +468,23 @@ const player = {
 const followers = [
 
     {
-        x:20,
-        y:130,
-        color:"#55aaff"
+        x:40,
+        y:260
     },
 
     {
-        x:5,
-        y:130,
-        color:"#55dd66"
+        x:10,
+        y:260
     },
 
     {
-        x:-10,
-        y:130,
-        color:"#cc8844"
+        x:-20,
+        y:260
     },
 
     {
-        x:-25,
-        y:130,
-        color:"#ff66cc"
+        x:-50,
+        y:260
     }
 
 ];
@@ -684,69 +496,92 @@ const followers = [
 
 const rooms = {
 
-    wasteland1:{
-        name:"ЦИФРОВАЯ ПУСТОШЬ",
-        type:"wasteland"
-    },
+    wasteland1:
+        "ЦИФРОВАЯ ПУСТОШЬ",
 
-    shop:{
-        name:"СТАРЫЙ МАГАЗИН",
-        type:"shop"
-    },
+    shop:
+        "МАГАЗИН",
 
-    wasteland2:{
-        name:"ПУСТОШЬ — ПОГОНЯ",
-        type:"wasteland"
-    },
+    wasteland2:
+        "ПУСТОШЬ",
 
-    boxes:{
-        name:"ВОРОТА",
-        type:"puzzle"
-    },
+    boxes:
+        "СТАРЫЕ ВОРОТА",
 
-    cemetery:{
-        name:"ЦИФРОВОЕ КЛАДБИЩЕ",
-        type:"cemetery"
-    }
+    cemetery:
+        "ЦИФРОВОЕ КЛАДБИЩЕ"
 
 };
 
 
 /* =========================================================
-   WALLS
+   DIALOGUE
 ========================================================= */
 
-const walls = [
+function beginDialogue() {
 
-    {
-        x:0,
-        y:0,
-        w:320,
-        h:7
-    },
+    game.mode = "dialogue";
 
-    {
-        x:0,
-        y:173,
-        w:320,
-        h:7
-    },
+    game.dialogue = [
 
-    {
-        x:0,
-        y:0,
-        w:7,
-        h:180
-    },
+        [
+            "ЛИЧИ",
+            "Надо проверить Немку... Она изменилась."
+        ],
 
-    {
-        x:313,
-        y:0,
-        w:7,
-        h:180
+        [
+            "ЛИЧИ",
+            "Последний раз, когда мы пытались поговорить с ней, она была странной."
+        ],
+
+        [
+            "ДЕЛЬТА",
+            "Так мы идём?"
+        ],
+
+        [
+            "ЛИЧИ",
+            "Да."
+        ],
+
+        [
+            "ПАНКЕЙК",
+            "Тогда не будем задерживаться."
+        ],
+
+        [
+            "КАШТАН",
+            "Если с Немкой действительно что-то случилось, надо выяснить причину."
+        ],
+
+        [
+            "ШАРЛОТА",
+            "И держитесь рядом. Здесь слишком много системных ошибок."
+        ]
+
+    ];
+
+    game.dialogueIndex = 0;
+
+}
+
+
+function nextDialogue() {
+
+    game.dialogueIndex++;
+
+    if (
+        game.dialogueIndex >=
+        game.dialogue.length
+    ) {
+
+        game.dialogue = null;
+
+        game.mode = "explore";
+
     }
 
-];
+}
 
 
 /* =========================================================
@@ -755,202 +590,171 @@ const walls = [
 
 function startGame() {
 
-    if (game.started)
-        return;
-
     game.started = true;
 
-    game.mode = "dialogue";
+    game.room =
+        "wasteland1";
 
-    game.room = "wasteland1";
+    player.x = 70;
+    player.y = 265;
 
-    player.x = 30;
-    player.y = 130;
+    beginDialogue();
 
-    game.dialogue = [
+    music("world");
 
-        {
-            name:"ЛИЧИ",
-            text:
-            "Надо проверить Немку... Она изменилась."
-        },
-
-        {
-            name:"ЛИЧИ",
-            text:
-            "Последний раз, когда мы пытались поговорить с ней, она была странной."
-        },
-
-        {
-            name:"ДЕЛЬТА",
-            text:
-            "Так мы идём?"
-        },
-
-        {
-            name:"ЛИЧИ",
-            text:
-            "Да."
-        },
-
-        {
-            name:"ПАНКЕЙК",
-            text:
-            "Тогда не будем тратить время."
-        },
-
-        {
-            name:"КАШТАН",
-            text:
-            "Нужно понять, что с ней произошло."
-        },
-
-        {
-            name:"ШАРЛОТА",
-            text:
-            "И лучше не подходить к ней слишком близко."
-        }
-
-    ];
-
-    game.dialogueIndex = 0;
 }
 
 
 /* =========================================================
-   COLLISION
+   TRANSITION
 ========================================================= */
 
-function rectsOverlap(a,b) {
+function transitionTo(room) {
 
-    return (
+    if (game.transition > 0)
+        return;
 
-        a.x < b.x+b.w &&
-        a.x+a.w > b.x &&
-        a.y < b.y+b.h &&
-        a.y+a.h > b.y
+    game.transition = 45;
 
-    );
+    game.transitionTarget = room;
+
 }
 
 
-function canMove(x,y) {
+function finishTransition() {
 
-    const test = {
+    game.room =
+        game.transitionTarget;
 
-        x:x,
-        y:y,
+    game.transitionTarget = null;
 
-        w:player.w,
-        h:player.h
+    player.x = 45;
+    player.y = 265;
 
-    };
+    if (game.room === "shop") {
 
-    for (
-        const wall of walls
-    ) {
-
-        if (
-            rectsOverlap(
-                test,
-                wall
-            )
-        )
-            return false;
+        player.x = 70;
 
     }
 
-    return true;
+    if (game.room === "wasteland2") {
+
+        player.x = 60;
+
+    }
+
+    if (game.room === "boxes") {
+
+        player.x = 60;
+
+        createPuzzle();
+
+    }
+
+    if (game.room === "cemetery") {
+
+        music("cemetery");
+
+    } else {
+
+        music("world");
+
+    }
+
 }
 
 
 /* =========================================================
-   PLAYER
+   PLAYER MOVEMENT
 ========================================================= */
-
-function getDeltaSprite() {
-
-    if (
-        player.direction === "left"
-    )
-        return images.deltaLeft;
-
-    if (
-        player.direction === "right"
-    )
-        return images.deltaRight;
-
-    if (
-        player.direction === "up"
-    )
-        return images.deltaBack;
-
-    return images.delta;
-}
-
 
 function updatePlayer() {
 
-    if (
-        game.mode !== "explore"
-    )
+    if (game.mode !== "explore")
         return;
 
-    let dx=0;
-    let dy=0;
+    let dx = 0;
+    let dy = 0;
 
     const speed =
-        keys.run ? 2.7 : 1.45;
-
-    if (keys.up) {
-
-        dy -= speed;
-
-        player.direction="up";
-    }
-
-    if (keys.down) {
-
-        dy += speed;
-
-        player.direction="down";
-    }
+        keys.run
+            ? 4
+            : 2.2;
 
     if (keys.left) {
 
         dx -= speed;
 
-        player.direction="left";
+        player.direction =
+            "left";
+
     }
 
     if (keys.right) {
 
         dx += speed;
 
-        player.direction="right";
+        player.direction =
+            "right";
+
     }
 
-    if (dx && dy) {
+    if (keys.up) {
+
+        dy -= speed;
+
+        player.direction =
+            "back";
+
+    }
+
+    if (keys.down) {
+
+        dy += speed;
+
+        player.direction =
+            "front";
+
+    }
+
+    if (dx !== 0 &&
+        dy !== 0) {
 
         dx *= .707;
         dy *= .707;
+
     }
 
-    if (
-        canMove(
-            player.x+dx,
-            player.y
-        )
-    )
-        player.x += dx;
+    player.x += dx;
+    player.y += dy;
+
+    player.x =
+        Math.max(
+            20,
+            Math.min(
+                620,
+                player.x
+            )
+        );
+
+    player.y =
+        Math.max(
+            55,
+            Math.min(
+                325,
+                player.y
+            )
+        );
 
     if (
-        canMove(
-            player.x,
-            player.y+dy
-        )
-    )
-        player.y += dy;
+        Math.abs(dx) +
+        Math.abs(dy) > 0
+    ) {
+
+        player.walkFrame += .2;
+
+    }
+
 }
 
 
@@ -960,102 +764,117 @@ function updatePlayer() {
 
 function updateFollowers() {
 
-    if (
-        game.mode !== "explore"
-    )
+    if (game.mode !== "explore")
         return;
-
-    const targets = [
-
-        {
-            x:player.x-16,
-            y:player.y
-        },
-
-        {
-            x:player.x-32,
-            y:player.y
-        },
-
-        {
-            x:player.x-48,
-            y:player.y
-        },
-
-        {
-            x:player.x-64,
-            y:player.y
-        }
-
-    ];
 
     followers.forEach(
         (f,i) => {
 
-            const t =
-                targets[i];
+            const targetX =
+                player.x -
+                30 -
+                i*25;
+
+            const targetY =
+                player.y;
 
             f.x +=
-                (t.x-f.x)*.08;
+                (targetX-f.x)*.1;
 
             f.y +=
-                (t.y-f.y)*.08;
+                (targetY-f.y)*.1;
 
         }
     );
+
 }
 
 
 /* =========================================================
-   DIALOGUE
+   EXITS
 ========================================================= */
 
-function updateDialogue() {
+function updateExits() {
 
-    if (!game.dialogue)
+    if (
+        game.mode !==
+        "explore"
+    )
         return;
 
-    if (pressed("z")) {
+    if (player.x < 620)
+        return;
 
-        game.dialogueIndex++;
+    if (
+        game.room ===
+        "wasteland1"
+    ) {
+
+        transitionTo("shop");
+
+    }
+
+    else if (
+        game.room ===
+        "shop"
+    ) {
+
+        transitionTo("wasteland2");
+
+    }
+
+    else if (
+        game.room ===
+        "wasteland2"
+    ) {
+
+        startChase();
+
+    }
+
+    else if (
+        game.room ===
+        "boxes"
+    ) {
 
         if (
-            game.dialogueIndex >=
-            game.dialogue.length
+            game.puzzle &&
+            game.puzzle.solved
         ) {
 
-            game.dialogue=null;
+            transitionTo(
+                "cemetery"
+            );
 
-            game.mode="explore";
+        } else {
+
+            player.x = 600;
+
+            message(
+                "Ворота закрыты. Нужно поставить все коробки на кнопки."
+            );
+
         }
+
     }
 
-    if (pressed("x")) {
-
-        game.dialogue=null;
-
-        game.mode="explore";
-    }
 }
 
 
 /* =========================================================
-   RANDOM BATTLE
+   RANDOM BATTLES
 ========================================================= */
 
 let battleSteps = 0;
 
-function checkRandomBattle() {
+function randomBattle() {
 
     if (
-        game.mode !== "explore"
-    )
-        return;
-
-    if (
+        game.mode !== "explore" ||
         game.room === "shop" ||
         game.room === "boxes" ||
-        game.room === "cemetery"
+        game.room === "cemetery" ||
+        game.room === "wasteland2"
     )
         return;
 
@@ -1071,176 +890,82 @@ function checkRandomBattle() {
     battleSteps++;
 
     /*
-       Теперь бой не будет появляться
-       каждые пару секунд.
+       Бой не каждые 2 секунды.
+       Минимум примерно 25 секунд
+       активного движения.
     */
 
     if (
-        battleSteps > 600 &&
-        Math.random() < .0025
+        battleSteps > 900 &&
+        Math.random() < .004
     ) {
 
-        battleSteps=0;
+        battleSteps = 0;
 
-        startErrorBattle();
+        startBattle();
+
     }
+
 }
 
 
 /* =========================================================
-   ERROR BATTLE
+   BATTLE START
 ========================================================= */
 
-function startErrorBattle() {
+function startBattle() {
 
-    game.mode="battle";
+    game.mode = "battle";
 
     game.battle = {
 
-        type:"error",
+        enemyHP:180,
 
-        enemy:{
-
-            name:"ОШИБКА СИСТЕМЫ",
-
-            hp:180,
-
-            maxHP:180,
-
-            attack:10
-
-        },
-
-        phase:"menu",
-
-        actor:0,
+        enemyMax:180,
 
         menu:0,
 
-        mercy:0,
+        actor:0,
 
-        rd:0,
+        phase:"menu",
 
-        maxRD:100,
+        soulX:320,
 
-        defense:false,
+        soulY:275,
 
-        soul:{
-
-            x:160,
-
-            y:130,
-
-            speed:3.2,
-
-            inv:0
-
-        },
+        soulSpeed:3.4,
 
         attackTimer:0,
 
-        laser:null,
+        attackDuration:420,
+
+        attackType:
+            Math.random() <
+            .5
+                ? "laser"
+                : "explosion",
+
+        laserX:320,
+
+        laserWarning:0,
 
         explosions:[],
 
-        message:
-            "Что-то сломалось...",
+        hitCooldown:0,
 
-        enemyCount:
-            Math.random() < .65
-            ? 1
-            : 2
+        message:
+            "Ошибка системы появилась из цифрового шума."
+
     };
 
-    playSound("battle");
+    music("battle");
+
 }
 
 
 /* =========================================================
-   BEAST BATTLE
+   BATTLE INPUT
 ========================================================= */
-
-function startBeastBattle() {
-
-    game.mode="battle";
-
-    game.battle = {
-
-        type:"beast",
-
-        enemy:{
-
-            name:"ГЛЮКНУВШИЙ ЗВЕРЬ",
-
-            hp:600,
-
-            maxHP:600,
-
-            attack:14
-
-        },
-
-        phase:"menu",
-
-        actor:0,
-
-        menu:0,
-
-        rd:0,
-
-        maxRD:100,
-
-        mercy:0,
-
-        defense:false,
-
-        pushCount:0,
-
-        soul:{
-
-            x:160,
-
-            y:130,
-
-            speed:3.2,
-
-            inv:0
-        },
-
-        attackTimer:0,
-
-        attackType:null,
-
-        attackIndex:0,
-
-        laser:null,
-
-        roar:null,
-
-        claw:null,
-
-        message:
-            "ЗВЕРЬ РЫЧИТ В ТЕМНОТЕ..."
-    };
-
-    playSound("battle");
-}
-
-
-/* =========================================================
-   BATTLE MENU
-========================================================= */
-
-const battleOptions = [
-
-    "FIGHT",
-    "ACT",
-    "MAGIC",
-    "ITEM",
-    "DEFEND",
-    "MERCY"
-];
-
 
 function updateBattle() {
 
@@ -1251,183 +976,52 @@ function updateBattle() {
         return;
 
 
-    if (
-        b.phase === "menu"
-    ) {
+    if (b.phase === "menu") {
 
-        if (pressed("left")) {
+        if (pressed("left"))
+            b.menu =
+                Math.max(
+                    0,
+                    b.menu-1
+                );
 
-            b.menu--;
+        if (pressed("right"))
+            b.menu =
+                Math.min(
+                    3,
+                    b.menu+1
+                );
 
-            if (b.menu<0)
-                b.menu =
-                    battleOptions.length-1;
-        }
+        if (pressed("up"))
+            b.menu =
+                Math.max(
+                    0,
+                    b.menu-2
+                );
 
-        if (pressed("right")) {
+        if (pressed("down"))
+            b.menu =
+                Math.min(
+                    3,
+                    b.menu+2
+                );
 
-            b.menu++;
-
-            if (
-                b.menu >=
-                battleOptions.length
-            )
-                b.menu=0;
-        }
-
-        if (pressed("up")) {
-
-            b.menu-=2;
-
-            if (b.menu<0)
-                b.menu += 6;
-        }
-
-        if (pressed("down")) {
-
-            b.menu+=2;
-
-            if (b.menu>=6)
-                b.menu-=6;
-        }
-
-        if (pressed("z")) {
-
-            chooseBattleAction();
-        }
+        if (pressed("z"))
+            battleAction();
 
     }
 
     else if (
-        b.phase === "act"
+        b.phase ===
+        "enemy"
     ) {
 
-        if (pressed("z")) {
-
-            b.message =
-                b.type==="beast"
-                ? "Зверь смотрит прямо на вас."
-                : "Ошибка нестабильна.";
-
-            nextBattleActor();
-        }
-
-        if (pressed("x")) {
-
-            b.phase="menu";
-        }
-
-    }
-
-    else if (
-        b.phase === "magic"
-    ) {
-
-        if (pressed("z")) {
-
-            useMagic();
-
-        }
-
-        if (pressed("x")) {
-
-            b.phase="menu";
-        }
-
-    }
-
-    else if (
-        b.phase === "item"
-    ) {
-
-        if (pressed("z")) {
-
-            useBattleItem();
-
-        }
-
-        if (pressed("x")) {
-
-            b.phase="menu";
-        }
-
-    }
-
-    else if (
-        b.phase === "mercy"
-    ) {
-
-        if (pressed("z")) {
-
-            if (
-                b.type === "beast"
-            ) {
-
-                b.message =
-                    "Зверь не понимает пощады.";
-
-                nextBattleActor();
-
-            }
-            else {
-
-                if (b.mercy>=100) {
-
-                    b.enemy.hp=0;
-
-                    b.phase="victory";
-
-                }
-                else {
-
-                    b.message =
-                        "Ошибка ещё сопротивляется.";
-
-                    nextBattleActor();
-                }
-            }
-        }
-
-        if (pressed("x")) {
-
-            b.phase="menu";
-        }
-
-    }
-
-    else if (
-        b.phase === "enemy"
-    ) {
+        updateSoul();
 
         updateEnemyAttack();
-    }
-
-    else if (
-        b.phase === "victory"
-    ) {
-
-        if (pressed("z")) {
-
-            finishBattle();
-        }
 
     }
 
-    else if (
-        b.phase === "defeat"
-    ) {
-
-        if (pressed("z")) {
-
-            resetParty();
-
-            game.mode="explore";
-
-            game.battle=null;
-
-            playSound("world");
-        }
-    }
 }
 
 
@@ -1435,286 +1029,130 @@ function updateBattle() {
    BATTLE ACTION
 ========================================================= */
 
-function chooseBattleAction() {
+function battleAction() {
 
     const b =
         game.battle;
 
-    const actor =
+    const p =
         party[b.actor];
 
 
-    if (b.menu===0) {
+    if (b.menu === 0) {
 
-        let damage =
-            actor.atk+
+        const damage =
+            p.atk +
             Math.floor(
                 Math.random()*8
             );
 
+        b.enemyHP =
+            Math.max(
+                0,
+                b.enemyHP-damage
+            );
+
+        b.message =
+            p.name+
+            " атакует!  -"+
+            damage+
+            " HP";
+
+    }
+
+
+    else if (b.menu === 1) {
+
+        b.enemyHP =
+            Math.max(
+                0,
+                b.enemyHP-8
+            );
+
+        b.message =
+            p.name+
+            " изучает ошибку.";
+
+    }
+
+
+    else if (b.menu === 2) {
+
         if (
-            b.type === "beast"
+            inventory.potions > 0
         ) {
 
-            b.enemy.hp =
-                Math.max(
-                    0,
-                    b.enemy.hp-damage
+            inventory.potions--;
+
+            p.hp =
+                Math.min(
+                    p.maxHP,
+                    p.hp+35
                 );
 
             b.message =
-                actor.name+
-                " атакует зверя!  -"+
-                damage+
-                " HP";
+                p.name+
+                " использует зелье. +35 HP";
 
-        }
-        else {
-
-            b.enemy.hp =
-                Math.max(
-                    0,
-                    b.enemy.hp-damage
-                );
+        } else {
 
             b.message =
-                actor.name+
-                " уничтожает часть ошибки.  -"+
-                damage+
-                " HP";
+                "Зелий больше нет.";
+
         }
 
+    }
+
+
+    else if (b.menu === 3) {
+
         if (
-            b.enemy.hp<=0
+            b.enemyHP <= 30
         ) {
 
-            b.phase="victory";
+            b.message =
+                "Ошибка больше не сопротивляется.";
+
+            endBattle();
 
             return;
+
         }
 
-        nextBattleActor();
+        b.message =
+            "Пощада пока невозможна.";
 
     }
 
-    else if (
-        b.menu===1
+
+    if (
+        b.enemyHP <= 0
     ) {
 
-        b.phase="act";
+        endBattle();
+
+        return;
 
     }
 
-    else if (
-        b.menu===2
-    ) {
-
-        b.phase="magic";
-
-    }
-
-    else if (
-        b.menu===3
-    ) {
-
-        b.phase="item";
-
-    }
-
-    else if (
-        b.menu===4
-    ) {
-
-        defend();
-
-    }
-
-    else if (
-        b.menu===5
-    ) {
-
-        b.phase="mercy";
-
-    }
-}
-
-
-/* =========================================================
-   DEFEND
-========================================================= */
-
-function defend() {
-
-    const b =
-        game.battle;
 
     /*
-       RD теперь появляется
-       именно от защиты.
+       Каждый союзник получает свой ход.
     */
-
-    const gain =
-        20+
-        party[b.actor].def;
-
-    b.rd =
-        Math.min(
-            b.maxRD,
-            b.rd+gain
-        );
-
-    b.defense=true;
-
-    b.message =
-        party[b.actor].name+
-        " защищается! RD +"+
-        gain;
-
-    nextBattleActor();
-}
-
-
-/* =========================================================
-   MAGIC
-========================================================= */
-
-function useMagic() {
-
-    const b =
-        game.battle;
-
-    const actor =
-        party[b.actor];
-
-    if (
-        b.type === "beast"
-    ) {
-
-        const damage =
-            22+
-            Math.floor(
-                Math.random()*12
-            );
-
-        b.enemy.hp =
-            Math.max(
-                0,
-                b.enemy.hp-damage
-            );
-
-        b.message =
-            actor.name+
-            " использует цифровую магию! -"+
-            damage+
-            " HP";
-
-    }
-    else {
-
-        const damage=18;
-
-        b.enemy.hp =
-            Math.max(
-                0,
-                b.enemy.hp-damage
-            );
-
-        b.message =
-            actor.name+
-            " выпускает магический импульс! -"+
-            damage+
-            " HP";
-    }
-
-    if (
-        b.enemy.hp<=0
-    ) {
-
-        b.phase="victory";
-
-        return;
-    }
-
-    nextBattleActor();
-}
-
-
-/* =========================================================
-   ITEMS
-========================================================= */
-
-function useBattleItem() {
-
-    const b =
-        game.battle;
-
-    const actor =
-        party[b.actor];
-
-    if (
-        inventory.food<=0
-    ) {
-
-        b.message =
-            "Еды больше нет.";
-
-        return;
-    }
-
-    inventory.food--;
-
-    actor.hp =
-        Math.min(
-            actor.maxHP,
-            actor.hp+25
-        );
-
-    b.message =
-        actor.name+
-        " съедает еду. +25 HP";
-
-    nextBattleActor();
-}
-
-
-/* =========================================================
-   NEXT ALLY
-========================================================= */
-
-function nextBattleActor() {
-
-    const b =
-        game.battle;
 
     b.actor++;
 
-    /*
-       Важно:
-       каждый из пяти союзников
-       получает свой ход.
-    */
-
     if (
-        b.actor >= party.length
+        b.actor >=
+        party.length
     ) {
 
-        b.actor=0;
+        b.actor = 0;
 
-        startEnemyAttack();
+        beginEnemyAttack();
 
     }
-    else {
 
-        b.phase="menu";
-
-        b.menu=0;
-
-        b.defense=false;
-
-        b.message =
-            "Ход "+
-            party[b.actor].name;
-    }
 }
 
 
@@ -1722,92 +1160,39 @@ function nextBattleActor() {
    ENEMY ATTACK START
 ========================================================= */
 
-function startEnemyAttack() {
+function beginEnemyAttack() {
 
     const b =
         game.battle;
 
-    b.phase="enemy";
+    b.phase = "enemy";
 
-    b.attackTimer=0;
+    b.attackTimer =
+        b.attackDuration;
 
-    b.attackIndex++;
+    b.hitCooldown = 0;
 
-    b.laser=null;
-    b.explosions=[];
-    b.roar=null;
-    b.claw=null;
+    b.attackType =
+        Math.random() <
+        .5
+            ? "laser"
+            : "explosion";
+
+
+    b.laserX =
+        100 +
+        Math.random()*440;
+
+    b.laserWarning = 90;
+
+
+    b.explosions = [];
 
 
     if (
-        b.type === "beast"
+        b.attackType ===
+        "explosion"
     ) {
-
-        const attacks = [
-
-            "roar",
-            "laser",
-            "claw"
-
-        ];
-
-        b.attackType =
-            attacks[
-                (b.attackIndex-1)
-                % attacks.length
-            ];
-
-        if (
-            b.attackType==="roar"
-        )
-            startRoar();
-
-        if (
-            b.attackType==="laser"
-        )
-            startBeastLaser();
-
-        if (
-            b.attackType==="claw"
-        )
-            startClaw();
-
-    }
-    else {
-
-        startErrorAttack();
-    }
-}
-
-
-/* =========================================================
-   ERROR ATTACK
-========================================================= */
-
-function startErrorAttack() {
-
-    const b =
-        game.battle;
-
-    if (
-        b.enemyCount===1
-    ) {
-
-        b.laser = {
-
-            x:
-                70+
-                Math.random()*180,
-
-            warning:80,
-
-            active:40,
-
-            width:6
-        };
-
-    }
-    else {
 
         for (
             let i=0;
@@ -1818,156 +1203,30 @@ function startErrorAttack() {
             b.explosions.push({
 
                 x:
-                    65+
-                    Math.random()*190,
+                    90+
+                    Math.random()*450,
 
                 y:
-                    100+
-                    Math.random()*45,
+                    145+
+                    Math.random()*150,
+
+                radius:4,
 
                 timer:
-                    30+
-                    Math.random()*80,
+                    40+
+                    Math.random()*90
 
-                radius:2
             });
+
         }
-    }
-}
-
-
-/* =========================================================
-   BEAST ROAR
-========================================================= */
-
-function startRoar() {
-
-    const b =
-        game.battle;
-
-    b.roar = {
-
-        phase:"blue",
-
-        timer:50,
-
-        radius:10,
-
-        wave:0,
-
-        orangeEvery:130
-    };
-}
-
-
-/* =========================================================
-   BEAST LASER
-========================================================= */
-
-function startBeastLaser() {
-
-    const b =
-        game.battle;
-
-    b.laser = {
-
-        warning:100,
-
-        active:45,
-
-        x:
-            55+
-            Math.random()*210,
-
-        width:320
-    };
-}
-
-
-/* =========================================================
-   CLAW
-========================================================= */
-
-function startClaw() {
-
-    const b =
-        game.battle;
-
-    b.claw = {
-
-        x:b.soul.x,
-
-        y:b.soul.y,
-
-        warning:110,
-
-        active:30,
-
-        locked:false
-    };
-}
-
-
-/* =========================================================
-   ENEMY UPDATE
-========================================================= */
-
-function updateEnemyAttack() {
-
-    const b =
-        game.battle;
-
-    updateSoul();
-
-    if (
-        b.type==="beast"
-    ) {
-
-        if (
-            b.attackType==="roar"
-        )
-            updateRoar();
-
-        if (
-            b.attackType==="laser"
-        )
-            updateBeastLaser();
-
-        if (
-            b.attackType==="claw"
-        )
-            updateClaw();
-
-    }
-    else {
-
-        updateErrorAttack();
-    }
-
-
-    if (
-        b.attackTimer > 430
-    ) {
-
-        b.phase="menu";
-
-        b.actor=0;
-
-        b.menu=0;
-
-        b.defense=false;
-
-        b.message =
-            "Атака закончилась. Ход Дельты.";
 
     }
 
-    b.attackTimer++;
 }
 
 
 /* =========================================================
-   SOUL MOVEMENT
+   SOUL
 ========================================================= */
 
 function updateSoul() {
@@ -1975,41 +1234,51 @@ function updateSoul() {
     const b =
         game.battle;
 
-    const s =
-        b.soul;
+    let dx=0;
+    let dy=0;
 
-    if (keys.up)
-        s.y-=s.speed;
-
-    if (keys.down)
-        s.y+=s.speed;
 
     if (keys.left)
-        s.x-=s.speed;
+        dx-=b.soulSpeed;
 
     if (keys.right)
-        s.x+=s.speed;
+        dx+=b.soulSpeed;
 
-    s.x =
+    if (keys.up)
+        dy-=b.soulSpeed;
+
+    if (keys.down)
+        dy+=b.soulSpeed;
+
+
+    b.soulX += dx;
+    b.soulY += dy;
+
+
+    b.soulX =
         Math.max(
-            57,
+            65,
             Math.min(
-                263,
-                s.x
+                575,
+                b.soulX
             )
         );
 
-    s.y =
+    b.soulY =
         Math.max(
-            96,
+            125,
             Math.min(
-                155,
-                s.y
+                320,
+                b.soulY
             )
         );
 
-    if (s.inv>0)
-        s.inv--;
+
+    if (
+        b.hitCooldown > 0
+    )
+        b.hitCooldown--;
+
 }
 
 
@@ -2017,809 +1286,371 @@ function updateSoul() {
    DAMAGE
 ========================================================= */
 
-function damageSoul(amount) {
+function damageCurrentPlayer(
+    damage
+) {
 
     const b =
         game.battle;
 
     if (
-        b.soul.inv>0
+        b.hitCooldown > 0
     )
         return;
 
-    /*
-       Если последний выбранный
-       союзник защищался,
-       урон немного меньше.
-    */
 
-    let damage =
-        amount;
-
-    if (b.defense)
-        damage =
-            Math.floor(
-                damage*.5
-            );
-
-    const target =
+    const p =
         party[b.actor];
 
-    damage =
+
+    /*
+       ЗАЩИТА УМЕНЬШАЕТ УРОН.
+    */
+
+    const realDamage =
         Math.max(
             1,
-            damage-
+            damage -
             Math.floor(
-                target.def/4
+                p.def/2
             )
         );
 
-    target.hp =
+
+    p.hp =
         Math.max(
             0,
-            target.hp-damage
+            p.hp-realDamage
         );
 
-    b.soul.inv=45;
+
+    /*
+       ВОТ ЗДЕСЬ HP РЕАЛЬНО
+       УМЕНЬШАЕТСЯ.
+    */
+
+    updateInventoryHUD();
+
 
     b.message =
-        target.name+
-        " получает -"+
-        damage+
-        " HP";
+        p.name+
+        " получает "+
+        realDamage+
+        " урона!";
+
+
+    b.hitCooldown = 50;
+
+
+    /*
+       Если HP закончились,
+       союзник больше не может
+       получать урон.
+    */
 
     if (
         party.every(
-            p => p.hp<=0
+            p => p.hp <= 0
         )
     ) {
 
-        b.phase="defeat";
+        game.mode =
+            "defeat";
+
     }
+
 }
 
 
 /* =========================================================
-   ERROR ATTACK UPDATE
+   ENEMY ATTACK UPDATE
 ========================================================= */
 
-function updateErrorAttack() {
+function updateEnemyAttack() {
 
     const b =
         game.battle;
 
-    if (b.laser) {
 
-        const l=b.laser;
+    b.attackTimer--;
 
-        if (l.warning>0) {
 
-            l.warning--;
+    if (
+        b.attackType ===
+        "laser"
+    ) {
+
+        /*
+           Сначала появляется
+           предупреждение.
+        */
+
+        if (
+            b.laserWarning > 0
+        ) {
+
+            b.laserWarning--;
 
         }
-        else if (l.active>0) {
+
+        else {
+
+            /*
+               Лазер занимает всю
+               высоту боевой зоны.
+            */
 
             if (
                 Math.abs(
-                    b.soul.x-l.x
-                ) <
-                l.width
+                    b.soulX-
+                    b.laserX
+                ) < 13
             ) {
 
-                damageSoul(14);
-            }
-
-            l.active--;
-
-        }
-        else {
-
-            b.laser=null;
-        }
-    }
-
-
-    b.explosions.forEach(
-        ex => {
-
-            if (ex.timer>0) {
-
-                ex.timer--;
-
-                return;
-            }
-
-            if (
-                ex.radius<19
-            )
-                ex.radius+=1.5;
-
-            const dx =
-                b.soul.x-ex.x;
-
-            const dy =
-                b.soul.y-ex.y;
-
-            const distance =
-                Math.sqrt(
-                    dx*dx+
-                    dy*dy
+                damageCurrentPlayer(
+                    18
                 );
 
-            if (
-                distance<
-                ex.radius
-            )
-                damageSoul(9);
-
-            if (
-                ex.radius>=19
-            ) {
-
-                ex.radius=2;
-
-                ex.x =
-                    60+
-                    Math.random()*200;
-
-                ex.y =
-                    100+
-                    Math.random()*50;
-
-                ex.timer =
-                    30+
-                    Math.random()*70;
             }
-        }
-    );
-}
 
-
-/* =========================================================
-   ROAR UPDATE
-========================================================= */
-
-function updateRoar() {
-
-    const b =
-        game.battle;
-
-    const r =
-        b.roar;
-
-    r.timer--;
-
-    if (
-        r.timer<=0
-    ) {
-
-        r.timer=50;
-
-        r.wave++;
-
-        r.phase =
-            r.phase==="blue"
-            ? "orange"
-            : "blue";
-    }
-
-    r.radius+=1.1;
-
-    /*
-       Синяя волна:
-       нельзя двигаться.
-
-       Оранжевая:
-       через неё нужно пройти.
-    */
-
-    if (
-        r.phase==="blue"
-    ) {
-
-        const moving =
-            keys.up ||
-            keys.down ||
-            keys.left ||
-            keys.right;
-
-        if (moving) {
-
-            damageSoul(8);
         }
 
     }
-    else {
 
-        /*
-           Оранжевая волна
-           опасна только если
-           душа находится внутри
-           кольца.
-        */
-
-        const dx =
-            b.soul.x-160;
-
-        const dy =
-            b.soul.y-130;
-
-        const distance =
-            Math.sqrt(
-                dx*dx+
-                dy*dy
-            );
-
-        if (
-            Math.abs(
-                distance-r.radius
-            )<4
-        ) {
-
-            /*
-               Если игрок движется,
-               он может проскочить.
-            */
-
-            const moving =
-                keys.up ||
-                keys.down ||
-                keys.left ||
-                keys.right;
-
-            if (!moving)
-                damageSoul(10);
-        }
-    }
-}
-
-
-/* =========================================================
-   LASER UPDATE
-========================================================= */
-
-function updateBeastLaser() {
-
-    const b =
-        game.battle;
-
-    const l =
-        b.laser;
-
-    if (!l)
-        return;
 
     if (
-        l.warning>0
+        b.attackType ===
+        "explosion"
     ) {
 
-        l.warning--;
+        b.explosions.forEach(
+            e => {
 
-        return;
-    }
+                if (
+                    e.timer > 0
+                ) {
 
-    if (
-        l.active>0
-    ) {
+                    e.timer--;
 
-        /*
-           Лазер покрывает
-           всю ширину поля.
-           Безопасна только
-           отмеченная зона.
-        */
+                }
+                else {
 
-        const safeX =
-            145;
+                    e.radius += .8;
 
-        const safeW =
-            30;
+                    const dx =
+                        b.soulX-e.x;
 
-        if (
-            b.soul.x<
-                safeX ||
-            b.soul.x>
-                safeX+safeW
-        ) {
+                    const dy =
+                        b.soulY-e.y;
 
-            damageSoul(12);
-        }
+                    const distance =
+                        Math.sqrt(
+                            dx*dx+
+                            dy*dy
+                        );
 
-        l.active--;
+                    if (
+                        distance <
+                        e.radius+7
+                    ) {
 
-    }
-    else {
+                        damageCurrentPlayer(
+                            12
+                        );
 
-        b.laser=null;
-    }
-}
+                    }
 
+                    if (
+                        e.radius > 32
+                    ) {
 
-/* =========================================================
-   CLAW UPDATE
-========================================================= */
+                        e.radius = 4;
 
-function updateClaw() {
+                        e.x =
+                            80+
+                            Math.random()*470;
 
-    const b =
-        game.battle;
+                        e.y =
+                            140+
+                            Math.random()*160;
 
-    const c =
-        b.claw;
+                        e.timer =
+                            40+
+                            Math.random()*80;
 
-    if (!c)
-        return;
+                    }
 
-    if (
-        c.warning>0
-    ) {
+                }
 
-        /*
-           Предупреждение
-           следует за душой.
-        */
-
-        c.x =
-            b.soul.x;
-
-        c.y =
-            b.soul.y;
-
-        c.warning--;
-
-    }
-    else if (
-        c.active>0
-    ) {
-
-        /*
-           В момент остановки
-           лапа бьёт туда,
-           где была душа.
-        */
-
-        const dx =
-            b.soul.x-c.x;
-
-        const dy =
-            b.soul.y-c.y;
-
-        const distance =
-            Math.sqrt(
-                dx*dx+
-                dy*dy
-            );
-
-        if (
-            distance<17
-        ) {
-
-            damageSoul(16);
-        }
-
-        c.active--;
-
-    }
-    else {
-
-        b.claw=null;
-    }
-}
-
-
-/* =========================================================
-   BEAST SPECIAL ACTION
-========================================================= */
-
-function beastPush() {
-
-    const b =
-        game.battle;
-
-    if (
-        b.rd<50
-    ) {
-
-        b.message =
-            "Нужно накопить 50 RD.";
-
-        return;
-    }
-
-    b.rd-=50;
-
-    b.pushCount++;
-
-    b.message =
-        "ДЕЛЬТА толкает зверя! "+
-        "Успешных толчков: "+
-        b.pushCount+"/2";
-
-    /*
-       Два толчка = победа.
-    */
-
-    if (
-        b.pushCount>=2
-    ) {
-
-        b.phase="victory";
-
-        b.message =
-            "Зверь потерял равновесие! Вы победили.";
-
-        return;
-    }
-
-    nextBattleActor();
-}
-
-
-/* =========================================================
-   SPECIAL ACT MENU
-========================================================= */
-
-function updateActSpecial() {
-
-    const b =
-        game.battle;
-
-    if (
-        b.type !== "beast"
-    )
-        return;
-
-    if (pressed("z")) {
-
-        beastPush();
-    }
-}
-
-
-/* =========================================================
-   ACT MODIFICATION
-========================================================= */
-
-const oldUpdateBattle =
-    updateBattle;
-
-
-/*
-   Перехватываем ACT для зверя:
-   в ACT появляется возможность
-   толкнуть зверя за 50 RD.
-*/
-
-
-/* =========================================================
-   BATTLE FINISH
-========================================================= */
-
-function finishBattle() {
-
-    const wasBeast =
-        game.battle &&
-        game.battle.type==="beast";
-
-    game.battle=null;
-
-    game.mode="explore";
-
-    if (wasBeast) {
-
-        game.beastTriggered=true;
-
-        game.room="cemetery";
-
-        player.x=25;
-
-        player.y=130;
-
-        showMessage(
-            "Зверь исчез в цифровом шуме..."
+            }
         );
 
-        playSound("cemetery");
+    }
+
+
+    if (
+        b.attackTimer <= 0
+    ) {
+
+        b.phase = "menu";
+
+        b.actor = 0;
+
+        b.menu = 0;
+
+        b.message =
+            "Атака закончилась. Ход команды.";
 
     }
-    else {
 
-        playSound(
-            game.room==="cemetery"
+}
+
+
+/* =========================================================
+   END BATTLE
+========================================================= */
+
+function endBattle() {
+
+    game.battle = null;
+
+    game.mode = "explore";
+
+    battleSteps = 0;
+
+    music(
+        game.room ===
+        "cemetery"
             ? "cemetery"
             : "world"
-        );
-    }
-}
-
-
-/* =========================================================
-   RESET PARTY
-========================================================= */
-
-function resetParty() {
-
-    party.forEach(
-        p => {
-
-            p.hp =
-                p.maxHP;
-
-        }
     );
+
 }
 
 
 /* =========================================================
-   TRANSITIONS
+   CHASE
 ========================================================= */
 
-function startTransition(
-    target
-) {
+function startChase() {
 
-    if (
-        game.transition>0
-    )
-        return;
+    game.mode = "chase";
 
-    game.transition=35;
+    game.chase = {
 
-    game.transitionTarget =
-        target;
-}
+        time:30,
 
+        distance:0,
 
-function finishTransition() {
+        scroll:0,
 
-    const target =
-        game.transitionTarget;
+        qteIndex:0,
 
-    game.transitionTarget=null;
+        sequence:
+        [
+            "z",
+            "x",
+            "z",
+            "c",
+            "z",
+            "x",
+            "c",
+            "z"
+        ],
 
-    game.room=target;
+        failed:false,
 
-    player.x=20;
+        success:false
 
-    player.y=130;
+    };
 
-    if (
-        target==="shop"
-    ) {
-
-        player.x=30;
-
-        playSound("world");
-    }
-
-    if (
-        target==="wasteland2"
-    ) {
-
-        player.x=20;
-
-        playSound("world");
-    }
-
-    if (
-        target==="boxes"
-    ) {
-
-        player.x=20;
-
-        initPuzzle();
-
-        playSound("world");
-    }
-
-    if (
-        target==="cemetery"
-    ) {
-
-        player.x=20;
-
-        playSound("cemetery");
-    }
 }
 
 
 /* =========================================================
-   ROOM EXIT
+   CHASE UPDATE
 ========================================================= */
 
-function updateExit() {
+function updateChase() {
+
+    const c =
+        game.chase;
+
+
+    /*
+       ФОН ДВИГАЕТСЯ.
+       Чем быстрее игрок нажимает
+       нужные кнопки, тем быстрее
+       двигается пустошь.
+    */
+
+    c.scroll += 3;
+
+
+    /*
+       Таймер 30 секунд.
+    */
+
+    c.time -=
+        1/60;
+
+
+    const need =
+        c.sequence[
+            c.qteIndex
+        ];
+
 
     if (
-        game.mode!=="explore"
-    )
-        return;
-
-    if (
-        player.x<300
-    )
-        return;
-
-
-    if (
-        game.room==="wasteland1"
+        pressed(need)
     ) {
 
-        startTransition("shop");
+        c.qteIndex++;
 
-    }
-    else if (
-        game.room==="shop"
-    ) {
+        c.distance += 9;
 
-        startTransition(
-            "wasteland2"
-        );
-
-    }
-    else if (
-        game.room==="wasteland2"
-    ) {
-
-        startTransition(
-            "boxes"
-        );
-
-    }
-    else if (
-        game.room==="boxes"
-    ) {
 
         if (
-            game.puzzle &&
-            game.puzzle.open
+            c.qteIndex >=
+            c.sequence.length
         ) {
 
-            startTransition(
-                "cemetery"
-            );
+            c.success = true;
+
+            /*
+               После успешной погони
+               переходим к коробкам.
+            */
+
+            game.room =
+                "boxes";
+
+            game.mode =
+                "explore";
+
+            player.x = 70;
+            player.y = 265;
+
+            createPuzzle();
 
         }
-        else {
-
-            player.x=294;
-
-            showMessage(
-                "Ворота закрыты."
-            );
-        }
 
     }
-}
 
-
-/* =========================================================
-   SHOP
-========================================================= */
-
-function updateShopInteraction() {
 
     if (
-        game.room!=="shop" ||
-        game.mode!=="explore"
-    )
-        return;
-
-    if (
-        player.x>90 &&
-        player.x<180 &&
-        player.y>90 &&
-        pressed("z")
+        c.time <= 0 &&
+        !c.success
     ) {
 
-        game.mode="shop";
-        game.shopIndex=0;
-    }
-}
+        c.time = 30;
 
+        c.qteIndex = 0;
 
-function updateShop() {
+        c.distance = 0;
 
-    if (
-        pressed("x")
-    ) {
-
-        game.mode="explore";
-
-        return;
     }
 
-    if (
-        pressed("up")
-    ) {
-
-        game.shopIndex--;
-
-        if (
-            game.shopIndex<0
-        )
-            game.shopIndex =
-                shopItems.length-1;
-    }
-
-    if (
-        pressed("down")
-    ) {
-
-        game.shopIndex++;
-
-        if (
-            game.shopIndex >=
-            shopItems.length
-        )
-            game.shopIndex=0;
-    }
-
-    if (
-        pressed("z")
-    ) {
-
-        buyItem(
-            game.shopIndex
-        );
-    }
-}
-
-
-function buyItem(index) {
-
-    const item =
-        shopItems[index];
-
-    if (
-        money<item.price
-    ) {
-
-        showMessage(
-            "Не хватает денег."
-        );
-
-        return;
-    }
-
-    money -=
-        item.price;
-
-    if (
-        item.type==="food"
-    )
-        inventory.food++;
-
-    if (
-        item.type==="potion"
-    )
-        inventory.potion++;
-
-    if (
-        item.type==="weapon"
-    ) {
-
-        inventory.weapons++;
-
-        party.forEach(
-            p => p.atk++
-        );
-    }
-
-    if (
-        item.type==="armor"
-    ) {
-
-        inventory.armor++;
-
-        party.forEach(
-            p => p.def++
-        );
-    }
-
-    showMessage(
-        "Куплено: "+
-        item.name
-    );
 }
 
 
@@ -2827,35 +1658,35 @@ function buyItem(index) {
    PUZZLE
 ========================================================= */
 
-function initPuzzle() {
+function createPuzzle() {
 
     game.puzzle = {
 
-        open:false,
+        solved:false,
 
         selected:-1,
 
         boxes:[
 
             {
-                x:55,
-                y:65,
-                w:16,
-                h:16
+                x:150,
+                y:130,
+                w:34,
+                h:34
             },
 
             {
-                x:120,
-                y:105,
-                w:16,
-                h:16
+                x:270,
+                y:210,
+                w:34,
+                h:34
             },
 
             {
-                x:195,
-                y:65,
-                w:16,
-                h:16
+                x:400,
+                y:120,
+                w:34,
+                h:34
             }
 
         ],
@@ -2863,55 +1694,36 @@ function initPuzzle() {
         buttons:[
 
             {
-                x:90,
-                y:40,
-                w:18,
-                h:8
+                x:120,
+                y:100,
+                w:45,
+                h:12
             },
 
             {
-                x:220,
-                y:105,
-                w:18,
-                h:8
+                x:350,
+                y:250,
+                w:45,
+                h:12
             },
 
             {
-                x:145,
-                y:130,
-                w:18,
-                h:8
+                x:500,
+                y:100,
+                w:45,
+                h:12
             }
 
         ]
+
     };
+
 }
 
 
-function boxNearPlayer(box) {
-
-    const dx =
-        player.x-
-        (
-            box.x+
-            box.w/2
-        );
-
-    const dy =
-        player.y-
-        (
-            box.y+
-            box.h/2
-        );
-
-    return (
-        Math.sqrt(
-            dx*dx+
-            dy*dy
-        )<27
-    );
-}
-
+/* =========================================================
+   PUZZLE UPDATE
+========================================================= */
 
 function updatePuzzle() {
 
@@ -2923,166 +1735,230 @@ function updatePuzzle() {
 
 
     /*
-       Если отошёл от коробки,
-       она больше не продолжает
-       двигаться сама.
+       Если отойти от коробки,
+       она больше НЕ продолжает
+       двигаться.
     */
 
     if (
-        p.selected>=0 &&
-        !boxNearPlayer(
-            p.boxes[p.selected]
-        )
+        p.selected >= 0
     ) {
 
-        p.selected=-1;
+        const box =
+            p.boxes[
+                p.selected
+            ];
+
+
+        const dx =
+            player.x-
+            (
+                box.x+
+                box.w/2
+            );
+
+        const dy =
+            player.y-
+            (
+                box.y+
+                box.h/2
+            );
+
+        const distance =
+            Math.sqrt(
+                dx*dx+
+                dy*dy
+            );
+
+
+        if (
+            distance > 55
+        ) {
+
+            p.selected = -1;
+
+        }
+
     }
 
+
+    /*
+       Z выбирает ближайшую
+       коробку.
+    */
 
     if (
         pressed("z")
     ) {
 
         if (
-            p.selected<0
+            p.selected < 0
         ) {
 
-            for (
-                let i=0;
-                i<p.boxes.length;
-                i++
+            let closest=-1;
+            let best=9999;
+
+
+            p.boxes.forEach(
+                (box,i) => {
+
+                    const dx =
+                        player.x-
+                        (
+                            box.x+
+                            box.w/2
+                        );
+
+                    const dy =
+                        player.y-
+                        (
+                            box.y+
+                            box.h/2
+                        );
+
+                    const d =
+                        Math.sqrt(
+                            dx*dx+
+                            dy*dy
+                        );
+
+
+                    if (
+                        d < 60 &&
+                        d < best
+                    ) {
+
+                        best=d;
+                        closest=i;
+
+                    }
+
+                }
+            );
+
+
+            if (
+                closest >= 0
             ) {
 
-                if (
-                    boxNearPlayer(
-                        p.boxes[i]
-                    )
-                ) {
+                p.selected =
+                    closest;
 
-                    p.selected=i;
-
-                    break;
-                }
             }
 
         }
+
         else {
 
-            pushBox(
-                p.boxes[
-                    p.selected
-                ]
-            );
+            pushSelectedBox();
+
         }
+
     }
 
-
-    if (
-        pressed("x")
-    ) {
-
-        p.selected=-1;
-    }
-
-    checkPuzzle();
-}
-
-
-function pushBox(box) {
-
-    const speed=4;
-
-    let dx=0;
-    let dy=0;
 
     /*
-       Коробка толкается только
-       в направлении игрока.
+       Коробка двигается только
+       пока игрок рядом.
     */
 
     if (
-        Math.abs(
-            player.x-box.x
-        ) >
-        Math.abs(
-            player.y-box.y
-        )
+        p.selected >= 0
     ) {
 
-        if (
-            player.x<
-            box.x
-        )
-            dx=speed;
+        const box =
+            p.boxes[
+                p.selected
+            ];
 
-        else
-            dx=-speed;
+        const moving =
+            keys.left ||
+            keys.right ||
+            keys.up ||
+            keys.down;
+
+
+        if (moving) {
+
+            const speed=2.5;
+
+            if (keys.left)
+                box.x -= speed;
+
+            if (keys.right)
+                box.x += speed;
+
+            if (keys.up)
+                box.y -= speed;
+
+            if (keys.down)
+                box.y += speed;
+
+            box.x =
+                Math.max(
+                    20,
+                    Math.min(
+                        590,
+                        box.x
+                    )
+                );
+
+            box.y =
+                Math.max(
+                    70,
+                    Math.min(
+                        310,
+                        box.y
+                    )
+                );
+
+        }
 
     }
-    else {
-
-        if (
-            player.y<
-            box.y
-        )
-            dy=speed;
-
-        else
-            dy=-speed;
-    }
 
 
-    const nx =
-        box.x+dx;
+    checkPuzzle();
 
-    const ny =
-        box.y+dy;
+}
 
+
+function pushSelectedBox() {
+
+    const p =
+        game.puzzle;
 
     if (
-        nx<15 ||
-        nx+box.w>265 ||
-        ny<30 ||
-        ny+box.h>165
+        p.selected < 0
     )
         return;
 
+    const box =
+        p.boxes[
+            p.selected
+        ];
 
-    for (
-        const other
-        of game.puzzle.boxes
+    const distance =
+        Math.hypot(
+            player.x-
+            box.x,
+            player.y-
+            box.y
+        );
+
+    if (
+        distance > 65
     ) {
 
-        if (
-            other===box
-        )
-            continue;
+        p.selected=-1;
 
-        if (
-
-            nx<
-                other.x+
-                other.w &&
-
-            nx+box.w>
-                other.x &&
-
-            ny<
-                other.y+
-                other.h &&
-
-            ny+box.h>
-                other.y
-
-        )
-            return;
     }
 
-
-    box.x=nx;
-    box.y=ny;
 }
 
+
+/* =========================================================
+   PUZZLE CHECK
+========================================================= */
 
 function checkPuzzle() {
 
@@ -3091,46 +1967,48 @@ function checkPuzzle() {
 
     let correct=0;
 
-    for (
-        const box
-        of p.boxes
-    ) {
 
-        for (
-            const button
-            of p.buttons
-        ) {
+    p.boxes.forEach(
+        box => {
 
-            const cx =
-                box.x+
-                box.w/2;
+            p.buttons.forEach(
+                button => {
 
-            const cy =
-                box.y+
-                box.h/2;
+                    const bx =
+                        box.x+
+                        box.w/2;
 
-            const bx =
-                button.x+
-                button.w/2;
+                    const by =
+                        box.y+
+                        box.h/2;
 
-            const by =
-                button.y+
-                button.h/2;
+                    const px =
+                        button.x+
+                        button.w/2;
 
-            if (
-                Math.abs(
-                    cx-bx
-                )<8 &&
-                Math.abs(
-                    cy-by
-                )<8
-            ) {
+                    const py =
+                        button.y+
+                        button.h/2;
 
-                correct++;
 
-            }
+                    if (
+                        Math.abs(
+                            bx-px
+                        ) < 25 &&
+                        Math.abs(
+                            by-py
+                        ) < 20
+                    ) {
+
+                        correct++;
+
+                    }
+
+                }
+            );
+
         }
-    }
+    );
 
 
     if (
@@ -3138,50 +2016,164 @@ function checkPuzzle() {
         p.buttons.length
     ) {
 
-        if (!p.open) {
+        p.solved = true;
 
-            p.open=true;
+        p.selected = -1;
 
-            showMessage(
-                "Все кнопки загорелись. Ворота открыты."
-            );
-        }
+        message(
+            "Все кнопки загорелись зелёным. Ворота открыты!"
+        );
+
     }
+
 }
 
 
 /* =========================================================
-   BEAST TRIGGER
+   SHOP
 ========================================================= */
 
-function checkBeastTrigger() {
+function updateShop() {
 
     if (
-        game.room!=="boxes" ||
-        game.mode!=="explore"
-    )
-        return;
-
-    if (
-        !game.puzzle ||
-        !game.puzzle.open
-    )
-        return;
-
-    /*
-       Подход к воротам
-       вызывает прыжок зверя.
-    */
-
-    if (
-        player.x>245 &&
-        !game.beastTriggered
+        pressed("x")
     ) {
 
-        game.beastTriggered=true;
+        game.mode =
+            "explore";
 
-        startBeastBattle();
+        return;
+
     }
+
+
+    if (
+        pressed("up")
+    ) {
+
+        game.shopIndex--;
+
+        if (
+            game.shopIndex < 0
+        )
+            game.shopIndex=3;
+
+    }
+
+
+    if (
+        pressed("down")
+    ) {
+
+        game.shopIndex++;
+
+        if (
+            game.shopIndex > 3
+        )
+            game.shopIndex=0;
+
+    }
+
+
+    if (
+        pressed("z")
+    ) {
+
+        buyItem(
+            game.shopIndex
+        );
+
+    }
+
+}
+
+
+function buyItem(index) {
+
+    const prices =
+        [10,20,45,40];
+
+    const names =
+        [
+            "Еда",
+            "Зелье",
+            "Оружие",
+            "Броня"
+        ];
+
+
+    if (
+        gold <
+        prices[index]
+    ) {
+
+        message(
+            "Недостаточно денег."
+        );
+
+        return;
+
+    }
+
+
+    gold -=
+        prices[index];
+
+
+    if (index === 0)
+        inventory.food++;
+
+    if (index === 1)
+        inventory.potions++;
+
+    if (index === 2) {
+
+        inventory.weapons++;
+
+        party.forEach(
+            p => p.atk++
+        );
+
+    }
+
+    if (index === 3) {
+
+        inventory.armor++;
+
+        party.forEach(
+            p => p.def++
+        );
+
+    }
+
+
+    updateInventoryHUD();
+
+
+    message(
+        "Куплено: "+
+        names[index]
+    );
+
+}
+
+
+/* =========================================================
+   INVENTORY MENU
+========================================================= */
+
+function updateMenu() {
+
+    if (
+        pressed("x") ||
+        pressed("c")
+    ) {
+
+        game.mode =
+            "explore";
+
+    }
+
 }
 
 
@@ -3189,31 +2181,121 @@ function checkBeastTrigger() {
    MESSAGE
 ========================================================= */
 
-function showMessage(textValue) {
+function message(textValue) {
 
     game.message =
         textValue;
 
-    game.messageTimer=150;
+    game.messageTime =
+        180;
+
 }
 
 
 /* =========================================================
-   WORLD DRAW
+   INVENTORY HUD
 ========================================================= */
 
-function drawBackground(
-    img
+function updateInventoryHUD() {
+
+    document
+        .getElementById("gold")
+        .textContent =
+        gold;
+
+    document
+        .getElementById("food")
+        .textContent =
+        inventory.food;
+
+    document
+        .getElementById("potions")
+        .textContent =
+        inventory.potions;
+
+}
+
+
+/* =========================================================
+   DRAW HELPERS
+========================================================= */
+
+function txt(
+    str,
+    x,
+    y,
+    size=14,
+    color="#fff"
 ) {
 
+    ctx.fillStyle =
+        color;
+
+    ctx.font =
+        size+
+        "px monospace";
+
+    ctx.fillText(
+        str,
+        x,
+        y
+    );
+
+}
+
+
+function bar(
+    x,
+    y,
+    w,
+    h,
+    value,
+    max,
+    color="#fff"
+) {
+
+    ctx.fillStyle="#222";
+
+    ctx.fillRect(
+        x,
+        y,
+        w,
+        h
+    );
+
+    ctx.fillStyle =
+        color;
+
+    ctx.fillRect(
+        x,
+        y,
+        w*
+        Math.max(
+            0,
+            Math.min(
+                1,
+                value/max
+            )
+        ),
+        h
+    );
+
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+function drawWasteland() {
+
     if (
-        img &&
-        img.complete &&
-        img.naturalWidth>0
+        images.wasteland.complete &&
+        images.wasteland.naturalWidth
     ) {
 
         ctx.drawImage(
-            img,
+            images.wasteland,
             0,
             0,
             W,
@@ -3221,199 +2303,240 @@ function drawBackground(
         );
 
     }
-}
+    else {
 
+        ctx.fillStyle="#151522";
 
-function drawWorld() {
-
-    const room =
-        rooms[game.room];
-
-
-    if (
-        room.type==="wasteland"
-    ) {
-
-        drawBackground(
-            images.wasteland
+        ctx.fillRect(
+            0,
+            0,
+            W,
+            H
         );
 
-        if (
-            images.trail.complete &&
-            images.trail.naturalWidth>0
-        ) {
-
-            ctx.globalAlpha=.9;
-
-            ctx.drawImage(
-                images.trail,
-                0,
-                80,
-                W,
-                100
-            );
-
-            ctx.globalAlpha=1;
-        }
     }
 
 
     if (
-        room.type==="shop"
+        images.trail.complete &&
+        images.trail.naturalWidth
     ) {
 
-        drawBackground(
-            images.shop
+        ctx.globalAlpha=.9;
+
+        ctx.drawImage(
+            images.trail,
+            0,
+            150,
+            W,
+            210
         );
+
+        ctx.globalAlpha=1;
+
     }
 
-
-    if (
-        room.type==="puzzle"
-    ) {
-
-        drawPuzzleWorld();
-    }
-
-
-    if (
-        room.type==="cemetery"
-    ) {
-
-        drawCemetery();
-    }
-
-
-    drawFollowers();
-
-    drawPlayer();
-
-
-    text(
-        room.name,
-        10,
-        16,
-        7,
-        "#ffffff"
-    );
-
-
-    if (
-        room.type==="shop"
-    ) {
-
-        text(
-            "Z — войти в магазин",
-            95,
-            165,
-            6
-        );
-    }
 }
 
 
 /* =========================================================
-   DRAW FOLLOWERS
+   DRAW PLAYER
 ========================================================= */
 
-function drawFollowers() {
+function playerSprite() {
 
-    followers.forEach(
-        f => {
+    if (
+        player.direction ===
+        "left"
+    )
+        return images.left;
 
-            drawCharacter(
-                Math.round(f.x),
-                Math.round(f.y),
-                f.color
-            );
+    if (
+        player.direction ===
+        "right"
+    )
+        return images.right;
 
-        }
-    );
+    if (
+        player.direction ===
+        "back"
+    )
+        return images.back;
+
+    return images.delta;
+
 }
 
-
-/* =========================================================
-   PLAYER DRAW
-========================================================= */
 
 function drawPlayer() {
 
     const img =
-        getDeltaSprite();
+        playerSprite();
+
 
     if (
-        img &&
         img.complete &&
-        img.naturalWidth>0
+        img.naturalWidth
     ) {
 
         ctx.drawImage(
             img,
-            Math.round(
-                player.x-8
-            ),
-            Math.round(
-                player.y-10
-            ),
-            24,
+            player.x-18,
+            player.y-28,
+            36,
+            44
+        );
+
+    }
+    else {
+
+        ctx.fillStyle="#fff";
+
+        ctx.fillRect(
+            player.x-10,
+            player.y-20,
+            20,
             30
         );
 
-        return;
     }
 
-    drawCharacter(
-        player.x,
-        player.y,
-        "#ffffff"
-    );
 }
 
 
 /* =========================================================
-   FALLBACK CHARACTER
+   DRAW WORLD
 ========================================================= */
 
-function drawCharacter(
-    x,
-    y,
-    color
-) {
+function drawWorld() {
 
-    ctx.fillStyle="#000";
+    if (
+        game.room ===
+        "wasteland1" ||
+        game.room ===
+        "wasteland2"
+    ) {
 
-    ctx.fillRect(
-        x-2,
-        y-2,
-        14,
-        18
+        drawWasteland();
+
+    }
+
+
+    else if (
+        game.room ===
+        "shop"
+    ) {
+
+        if (
+            images.shop.complete &&
+            images.shop.naturalWidth
+        ) {
+
+            ctx.drawImage(
+                images.shop,
+                0,
+                0,
+                W,
+                H
+            );
+
+        }
+        else {
+
+            ctx.fillStyle="#202020";
+
+            ctx.fillRect(
+                0,
+                0,
+                W,
+                H
+            );
+
+            txt(
+                "МАГАЗИН",
+                260,
+                120,
+                28
+            );
+
+        }
+
+    }
+
+
+    else if (
+        game.room ===
+        "boxes"
+    ) {
+
+        drawBoxes();
+
+    }
+
+
+    else if (
+        game.room ===
+        "cemetery"
+    ) {
+
+        drawCemetery();
+
+    }
+
+
+    txt(
+        rooms[game.room],
+        20,
+        35,
+        15
     );
 
-    ctx.fillStyle=color;
 
-    ctx.fillRect(
-        x+1,
-        y,
-        8,
-        7
-    );
+    /*
+       Союзники
+    */
 
-    ctx.fillRect(
-        x,
-        y+7,
-        10,
-        8
-    );
+    if (
+        game.room !==
+        "shop"
+    ) {
+
+        followers.forEach(
+            (f,i) => {
+
+                ctx.fillStyle =
+                    [
+                        "#55aaff",
+                        "#55dd66",
+                        "#cc8844",
+                        "#ff66cc"
+                    ][i];
+
+                ctx.fillRect(
+                    f.x-8,
+                    f.y-15,
+                    16,
+                    25
+                );
+
+            }
+        );
+
+    }
+
+
+    drawPlayer();
+
 }
 
 
 /* =========================================================
-   PUZZLE WORLD DRAW
+   BOX PUZZLE DRAW
 ========================================================= */
 
-function drawPuzzleWorld() {
+function drawBoxes() {
 
-    ctx.fillStyle="#151821";
+    ctx.fillStyle="#12151d";
 
     ctx.fillRect(
         0,
@@ -3424,158 +2547,147 @@ function drawPuzzleWorld() {
 
 
     for (
-        let x=10;
-        x<320;
-        x+=20
+        let x=0;
+        x<W;
+        x+=40
     ) {
 
-        ctx.fillStyle="#292d38";
+        ctx.strokeStyle=
+            "#1d222d";
 
-        ctx.fillRect(
+        ctx.strokeRect(
             x,
-            20,
-            1,
-            150
+            60,
+            40,
+            300
         );
+
     }
 
 
-    /* ВОРОТА */
+    txt(
+        "ВОРОТА НА КЛАДБИЩЕ",
+        205,
+        35,
+        18
+    );
 
-    if (
+
+    /*
+       Ворота
+    */
+
+    ctx.fillStyle =
         game.puzzle &&
-        game.puzzle.open
-    ) {
+        game.puzzle.solved
+            ? "#31663b"
+            : "#30333b";
 
-        ctx.fillStyle="#334f36";
-
-        ctx.fillRect(
-            270,
-            40,
-            30,
-            110
-        );
-
-        text(
-            "OPEN",
-            273,
-            30,
-            6,
-            "#66ff88"
-        );
-
-    }
-    else {
-
-        ctx.fillStyle="#373b46";
-
-        ctx.fillRect(
-            270,
-            40,
-            30,
-            110
-        );
-
-        text(
-            "LOCK",
-            273,
-            30,
-            6,
-            "#ff5555"
-        );
-    }
+    ctx.fillRect(
+        570,
+        70,
+        45,
+        250
+    );
 
 
-    if (!game.puzzle)
-        return;
+    /*
+       Кнопки.
+       При правильной коробке
+       становятся зелёными.
+    */
 
+    game.puzzle.buttons.forEach(
+        button => {
 
-    /* КНОПКИ */
+            const active =
+                game.puzzle.boxes.some(
+                    box => {
 
-    game.puzzle.buttons
-        .forEach(
-            button => {
+                        const bx =
+                            box.x+
+                            box.w/2;
 
-                let active=false;
+                        const by =
+                            box.y+
+                            box.h/2;
 
-                for (
-                    const box
-                    of game.puzzle.boxes
-                ) {
+                        const px =
+                            button.x+
+                            button.w/2;
 
-                    const cx =
-                        box.x+
-                        box.w/2;
+                        const py =
+                            button.y+
+                            button.h/2;
 
-                    const cy =
-                        box.y+
-                        box.h/2;
+                        return (
+                            Math.abs(
+                                bx-px
+                            ) < 25 &&
+                            Math.abs(
+                                by-py
+                            ) < 20
+                        );
 
-                    const bx =
-                        button.x+
-                        button.w/2;
-
-                    const by =
-                        button.y+
-                        button.h/2;
-
-                    if (
-                        Math.abs(
-                            cx-bx
-                        )<8 &&
-                        Math.abs(
-                            cy-by
-                        )<8
-                    ) {
-
-                        active=true;
                     }
-                }
-
-
-                ctx.fillStyle =
-                    active
-                    ? "#39ff66"
-                    : "#aa2222";
-
-                ctx.fillRect(
-                    button.x,
-                    button.y,
-                    button.w,
-                    button.h
-                );
-            }
-        );
-
-
-    /* КОРОБКИ */
-
-    game.puzzle.boxes
-        .forEach(
-            (box,i) => {
-
-                ctx.fillStyle =
-                    game.puzzle.selected===i
-                    ? "#ffdd55"
-                    : "#8b5a32";
-
-                ctx.fillRect(
-                    box.x,
-                    box.y,
-                    box.w,
-                    box.h
                 );
 
-                ctx.strokeStyle="#d8a866";
 
-                ctx.strokeRect(
-                    box.x,
-                    box.y,
-                    box.w,
-                    box.h
-                );
-            }
-        );
+            ctx.fillStyle =
+                active
+                    ? "#32cc55"
+                    : "#cc3030";
+
+            ctx.fillRect(
+                button.x,
+                button.y,
+                button.w,
+                button.h
+            );
+
+        }
+    );
+
+
+    /*
+       Коробки
+    */
+
+    game.puzzle.boxes.forEach(
+        (box,i) => {
+
+            ctx.fillStyle =
+                game.puzzle.selected === i
+                    ? "#ffd94d"
+                    : "#996633";
+
+            ctx.fillRect(
+                box.x,
+                box.y,
+                box.w,
+                box.h
+            );
+
+            ctx.strokeStyle="#e5ad70";
+
+            ctx.strokeRect(
+                box.x,
+                box.y,
+                box.w,
+                box.h
+            );
+
+        }
+    );
+
+
+    txt(
+        "Подойди к коробке и нажми Z",
+        190,
+        335,
+        13
+    );
+
 }
 
 
@@ -3585,7 +2697,7 @@ function drawPuzzleWorld() {
 
 function drawCemetery() {
 
-    ctx.fillStyle="#070910";
+    ctx.fillStyle="#080b13";
 
     ctx.fillRect(
         0,
@@ -3595,14 +2707,14 @@ function drawCemetery() {
     );
 
 
-    ctx.fillStyle="#dddddd";
+    ctx.fillStyle="#ddd";
 
     ctx.beginPath();
 
     ctx.arc(
-        260,
-        35,
-        16,
+        510,
+        60,
+        32,
         0,
         Math.PI*2
     );
@@ -3610,75 +2722,150 @@ function drawCemetery() {
     ctx.fill();
 
 
-    ctx.fillStyle="#11131c";
+    ctx.fillStyle="#10131b";
 
     ctx.fillRect(
         0,
-        105,
+        220,
         W,
-        75
+        140
     );
 
 
     for (
         let i=0;
-        i<7;
+        i<9;
         i++
     ) {
 
         const x =
-            18+
-            i*44;
+            30+i*70;
 
         const y =
-            82+
-            (i%2)*15;
+            175+
+            (i%2)*30;
 
-        ctx.fillStyle="#3b3e4c";
+
+        ctx.fillStyle="#3b3f4c";
 
         ctx.fillRect(
             x,
             y,
-            18,
-            25
+            30,
+            48
         );
 
         ctx.fillRect(
-            x-3,
-            y+5,
-            24,
-            5
+            x-5,
+            y+10,
+            40,
+            7
         );
+
     }
 
 
-    for (
-        let i=0;
-        i<10;
-        i++
-    ) {
+    txt(
+        "ЦИФРОВОЕ КЛАДБИЩЕ",
+        210,
+        35,
+        18
+    );
 
-        ctx.fillStyle =
-            "rgba(100,100,255,.15)";
-
-        ctx.fillRect(
-            0,
-            Math.random()*180,
-            320,
-            1
-        );
-    }
 }
 
 
 /* =========================================================
-   SHOP DRAW
+   CHASE DRAW
 ========================================================= */
 
-function drawShopMenu() {
+function drawChase() {
 
-    ctx.fillStyle =
-        "rgba(0,0,0,.96)";
+    /*
+       ДВИГАЮЩИЙСЯ ФОН.
+       Рисуем несколько копий
+       картинки рядом и смещаем их.
+    */
+
+    ctx.save();
+
+    const offset =
+        -(game.chase.scroll % W);
+
+
+    for (
+        let i=-1;
+        i<=1;
+        i++
+    ) {
+
+        if (
+            images.wasteland.complete &&
+            images.wasteland.naturalWidth
+        ) {
+
+            ctx.drawImage(
+                images.wasteland,
+                offset+i*W,
+                0,
+                W,
+                H
+            );
+
+        }
+        else {
+
+            ctx.fillStyle="#151522";
+
+            ctx.fillRect(
+                offset+i*W,
+                0,
+                W,
+                H
+            );
+
+        }
+
+    }
+
+
+    /*
+       Тропинка тоже движется.
+    */
+
+    if (
+        images.trail.complete &&
+        images.trail.naturalWidth
+    ) {
+
+        for (
+            let i=-1;
+            i<=1;
+            i++
+        ) {
+
+            ctx.drawImage(
+                images.trail,
+                offset+i*W,
+                150,
+                W,
+                210
+            );
+
+        }
+
+    }
+
+
+    ctx.restore();
+
+
+    /*
+       Затемнение движения.
+    */
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.2)";
 
     ctx.fillRect(
         0,
@@ -3688,86 +2875,111 @@ function drawShopMenu() {
     );
 
 
-    ctx.strokeStyle="#ffffff";
-
-    ctx.lineWidth=2;
-
-    ctx.strokeRect(
-        25,
-        10,
-        270,
-        160
-    );
-
-
-    text(
-        "МАГАЗИН",
-        110,
-        28,
-        10
-    );
-
-    text(
-        "G: "+money,
+    txt(
+        "ГЛЮЧНЫЙ ЗВЕРЬ!",
         235,
-        28,
-        6,
-        "#ffd84d"
+        40,
+        23,
+        "#ff4444"
     );
 
 
-    shopItems.forEach(
-        (item,i) => {
-
-            const y =
-                52+
-                i*25;
-
-            if (
-                game.shopIndex===i
-            ) {
-
-                text(
-                    "▶",
-                    43,
-                    y,
-                    7,
-                    "#ffffff"
-                );
-            }
-
-            text(
-                item.name,
-                60,
-                y,
-                7
-            );
-
-            text(
-                item.price+
-                " G",
-                220,
-                y,
-                7,
-                "#ffd84d"
-            );
-        }
+    txt(
+        "БЕГИ!",
+        290,
+        70,
+        18
     );
 
 
-    text(
-        "Z — купить",
-        45,
-        158,
-        6
-    );
+    /*
+       Зверь сзади.
+    */
 
-    text(
-        "X — выйти",
+    if (
+        images.error.complete &&
+        images.error.naturalWidth
+    ) {
+
+        ctx.drawImage(
+            images.error,
+            40,
+            175,
+            80,
+            80
+        );
+
+    }
+
+
+    /*
+       Дельта впереди.
+    */
+
+    drawPlayer();
+
+
+    /*
+       QTE.
+    */
+
+    const need =
+        game.chase.sequence[
+            game.chase.qteIndex
+        ];
+
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.8)";
+
+    ctx.fillRect(
         220,
-        158,
-        6
+        105,
+        200,
+        120
     );
+
+
+    txt(
+        "НАЖМИ",
+        280,
+        135,
+        15
+    );
+
+
+    txt(
+        need.toUpperCase(),
+        300,
+        180,
+        38,
+        "#fff"
+    );
+
+
+    txt(
+        "Время: "+
+        Math.ceil(
+            game.chase.time
+        ),
+        275,
+        205,
+        13
+    );
+
+
+    txt(
+        (
+            game.chase.qteIndex+
+            1
+        )+
+        "/"+
+        game.chase.sequence.length,
+        300,
+        225,
+        12
+    );
+
 }
 
 
@@ -3777,8 +2989,11 @@ function drawShopMenu() {
 
 function drawDialogue() {
 
-    ctx.fillStyle =
-        "rgba(0,0,0,.58)";
+    drawWorld();
+
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.6)";
 
     ctx.fillRect(
         0,
@@ -3788,25 +3003,25 @@ function drawDialogue() {
     );
 
 
-    ctx.fillStyle="#030303";
+    ctx.fillStyle="#050505";
 
     ctx.fillRect(
-        10,
-        105,
-        300,
-        63
+        25,
+        235,
+        590,
+        105
     );
 
 
-    ctx.strokeStyle="#ffffff";
+    ctx.strokeStyle="#fff";
 
-    ctx.lineWidth=2;
+    ctx.lineWidth=3;
 
     ctx.strokeRect(
-        10,
-        105,
-        300,
-        63
+        25,
+        235,
+        590,
+        105
     );
 
 
@@ -3816,98 +3031,82 @@ function drawDialogue() {
         ];
 
 
-    text(
-        d.name,
-        22,
-        120,
-        7,
-        d.name==="ДЕЛЬТА"
-        ? "#ffffff"
-        : "#66ccff"
+    txt(
+        d[0],
+        45,
+        265,
+        18,
+        d[0] ===
+        "ДЕЛЬТА"
+            ? "#fff"
+            : "#66bbff"
     );
 
 
-    ctx.font =
-        "7px monospace";
+    ctx.font=
+        "16px monospace";
 
-    wrappedText(
-        d.text,
-        22,
-        135,
-        270,
-        9
-    );
+    ctx.fillStyle="#fff";
 
-
-    text(
-        "Z — далее",
-        240,
-        160,
-        6
-    );
-}
-
-
-/* =========================================================
-   WRAPPED TEXT
-========================================================= */
-
-function wrappedText(
-    value,
-    x,
-    y,
-    width,
-    lineHeight
-) {
 
     const words =
-        value.split(" ");
+        d[1].split(" ");
 
     let line="";
+    let y=290;
 
-    for (
-        const word
-        of words
-    ) {
 
-        const test =
-            line+
-            word+
-            " ";
+    words.forEach(
+        word => {
 
-        if (
-            ctx.measureText(
-                test
-            ).width >
-            width &&
-            line
-        ) {
-
-            ctx.fillText(
-                line,
-                x,
-                y
-            );
-
-            y +=
-                lineHeight;
-
-            line =
+            const test =
+                line+
                 word+
                 " ";
 
-        }
-        else {
+            if (
+                ctx.measureText(
+                    test
+                ).width > 530
+            ) {
 
-            line=test;
+                ctx.fillText(
+                    line,
+                    45,
+                    y
+                );
+
+                y+=22;
+
+                line =
+                    word+
+                    " ";
+
+            }
+            else {
+
+                line=test;
+
+            }
+
         }
-    }
+    );
+
 
     ctx.fillText(
         line,
-        x,
+        45,
         y
     );
+
+
+    txt(
+        "Z — далее",
+        510,
+        325,
+        12
+    );
+
 }
 
 
@@ -3920,7 +3119,8 @@ function drawBattle() {
     const b =
         game.battle;
 
-    ctx.fillStyle="#050505";
+
+    ctx.fillStyle="#050509";
 
     ctx.fillRect(
         0,
@@ -3931,110 +3131,230 @@ function drawBattle() {
 
 
     /*
-       Верхняя рамка
+       Враг
     */
-
-    ctx.strokeStyle="#ffffff";
-
-    ctx.lineWidth=2;
-
-    ctx.strokeRect(
-        20,
-        7,
-        280,
-        65
-    );
-
-
-    /* ВРАГ */
 
     if (
         images.error.complete &&
-        images.error.naturalWidth>0 &&
-        b.type==="error"
+        images.error.naturalWidth
     ) {
 
         ctx.drawImage(
             images.error,
-            130,
-            10,
-            60,
-            60
+            260,
+            20,
+            120,
+            120
         );
 
     }
-    else if (
-        b.type==="beast"
-    ) {
-
-        drawBeast();
-
-    }
 
 
-    text(
-        b.enemy.name,
-        28,
-        20,
-        7
+    txt(
+        "ОШИБКА СИСТЕМЫ",
+        35,
+        35,
+        18
     );
 
 
-    text(
+    txt(
         "HP",
-        215,
+        480,
+        30,
+        14
+    );
+
+
+    bar(
+        515,
         20,
-        6
+        100,
+        12,
+        b.enemyHP,
+        b.enemyMax
     );
 
 
-    drawBar(
-        235,
-        15,
-        48,
-        6,
-        b.enemy.hp,
-        b.enemy.maxHP
-    );
-
-
-    text(
-        b.enemy.hp+
-        "/"+
-        b.enemy.maxHP,
-        240,
-        31,
-        6
+    txt(
+        b.enemyHP+
+        " / "+
+        b.enemyMax,
+        515,
+        52,
+        12
     );
 
 
     /*
-       RD
+       Боевая зона
     */
 
-    text(
-        "RD",
-        215,
-        42,
-        6,
-        "#66ddff"
+    ctx.strokeStyle="#fff";
+
+    ctx.lineWidth=3;
+
+    ctx.strokeRect(
+        45,
+        105,
+        360,
+        215
     );
 
-    drawBar(
-        235,
-        37,
-        48,
-        6,
-        b.rd,
-        b.maxRD
-    );
 
-    text(
-        Math.floor(b.rd),
-        288,
-        42,
-        5,
-        "#66ddff"
+    /*
+       Атака врага
+    */
+
+    if (
+        b.phase ===
+        "enemy"
+    ) {
+
+        if (
+            b.attackType ===
+            "laser"
+        ) {
+
+            if (
+                b.laserWarning > 0
+            ) {
+
+                ctx.fillStyle=
+                    "rgba(255,40,40,.35)";
+
+                ctx.fillRect(
+                    b.laserX-8,
+                    108,
+                    16,
+                    209
+                );
+
+                txt(
+                    "!",
+                    b.laserX-6,
+                    170,
+                    30,
+                    "#ff3333"
+                );
+
+            }
+            else {
+
+                ctx.fillStyle=
+                    "#ff2222";
+
+                ctx.fillRect(
+                    b.laserX-7,
+                    108,
+                    14,
+                    209
+                );
+
+            }
+
+        }
+
+
+        if (
+            b.attackType ===
+            "explosion"
+        ) {
+
+            b.explosions.forEach(
+                e => {
+
+                    if (
+                        e.timer <= 0
+                    ) {
+
+                        ctx.strokeStyle=
+                            "#ff7733";
+
+                        ctx.lineWidth=3;
+
+                        ctx.beginPath();
+
+                        ctx.arc(
+                            e.x,
+                            e.y,
+                            e.radius,
+                            0,
+                            Math.PI*2
+                        );
+
+                        ctx.stroke();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /*
+           Душа
+        */
+
+        ctx.fillStyle=
+            b.hitCooldown > 0
+                ? "#ffffff"
+                : "#ff3045";
+
+        ctx.fillRect(
+            b.soulX-7,
+            b.soulY-7,
+            14,
+            14
+        );
+
+    }
+
+
+    /*
+       HP команды.
+       Теперь они всегда видны.
+       При попадании значения меняются
+       непосредственно здесь.
+    */
+
+    party.forEach(
+        (p,i) => {
+
+            const y =
+                125+i*40;
+
+            txt(
+                p.name,
+                430,
+                y,
+                13
+            );
+
+            bar(
+                500,
+                y-12,
+                105,
+                10,
+                p.hp,
+                p.maxHP,
+                p.hp >
+                p.maxHP*.5
+                    ? "#55dd66"
+                    : "#ff4444"
+            );
+
+            txt(
+                p.hp+
+                "/"+
+                p.maxHP,
+                510,
+                y+15,
+                11
+            );
+
+        }
     );
 
 
@@ -4042,32 +3362,12 @@ function drawBattle() {
        Сообщение
     */
 
-    wrappedText(
+    txt(
         b.message,
-        25,
-        82,
-        130,
-        7
+        55,
+        335,
+        12
     );
-
-
-    /*
-       Поле атаки
-    */
-
-    if (
-        b.phase==="enemy"
-    ) {
-
-        drawAttackField();
-    }
-
-
-    /*
-       Партия
-    */
-
-    drawBattleParty();
 
 
     /*
@@ -4075,729 +3375,249 @@ function drawBattle() {
     */
 
     if (
-        b.phase==="menu"
+        b.phase ===
+        "menu"
     ) {
 
-        drawBattleMenu();
+        const options = [
+            "FIGHT",
+            "ACT",
+            "ITEM",
+            "MERCY"
+        ];
+
+
+        options.forEach(
+            (name,i) => {
+
+                const x =
+                    50+
+                    (i%2)*160;
+
+                const y =
+                    145+
+                    Math.floor(
+                        i/2
+                    )*65;
+
+
+                if (
+                    b.menu === i
+                ) {
+
+                    ctx.strokeStyle=
+                        "#fff";
+
+                    ctx.strokeRect(
+                        x-12,
+                        y-25,
+                        130,
+                        42
+                    );
+
+                }
+
+
+                txt(
+                    name,
+                    x,
+                    y,
+                    18
+                );
+
+            }
+        );
+
     }
 
-
-    if (
-        b.phase==="act"
-    ) {
-
-        drawActMenu();
-    }
-
-
-    if (
-        b.phase==="magic"
-    ) {
-
-        drawMagicMenu();
-    }
-
-
-    if (
-        b.phase==="item"
-    ) {
-
-        drawItemMenu();
-    }
-
-
-    if (
-        b.phase==="mercy"
-    ) {
-
-        drawMercyMenu();
-    }
-
-
-    if (
-        b.phase==="victory"
-    ) {
-
-        drawVictory();
-    }
-
-
-    if (
-        b.phase==="defeat"
-    ) {
-
-        drawDefeat();
-    }
 }
 
 
 /* =========================================================
-   BEAST DRAW
+   SHOP DRAW
 ========================================================= */
 
-function drawBeast() {
+function drawShopMenu() {
 
-    /*
-       Если потом добавишь отдельный
-       sprite зверя, его можно вставить
-       сюда.
-    */
+    drawWorld();
 
-    ctx.fillStyle="#6b247c";
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.9)";
 
     ctx.fillRect(
-        140,
-        25,
-        40,
-        30
-    );
-
-    ctx.fillStyle="#ff3355";
-
-    ctx.fillRect(
-        147,
-        32,
-        6,
-        6
-    );
-
-    ctx.fillRect(
-        167,
-        32,
-        6,
-        6
-    );
-
-    ctx.fillStyle="#111";
-
-    ctx.fillRect(
-        150,
+        100,
         45,
-        22,
-        5
+        440,
+        275
     );
-}
 
 
-/* =========================================================
-   BATTLE MENU DRAW
-========================================================= */
+    ctx.strokeStyle="#fff";
 
-function drawBattleMenu() {
+    ctx.strokeRect(
+        100,
+        45,
+        440,
+        275
+    );
 
-    const positions = [
 
-        [165,112],
-        [235,112],
+    txt(
+        "МАГАЗИН",
+        270,
+        80,
+        25
+    );
 
-        [165,132],
-        [235,132],
 
-        [165,152],
-        [235,152]
-
+    const items = [
+        ["Еда",10],
+        ["Зелье",20],
+        ["Оружие",45],
+        ["Броня",40]
     ];
 
 
-    battleOptions.forEach(
-        (label,i) => {
-
-            const x =
-                positions[i][0];
+    items.forEach(
+        (item,i) => {
 
             const y =
-                positions[i][1];
+                125+
+                i*40;
 
 
             if (
-                game.battle.menu===i
+                game.shopIndex === i
             ) {
 
-                ctx.strokeStyle =
-                    "#ffffff";
-
-                ctx.strokeRect(
-                    x-9,
-                    y-9,
-                    62,
+                txt(
+                    "▶",
+                    130,
+                    y,
                     16
                 );
 
-                text(
-                    "▶",
-                    x-5,
-                    y+2,
-                    6,
-                    "#ffdd55"
-                );
             }
 
 
-            text(
-                label,
-                x+7,
-                y+2,
-                6
-            );
-        }
-    );
-}
-
-
-/* =========================================================
-   ACT MENU
-========================================================= */
-
-function drawActMenu() {
-
-    const b =
-        game.battle;
-
-    text(
-        "ACT",
-        175,
-        110,
-        8
-    );
-
-
-    if (
-        b.type==="beast"
-    ) {
-
-        text(
-            "ТОЛКНУТЬ",
-            175,
-            127,
-            7,
-            "#ffffff"
-        );
-
-        text(
-            "50 RD",
-            175,
-            139,
-            6,
-            "#66ddff"
-        );
-
-        text(
-            "УСПЕХИ: "+
-            b.pushCount+
-            "/2",
-            175,
-            150,
-            6
-        );
-
-        text(
-            "Z — выполнить",
-            175,
-            161,
-            6
-        );
-
-    }
-    else {
-
-        text(
-            "ИЗУЧИТЬ",
-            175,
-            127,
-            7
-        );
-
-        text(
-            "Ошибка нестабильна.",
-            175,
-            140,
-            5
-        );
-
-        text(
-            "Z — выполнить",
-            175,
-            157,
-            6
-        );
-    }
-}
-
-
-/* =========================================================
-   MAGIC MENU
-========================================================= */
-
-function drawMagicMenu() {
-
-    text(
-        "MAGIC",
-        175,
-        110,
-        8
-    );
-
-    text(
-        "GLITCH BURST",
-        175,
-        128,
-        6
-    );
-
-    text(
-        "Цифровой удар.",
-        175,
-        140,
-        5
-    );
-
-    text(
-        "Z — использовать",
-        175,
-        157,
-        6
-    );
-}
-
-
-/* =========================================================
-   ITEM MENU
-========================================================= */
-
-function drawItemMenu() {
-
-    text(
-        "ITEM",
-        175,
-        110,
-        8
-    );
-
-    text(
-        "ЕДА +25 HP",
-        175,
-        128,
-        6
-    );
-
-    text(
-        "ОСТАЛОСЬ: "+
-        inventory.food,
-        175,
-        141,
-        6
-    );
-
-    text(
-        "Z — использовать",
-        175,
-        157,
-        6
-    );
-}
-
-
-/* =========================================================
-   MERCY MENU
-========================================================= */
-
-function drawMercyMenu() {
-
-    const b =
-        game.battle;
-
-    text(
-        "MERCY",
-        175,
-        110,
-        8
-    );
-
-    if (
-        b.type==="beast"
-    ) {
-
-        text(
-            "Пощада не работает.",
-            175,
-            130,
-            6
-        );
-
-        text(
-            "Попробуйте ACT.",
-            175,
-            143,
-            6
-        );
-
-    }
-    else {
-
-        text(
-            "ПОЩАДИТЬ",
-            175,
-            128,
-            7
-        );
-    }
-
-    text(
-        "Z — выбрать",
-        175,
-        157,
-        6
-    );
-}
-
-
-/* =========================================================
-   BATTLE PARTY
-========================================================= */
-
-function drawBattleParty() {
-
-    const b =
-        game.battle;
-
-    party.forEach(
-        (p,i) => {
-
-            const y =
-                102+
-                i*12;
-
-
-            if (
-                b.actor===i &&
-                b.phase==="menu"
-            ) {
-
-                text(
-                    "▶",
-                    2,
-                    y,
-                    5,
-                    "#ffffff"
-                );
-            }
-
-
-            text(
-                p.name,
-                9,
+            txt(
+                item[0],
+                160,
                 y,
-                5,
-                "#ffffff"
+                16
             );
 
 
-            text(
-                "HP",
-                58,
+            txt(
+                item[1]+
+                " G",
+                420,
                 y,
-                5
+                16,
+                "#ffd84d"
             );
 
-
-            drawBar(
-                72,
-                y-5,
-                38,
-                5,
-                p.hp,
-                p.maxHP
-            );
-
-
-            text(
-                p.hp+
-                "/"+
-                p.maxHP,
-                113,
-                y,
-                5
-            );
         }
-    );
-}
-
-
-/* =========================================================
-   ATTACK FIELD
-========================================================= */
-
-function drawAttackField() {
-
-    const b =
-        game.battle;
-
-    ctx.strokeStyle="#ffffff";
-
-    ctx.lineWidth=2;
-
-    ctx.strokeRect(
-        48,
-        91,
-        224,
-        70
     );
 
 
-    /*
-       ЛАЗЕР
-    */
-
-    if (
-        b.laser
-    ) {
-
-        const l =
-            b.laser;
-
-
-        if (
-            l.warning>0
-        ) {
-
-            /*
-               Большое предупреждение
-            */
-
-            ctx.fillStyle =
-                "rgba(255,40,40,.35)";
-
-            ctx.fillRect(
-                49,
-                92,
-                222,
-                68
-            );
-
-
-            /*
-               Безопасная зона
-            */
-
-            ctx.fillStyle =
-                "rgba(50,255,100,.25)";
-
-            ctx.fillRect(
-                145,
-                92,
-                30,
-                68
-            );
-
-
-            text(
-                "!",
-                155,
-                125,
-                20,
-                "#ff4444"
-            );
-
-        }
-        else {
-
-            ctx.fillStyle="#ff2222";
-
-            ctx.fillRect(
-                49,
-                92,
-                222,
-                68
-            );
-
-
-            ctx.fillStyle =
-                "rgba(60,255,100,.2)";
-
-            ctx.fillRect(
-                145,
-                92,
-                30,
-                68
-            );
-        }
-    }
-
-
-    /*
-       РЫК
-    */
-
-    if (
-        b.roar
-    ) {
-
-        const r =
-            b.roar;
-
-        ctx.strokeStyle =
-            r.phase==="blue"
-            ? "#4488ff"
-            : "#ff8833";
-
-        ctx.lineWidth=3;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            160,
-            130,
-            Math.min(
-                50,
-                r.radius
-            ),
-            0,
-            Math.PI*2
-        );
-
-        ctx.stroke();
-
-
-        text(
-            r.phase==="blue"
-            ? "НЕ ДВИГАЙСЯ"
-            : "ПРОСКОЧИ",
-            122,
-            103,
-            6,
-            r.phase==="blue"
-            ? "#4488ff"
-            : "#ff8833"
-        );
-    }
-
-
-    /*
-       ЛАПА
-    */
-
-    if (
-        b.claw
-    ) {
-
-        const c =
-            b.claw;
-
-
-        if (
-            c.warning>0
-        ) {
-
-            ctx.strokeStyle =
-                "#ffcc33";
-
-            ctx.lineWidth=2;
-
-            ctx.strokeRect(
-                c.x-12,
-                c.y-12,
-                24,
-                24
-            );
-
-            text(
-                "!",
-                c.x-2,
-                c.y+3,
-                8,
-                "#ffcc33"
-            );
-
-        }
-        else {
-
-            ctx.fillStyle =
-                "rgba(255,80,80,.7)";
-
-            ctx.fillRect(
-                c.x-18,
-                c.y-18,
-                36,
-                36
-            );
-        }
-    }
-
-
-    /*
-       ДУША
-    */
-
-    if (
-        b.soul.inv%6<3
-    ) {
-
-        ctx.fillStyle="#ff3344";
-
-        ctx.fillRect(
-            b.soul.x-4,
-            b.soul.y-4,
-            8,
-            8
-        );
-    }
-}
-
-
-/* =========================================================
-   VICTORY
-========================================================= */
-
-function drawVictory() {
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.88)";
-
-    ctx.fillRect(
-        0,
-        70,
-        320,
-        110
-    );
-
-
-    text(
-        "ПОБЕДА!",
-        125,
-        103,
+    txt(
+        "Z — купить",
+        130,
+        295,
         13
     );
 
 
-    text(
-        game.battle.type==="beast"
-        ? "ЗВЕРЬ ПОВЕРЖЕН"
-        : "ОШИБКА УСТРАНЕНА",
-        100,
-        123,
-        6
+    txt(
+        "X — выйти",
+        410,
+        295,
+        13
+    );
+
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+function drawMenu() {
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.95)";
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
     );
 
 
-    if (
-        game.battle.type==="beast"
-    ) {
-
-        text(
-            "Вы победили силой.",
-            105,
-            137,
-            6
-        );
-    }
-
-
-    text(
-        "Z — продолжить",
-        108,
-        154,
-        7
+    txt(
+        "ИНВЕНТАРЬ",
+        50,
+        55,
+        28
     );
+
+
+    txt(
+        "Еда: "+
+        inventory.food,
+        60,
+        105,
+        18
+    );
+
+
+    txt(
+        "Зелья: "+
+        inventory.potions,
+        60,
+        135,
+        18
+    );
+
+
+    txt(
+        "Оружие: "+
+        inventory.weapons,
+        60,
+        165,
+        18
+    );
+
+
+    txt(
+        "Броня: "+
+        inventory.armor,
+        60,
+        195,
+        18
+    );
+
+
+    txt(
+        "Деньги: "+
+        gold,
+        60,
+        235,
+        18,
+        "#ffd84d"
+    );
+
+
+    txt(
+        "X / C — назад",
+        60,
+        300,
+        14
+    );
+
 }
 
 
@@ -4807,8 +3627,7 @@ function drawVictory() {
 
 function drawDefeat() {
 
-    ctx.fillStyle =
-        "rgba(0,0,0,.93)";
+    ctx.fillStyle="#000";
 
     ctx.fillRect(
         0,
@@ -4818,167 +3637,34 @@ function drawDefeat() {
     );
 
 
-    text(
+    txt(
         "ОТРЯД ПОВЕРЖЕН",
-        90,
-        88,
-        10
+        190,
+        150,
+        25,
+        "#ff4444"
     );
 
 
-    text(
-        "Система вернула вас назад.",
-        85,
-        106,
-        6
+    txt(
+        "Z — начать заново",
+        235,
+        200,
+        15
     );
 
-
-    text(
-        "Z — продолжить",
-        105,
-        127,
-        7
-    );
 }
 
 
 /* =========================================================
-   BAR
-========================================================= */
-
-function drawBar(
-    x,
-    y,
-    width,
-    height,
-    value,
-    max
-) {
-
-    ctx.fillStyle="#222222";
-
-    ctx.fillRect(
-        x,
-        y,
-        width,
-        height
-    );
-
-
-    const amount =
-        Math.max(
-            0,
-            Math.min(
-                1,
-                value/max
-            )
-        );
-
-
-    ctx.fillStyle="#ffffff";
-
-    ctx.fillRect(
-        x,
-        y,
-        width*amount,
-        height
-    );
-}
-
-
-/* =========================================================
-   TEXT
-========================================================= */
-
-function text(
-    value,
-    x,
-    y,
-    size=7,
-    color="#ffffff"
-) {
-
-    ctx.fillStyle=color;
-
-    ctx.font =
-        size+
-        "px monospace";
-
-    ctx.fillText(
-        value,
-        x,
-        y
-    );
-}
-
-
-/* =========================================================
-   MENU
-========================================================= */
-
-function drawMainMenu() {
-
-    ctx.fillStyle="#050507";
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    text(
-        "BLOOD GLOW",
-        93,
-        60,
-        16
-    );
-
-
-    text(
-        "DIGITAL WASTELAND",
-        96,
-        77,
-        6,
-        "#7777ff"
-    );
-
-
-    text(
-        "Z — НАЧАТЬ",
-        120,
-        112,
-        8
-    );
-
-
-    text(
-        "WASD / ДЖОЙСТИК — ДВИЖЕНИЕ",
-        72,
-        140,
-        5
-    );
-
-
-    text(
-        "Z — ДЕЙСТВИЕ   X — ОТМЕНА   C — МЕНЮ",
-        58,
-        153,
-        5
-    );
-}
-
-
-/* =========================================================
-   MAIN UPDATE
+   UPDATE
 ========================================================= */
 
 function update() {
 
     if (
-        game.mode==="title"
+        game.mode ===
+        "title"
     ) {
 
         if (
@@ -4986,122 +3672,184 @@ function update() {
         ) {
 
             startGame();
+
         }
 
     }
+
     else if (
-        game.transition>0
+        game.transition > 0
     ) {
 
         game.transition--;
 
         if (
-            game.transition<=0
+            game.transition <= 0
         ) {
 
             finishTransition();
+
         }
 
     }
+
     else if (
-        game.mode==="dialogue"
+        game.mode ===
+        "dialogue"
     ) {
 
-        updateDialogue();
+        if (
+            pressed("z")
+        ) {
+
+            nextDialogue();
+
+        }
+
+        if (
+            pressed("x")
+        ) {
+
+            game.dialogue=null;
+
+            game.mode=
+                "explore";
+
+        }
 
     }
+
     else if (
-        game.mode==="explore"
+        game.mode ===
+        "explore"
     ) {
 
         updatePlayer();
 
         updateFollowers();
 
-        checkRandomBattle();
+        updateExits();
 
-        updateExit();
+        randomBattle();
 
-        updateShopInteraction();
-
-        updatePuzzle();
-
-        checkBeastTrigger();
 
         if (
             pressed("c")
         ) {
 
-            game.mode="menu";
+            game.mode =
+                "menu";
+
         }
 
-    }
-    else if (
-        game.mode==="battle"
-    ) {
-
-        /*
-           Особый ACT зверя.
-        */
 
         if (
-            game.battle &&
-            game.battle.phase==="act" &&
-            game.battle.type==="beast"
+            game.room ===
+            "boxes"
         ) {
 
-            updateActSpecial();
-
-            if (
-                pressed("x")
-            ) {
-
-                game.battle.phase="menu";
-            }
+            updatePuzzle();
 
         }
-        else {
 
-            updateBattle();
+
+        if (
+            game.room ===
+            "shop" &&
+            player.x > 100 &&
+            player.x < 300 &&
+            player.y > 200 &&
+            pressed("z")
+        ) {
+
+            game.mode =
+                "shop";
+
         }
 
     }
+
     else if (
-        game.mode==="shop"
+        game.mode ===
+        "battle"
+    ) {
+
+        updateBattle();
+
+    }
+
+    else if (
+        game.mode ===
+        "chase"
+    ) {
+
+        updateChase();
+
+    }
+
+    else if (
+        game.mode ===
+        "shop"
     ) {
 
         updateShop();
 
     }
+
     else if (
-        game.mode==="menu"
+        game.mode ===
+        "menu"
+    ) {
+
+        updateMenu();
+
+    }
+
+    else if (
+        game.mode ===
+        "defeat"
     ) {
 
         if (
-            pressed("x") ||
-            pressed("c")
+            pressed("z")
         ) {
 
-            game.mode="explore";
+            party.forEach(
+                p =>
+                    p.hp=p.maxHP
+            );
+
+            game.mode =
+                "explore";
+
+            music("world");
+
         }
 
     }
 
 
     if (
-        game.messageTimer>0
-    )
-        game.messageTimer--;
+        game.messageTime > 0
+    ) {
+
+        game.messageTime--;
+
+    }
 
 
-    old.up=keys.up;
-    old.down=keys.down;
-    old.left=keys.left;
-    old.right=keys.right;
+    /*
+       Запоминаем клавиши
+       только после обработки.
+    */
 
-    old.z=keys.z;
-    old.x=keys.x;
-    old.c=keys.c;
+    for (const k in previous) {
+
+        previous[k] =
+            keys[k];
+
+    }
+
 }
 
 
@@ -5120,85 +3868,11 @@ function draw() {
 
 
     if (
-        game.mode==="title"
+        game.mode ===
+        "title"
     ) {
 
-        drawMainMenu();
-
-        return;
-    }
-
-
-    if (
-        game.mode==="battle"
-    ) {
-
-        drawBattle();
-
-    }
-    else {
-
-        drawWorld();
-
-
-        if (
-            game.mode==="dialogue"
-        ) {
-
-            drawDialogue();
-        }
-
-
-        if (
-            game.mode==="shop"
-        ) {
-
-            drawShopMenu();
-        }
-
-
-        if (
-            game.mode==="menu"
-        ) {
-
-            drawMenu();
-        }
-    }
-
-
-    if (
-        game.messageTimer>0 &&
-        game.mode!=="battle" &&
-        game.mode!=="dialogue"
-    ) {
-
-        ctx.fillStyle =
-            "rgba(0,0,0,.82)";
-
-        ctx.fillRect(
-            25,
-            24,
-            270,
-            25
-        );
-
-        text(
-            game.message,
-            35,
-            40,
-            6
-        );
-    }
-
-
-    if (
-        game.transition>0
-    ) {
-
-        ctx.fillStyle="#000000";
-
-        ctx.globalAlpha =
-            game.transition/35;
+        ctx.fillStyle="#050509";
 
         ctx.fillRect(
             0,
@@ -5207,105 +3881,176 @@ function draw() {
             H
         );
 
-        ctx.globalAlpha=1;
+
+        txt(
+            "BLOOD GLOW",
+            205,
+            125,
+            38
+        );
+
+
+        txt(
+            "DIGITAL WASTELAND",
+            225,
+            155,
+            14,
+            "#7777ff"
+        );
+
+
+        txt(
+            "Z — НАЧАТЬ",
+            270,
+            225,
+            18
+        );
+
+
+        txt(
+            "WASD / ДЖОЙСТИК — движение",
+            205,
+            270,
+            12
+        );
+
+        return;
+
     }
-}
 
 
-/* =========================================================
-   MENU DRAW
-========================================================= */
+    if (
+        game.mode ===
+        "battle"
+    ) {
 
-function drawMenu() {
+        drawBattle();
 
-    ctx.fillStyle =
-        "rgba(0,0,0,.96)";
+    }
 
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
+    else if (
+        game.mode ===
+        "chase"
+    ) {
 
+        drawChase();
 
-    ctx.strokeStyle="#ffffff";
+    }
 
-    ctx.strokeRect(
-        20,
-        10,
-        280,
-        160
-    );
+    else if (
+        game.mode ===
+        "shop"
+    ) {
 
+        drawShopMenu();
 
-    text(
-        "МЕНЮ",
-        130,
-        28,
-        10
-    );
+    }
 
+    else if (
+        game.mode ===
+        "menu"
+    ) {
 
-    text(
-        "ITEM",
-        50,
-        55,
-        8
-    );
+        drawMenu();
 
-    text(
-        "ЕДА: "+
-        inventory.food,
-        180,
-        55,
-        7
-    );
+    }
 
+    else if (
+        game.mode ===
+        "defeat"
+    ) {
 
-    text(
-        "ЗЕЛЬЯ: "+
-        inventory.potion,
-        180,
-        70,
-        7
-    );
+        drawDefeat();
+
+    }
+
+    else {
+
+        drawWorld();
 
 
-    text(
-        "ОРУЖИЕ: "+
-        inventory.weapons,
-        50,
-        90,
-        7
-    );
+        if (
+            game.mode ===
+            "dialogue"
+        ) {
+
+            drawDialogue();
+
+        }
+
+    }
 
 
-    text(
-        "БРОНЯ: "+
-        inventory.armor,
-        50,
-        105,
-        7
-    );
+    /*
+       Сообщение.
+    */
+
+    if (
+        game.messageTime > 0 &&
+        game.mode !==
+        "battle"
+    ) {
+
+        ctx.fillStyle=
+            "rgba(0,0,0,.8)";
+
+        ctx.fillRect(
+            100,
+            55,
+            440,
+            45
+        );
 
 
-    text(
-        "GOLD: "+
-        money,
-        50,
-        125,
-        7,
-        "#ffd84d"
-    );
+        txt(
+            game.message,
+            120,
+            83,
+            13
+        );
+
+    }
 
 
-    text(
-        "X / C — назад",
-        210,
-        155,
-        6
-    );
+    /*
+       Переход.
+    */
+
+    if (
+        game.transition > 0
+    ) {
+
+        const alpha =
+            game.transition < 23
+                ? 1-
+                  game.transition/23
+                : (
+                    45-
+                    game.transition
+                  )/22;
+
+
+        ctx.fillStyle =
+            "rgba(0,0,0,"+
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    alpha
+                )
+            )+
+            ")";
+
+
+        ctx.fillRect(
+            0,
+            0,
+            W,
+            H
+        );
+
+    }
+
 }
 
 
@@ -5322,7 +4067,10 @@ function loop() {
     requestAnimationFrame(
         loop
     );
+
 }
 
+
+updateInventoryHUD();
 
 loop();
